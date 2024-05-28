@@ -1,17 +1,12 @@
 import numpy as np
-import chronocluster
 from chronocluster import clustering
 from chronocluster.data.simdata import generate_random_points
-from chronocluster.utils import clustering_heatmap, plot_l_diff, plot_mc_points
+from chronocluster.utils import clustering_heatmap, pdiff_heatmap
 
-import numpy as np
 import matplotlib.pyplot as plt
-import importlib
+import seaborn as sns
 
-
-importlib.reload(chronocluster.clustering)
-importlib.reload(chronocluster.utils)
-importlib.reload(chronocluster.data.simdata)
+import scipy.stats as stats
 
 # Generate random points
 
@@ -40,7 +35,7 @@ time_slices = np.arange(start_time, end_time, time_interval)
 inclusion_probs = clustering.in_probs(points, time_slices, end_time)
 
 # Run the Monte Carlo simulation
-num_iterations = 10
+num_iterations = 100
 simulations = clustering.mc_samples(points, time_slices, inclusion_probs, num_iterations=num_iterations)
 
 # Define distances for Ripley's K function
@@ -71,17 +66,6 @@ max_distance = 200
 
 pairwise_density, support = clustering.temporal_pairwise(simulations, time_slices, bw=1, density=False, max_distance = max_distance)
 
-t_index = 9
-plt.plot(support, np.mean(pairwise_density[:, t_index, :], axis=1))
-plt.xlabel('Distance')
-plt.ylabel('Density of Pairwise Distances')
-plt.title(f'Pairewise Distances for Time Slice {time_slices[t_index]}')
-plt.show()
-
-clustering_heatmap(pairwise_density, support, time_slices)
-
-plot_mc_points(simulations, iter = 5, t = 10)
-
 # CSR baseline
 # Generate CSR sample
 x_min, x_max = 1, 200
@@ -97,9 +81,7 @@ plt.ylabel('Y')
 plt.title('CSR Sampled Points')
 plt.show()
 
-inclusion_probs = clustering.in_probs(csr_points, time_slices, end_time)
-
-num_iterations = 10
+csr_inclusion_probs = clustering.in_probs(csr_points, time_slices, end_time)
 csr_simulations = clustering.mc_samples(csr_points, time_slices, inclusion_probs, num_iterations=num_iterations)
 
 csr_k_results, csr_l_results, csr_g_results = clustering.temporal_cluster(csr_simulations, 
@@ -110,53 +92,28 @@ csr_k_results, csr_l_results, csr_g_results = clustering.temporal_cluster(csr_si
                                                             calc_L = True,
                                                             calc_G = True)
 
-# Additional plot to see K(t,d) for a specific time slice
-t_index = 9  # For example, the 6th time slice
-plt.plot(distances, np.mean(csr_k_results[:, t_index, :], axis=1))
-plt.xlabel('Distance')
-plt.ylabel('Normalized Ripley\'s K')
-plt.title(f'Ripley\'s K Function for Time Slice {time_slices[t_index]}')
-plt.show()
-
 csr_pairwise_density, csr_support = clustering.temporal_pairwise(csr_simulations, time_slices, bw=1, density=False, max_distance=max_distance)
 
-t_index = 9
-plt.plot(csr_support, np.mean(csr_pairwise_density[:, t_index, :], axis=1))
-plt.xlabel('Distance')
-plt.ylabel('Density of Pairwise Distances')
-plt.title(f'Pairewise Distances for Time Slice {time_slices[t_index]}')
+# Ensure the shapes are the same
+assert pairwise_density.shape == csr_pairwise_density.shape
+
+p_diff_array = clustering.p_diff(pairwise_density, csr_pairwise_density)
+
+# Plot the heatmap of probabilities
+plt.figure(figsize=(12, 6))
+sns.heatmap(p_diff_array, xticklabels=time_slices, yticklabels=support, cmap='viridis', cbar_kws={'label': 'P(diff > 0)'})
+plt.xlabel('Time Slices')
+plt.ylabel('Pairwise Distances')
+plt.title('Heatmap of P(diff > 0) Over Time and Distance')
+
+# Adjust y-axis ticks and invert the axis
+num_ticks = 10  # Desired number of y-ticks
+tick_indices = np.linspace(0, len(support) - 1, num_ticks, dtype=int)
+tick_labels = np.round(support[tick_indices], 2)
+plt.yticks(tick_indices, tick_labels)
+plt.gca().invert_yaxis()
+
 plt.show()
 
-### compare 
-t_index = 9
-plt.plot(csr_support, np.mean(pairwise_density[:, t_index, :], axis=1) - np.mean(csr_pairwise_density[:, t_index, :], axis=1))
-plt.xlabel('Distance')
-plt.ylabel('Density of Pairwise Distances')
-plt.title(f'Pairewise Distances for Time Slice {time_slices[t_index]}')
-plt.show()
-
-## difference
-density_diff = pairwise_density - csr_pairwise_density
-# Assume density_diff is already computed and has shape (distances, time_slices, iterations)
-# Example support and time_slices for plotting
-# support = np.linspace(0, 10, 100)  # Example distances
-time_slice_index = 15  # Change as needed
-
-# Extract the data for the given time slice
-time_slice_data = density_diff[:, time_slice_index, :]
-
-# Calculate the mean, 5th percentile, and 95th percentile
-mean_density_diff = np.mean(time_slice_data, axis=1)
-quantile_5 = np.percentile(time_slice_data, 5, axis=1)
-quantile_95 = np.percentile(time_slice_data, 95, axis=1)
-
-# Plot the mean and the quantile range
-plt.figure(figsize=(10, 6))
-plt.plot(support, mean_density_diff, label='Mean Density Difference')
-plt.fill_between(support, quantile_5, quantile_95, color='gray', alpha=0.5, label='5th-95th Percentile Range')
-plt.xlabel('Pairwise Distances')
-plt.ylabel('Density Difference')
-plt.title(f'Density Difference at Time Slice {time_slice_index}')
-plt.legend()
-plt.show()
+pdiff_heatmap(p_diff_array, time_slices, support)
 

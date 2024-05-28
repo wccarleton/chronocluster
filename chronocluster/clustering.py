@@ -1,9 +1,6 @@
 import numpy as np
-import pointpats as pp
-from pointpats import PointPattern
-import pointpats.distance_statistics as dstats
 import random
-from scipy.stats import norm
+import pointpats.distance_statistics as dstats
 from scipy.stats import norm, gaussian_kde
 from scipy.spatial import distance
 
@@ -221,3 +218,41 @@ def csr_sample(points, x_min, x_max, y_min, y_max):
         randomized_points.append([new_x, new_y, mean, std_dev])
 
     return randomized_points
+
+def p_diff(pairwise_density, csr_pairwise_density, condition='greater'):
+    """
+    Calculate the probability that the density difference meets a specified condition,
+    propagating chronological uncertainty from MC iterations.
+
+    Parameters:
+    pairwise_density (np.ndarray): Array of pairwise densities with shape (distances, time_slices, iterations).
+    csr_pairwise_density (np.ndarray): Array of CSR pairwise densities with shape (distances, time_slices, iterations).
+    condition (str): Condition to apply for probability calculation ('greater' or 'less').
+
+    Returns:
+    np.ndarray: Probability values with shape (distances, time_slices).
+    """
+    # Calculate differences for each iteration
+    density_diff = pairwise_density - csr_pairwise_density
+
+    # Calculate mean and standard deviation of the differences
+    mean_density_diff = np.mean(density_diff, axis=2)
+    std_density_diff = np.std(density_diff, axis=2)
+    
+    # Avoid division by zero in case of very small std deviation
+    epsilon = np.finfo(float).eps
+    std_density_diff[std_density_diff < epsilon] = epsilon
+    
+    # Calculate z-scores
+    z_scores = mean_density_diff / std_density_diff
+    
+    if condition == 'greater':
+        # Calculate probability for p > 0
+        p_values = 1 - stats.norm.cdf(z_scores)
+    elif condition == 'less':
+        # Calculate probability for p < 0
+        p_values = stats.norm.cdf(z_scores)
+    else:
+        raise ValueError("Invalid condition. Use 'greater' or 'less'.")
+    
+    return p_values

@@ -25,6 +25,44 @@ def clustering_heatmap(results,
     plt.title(f"Heatmap of Mean {result_type}(d) Function Over Time and Distance")
     plt.show()
 
+def largest_divisor(n, max_divisors=10):
+    for i in range(max_divisors, 0, -1):
+        if n % i == 0:
+            return i
+    return 1
+
+def pdiff_heatmap(p_diff_array, time_slices, support):
+    """
+    Plot the heatmap of probability values.
+    
+    Parameters:
+    p_diff_array (np.ndarray): Array of probability values with shape (distances, time_slices).
+    time_slices (np.ndarray): Array of time slice values.
+    support (np.ndarray): Array of pairwise distance values.
+    """
+    plt.figure(figsize=(12, 6))
+    ax = sns.heatmap(p_diff_array, xticklabels=time_slices, yticklabels=support, cmap='viridis', cbar_kws={'label': 'P(diff > 0)'})
+    plt.xlabel('Time Slices')
+    plt.ylabel('Pairwise Distances')
+    plt.title('Heatmap of P(diff > 0) Over Time and Distance')
+    
+    # Adjust x and y axis ticks
+     # Adjust x and y axis ticks using the largest divisor
+    x_divisor = largest_divisor(len(time_slices))
+    y_divisor = largest_divisor(len(support))
+
+    x_ticks_indices = np.arange(0, len(time_slices), len(time_slices) // x_divisor)
+    y_ticks_indices = np.arange(0, len(support), len(support) // y_divisor)
+    
+    ax.set_xticks(x_ticks_indices)
+    ax.set_xticklabels(np.round(time_slices[x_ticks_indices], 2))
+    
+    ax.set_yticks(y_ticks_indices)
+    ax.set_yticklabels(np.round(support[y_ticks_indices], 2))
+    
+    plt.gca().invert_yaxis()
+    plt.show()
+
 def plot_derivative(results, 
                     distances, 
                     time_slices, 
@@ -51,31 +89,6 @@ def plot_derivative(results,
     plt.title(f"Derivative of {result_type}(d) for Time Slice {time_slices[t_index]}")
     plt.legend()
     plt.show()
-    
-def rotate_matrix(results, distances):
-    """
-    Rotate the 3D results matrix by 45 degrees.
-
-    Parameters:
-    results (np.ndarray): A 3D array where the first dimension is the distance, 
-                          the second dimension is the time slice, and the third dimension is the iteration.
-
-    Returns:
-    np.ndarray: Rotated 3D results matrix.
-    """
-    num_distances, num_slices, num_iterations = results.shape
-    rotated_results = np.zeros_like(results)
-    
-    for i in range(num_distances):
-        for j in range(num_slices):
-            for k in range(num_iterations):
-                # Apply the rotation matrix
-                original_value = results[i, j, k]
-                rotated_x = (original_value - distances[i]) / np.sqrt(2)
-                rotated_y = (original_value + distances[i]) / np.sqrt(2)
-                rotated_results[i, j, k] = rotated_y  # Use rotated_y for the new value
-    
-    return rotated_results
 
 def plot_l_diff(l_results, distances, time_slices):
     """
