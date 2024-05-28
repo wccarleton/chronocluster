@@ -82,8 +82,7 @@ def mc_samples(points,
 
 def temporal_cluster(point_sets, 
                      distances, 
-                     time_slices, 
-                     num_iterations = 1000, 
+                     time_slices,  
                      calc_K = True, 
                      calc_L = False, 
                      calc_G = False):
@@ -91,10 +90,9 @@ def temporal_cluster(point_sets,
     Calculate Ripley's K, Ripley's L, and pair correlation function over time.
 
     Parameters:
-    point_sets (list): List of point sets for each iteration.
+    point_sets (list): List of point sets for each mc iteration.
     distances (np.ndarray): Array of distances at which to calculate the functions.
     time_slices (np.ndarray): Array of time slices.
-    num_iterations (int): Number of Monte Carlo iterations. Default is 1000.
     calc_K (bool): Whether to calculate Ripley's K function. Default is True.
     calc_L (bool): Whether to calculate Ripley's L function. Default is False.
     calc_G (bool): Whether to calculate the pair correlation function. Default is False.
@@ -104,6 +102,7 @@ def temporal_cluster(point_sets,
     """
     num_distances = len(distances)
     num_slices = len(time_slices)
+    num_iterations = len(point_sets)
     
     k_results = np.zeros((num_distances, num_slices, num_iterations)) if calc_K else None
     l_results = np.zeros((num_distances, num_slices, num_iterations)) if calc_L else None
@@ -130,7 +129,7 @@ def temporal_cluster(point_sets,
 
 def temporal_pairwise(simulations, 
                       time_slices, 
-                      bw=1, 
+                      bw = 1, 
                       density = False, 
                       max_distance = None):
     """
@@ -248,10 +247,10 @@ def p_diff(pairwise_density, csr_pairwise_density, condition='greater'):
     
     if condition == 'greater':
         # Calculate probability for p > 0
-        p_values = 1 - stats.norm.cdf(z_scores)
+        p_values = 1 - norm.cdf(z_scores)
     elif condition == 'less':
         # Calculate probability for p < 0
-        p_values = stats.norm.cdf(z_scores)
+        p_values = norm.cdf(z_scores)
     else:
         raise ValueError("Invalid condition. Use 'greater' or 'less'.")
     

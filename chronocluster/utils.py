@@ -2,6 +2,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+def _largest_divisor(n, max_divisors=10):
+    'Utility function for legible axis tick mark density.'
+    for i in range(max_divisors, 0, -1):
+        if n % i == 0:
+            return i
+    return 1
+
 def clustering_heatmap(results,
                        distances,
                        time_slices,
@@ -19,17 +26,30 @@ def clustering_heatmap(results,
     mean_values = np.mean(results, axis=2)
     
     plt.figure(figsize=(12, 6))
-    sns.heatmap(mean_values, xticklabels=time_slices, yticklabels=distances, cmap='viridis', cbar_kws={'label': f"Mean {result_type}(d)"})
+
+    ax = sns.heatmap(mean_values, 
+                    xticklabels = time_slices, 
+                    yticklabels = distances, 
+                    cmap = 'viridis', 
+                    cbar_kws = {'label': f"Mean {result_type}(d)"})
+    
+    # Adjust x and y axis ticks using the largest divisor
+    x_divisor = _largest_divisor(len(time_slices))
+    y_divisor = _largest_divisor(len(distances))
+
+    x_ticks_indices = np.arange(0, len(time_slices), len(time_slices) // x_divisor)
+    y_ticks_indices = np.arange(0, len(distances), len(distances) // y_divisor)
+    
+    ax.set_xticks(x_ticks_indices)
+    ax.set_xticklabels(np.round(time_slices[x_ticks_indices], 2))
+    
+    ax.set_yticks(y_ticks_indices)
+    ax.set_yticklabels(np.round(distances[y_ticks_indices], 2))
+
     plt.xlabel('Time Slices')
     plt.ylabel('Distances')
     plt.title(f"Heatmap of Mean {result_type}(d) Function Over Time and Distance")
     plt.show()
-
-def largest_divisor(n, max_divisors=10):
-    for i in range(max_divisors, 0, -1):
-        if n % i == 0:
-            return i
-    return 1
 
 def pdiff_heatmap(p_diff_array, time_slices, support):
     """
@@ -46,10 +66,9 @@ def pdiff_heatmap(p_diff_array, time_slices, support):
     plt.ylabel('Pairwise Distances')
     plt.title('Heatmap of P(diff > 0) Over Time and Distance')
     
-    # Adjust x and y axis ticks
-     # Adjust x and y axis ticks using the largest divisor
-    x_divisor = largest_divisor(len(time_slices))
-    y_divisor = largest_divisor(len(support))
+    # Adjust x and y axis ticks using the largest divisor
+    x_divisor = _largest_divisor(len(time_slices))
+    y_divisor = _largest_divisor(len(support))
 
     x_ticks_indices = np.arange(0, len(time_slices), len(time_slices) // x_divisor)
     y_ticks_indices = np.arange(0, len(support), len(support) // y_divisor)
