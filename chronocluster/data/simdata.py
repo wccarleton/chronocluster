@@ -1,14 +1,17 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from chronocluster.clustering import Point
+from scipy.stats import norm
 
 def generate_random_points(n_points, 
                            cluster_centers, 
                            cluster_std, 
                            age_mean = 1000, 
                            age_sd = 200,
-                           age_error = 50):
+                           age_error = 50,
+                           verbose=False):
     """
-    Generate random points (x, y, mean_age, sd_age).
+    Generate random Point objects with (x, y, start_distribution, end_distribution).
     
     Parameters:
     n_points (int): Number of points to generate.
@@ -16,9 +19,11 @@ def generate_random_points(n_points,
     cluster_std (float): Standard deviation of the clusters.
     age_mean (float): Mean of the ages.
     age_sd (float): Standard deviation of the ages.
+    age_error (float): Standard deviation of the age error.
+    verbose (bool): If True, prints temporal consistency check messages.
     
     Returns:
-    list: A list of points [x, y, mean_age, sd_age].
+    list: A list of Point objects.
     """
     points = []
     n_clusters = len(cluster_centers)
@@ -32,6 +37,8 @@ def generate_random_points(n_points,
         sd_ages = np.full(points_per_cluster, age_error)  # Assuming a fixed standard deviation for ages
 
         for x, y, mean, sd in zip(x_points, y_points, mean_ages, sd_ages):
-            points.append([x, y, mean, sd])
+            start_distribution = norm(loc=mean, scale=sd)
+            end_distribution = norm(loc=mean + 100, scale=sd)  # Example: end date is 100 units after start date
+            points.append(Point(x, y, start_distribution, end_distribution, verbose=verbose))
     
     return points

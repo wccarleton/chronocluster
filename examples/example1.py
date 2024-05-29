@@ -2,7 +2,7 @@
 import numpy as np
 from chronocluster import clustering
 from chronocluster.data.simdata import generate_random_points
-from chronocluster.utils import clustering_heatmap, pdiff_heatmap
+from chronocluster.utils import clustering_heatmap, pdiff_heatmap, plot_mc_points
 
 # plotting
 import matplotlib.pyplot as plt
@@ -24,11 +24,17 @@ cluster_centers = [(50, 50),
                    (165, 65)]
 cluster_std = 3
 
-points = generate_random_points(n_points, cluster_centers, cluster_std)
+points = generate_random_points(n_points, 
+                                cluster_centers, 
+                                cluster_std, 
+                                age_mean = 1000, 
+                                age_sd = 50,
+                                age_error = 10,
+                                verbose=False)
 
 # Visualize the generated points
-x_coords = [p[0] for p in points]
-y_coords = [p[1] for p in points]
+x_coords = [point.x for point in points]
+y_coords = [point.y for point in points]
 plt.scatter(x_coords, y_coords, alpha=0.6)
 plt.xlabel('X')
 plt.ylabel('Y')
@@ -36,13 +42,13 @@ plt.title('Generated Random Points')
 plt.show()
 
 # Define the time slices
-start_time = 500
+start_time = 100
 end_time = 2100
 time_interval = 100
 time_slices = np.arange(start_time, end_time, time_interval)
 
 # Precompute inclusion probabilities
-inclusion_probs = clustering.in_probs(points, time_slices, end_time)
+inclusion_probs = clustering.in_probs(points, time_slices)
 
 # Run the Monte Carlo simulation
 num_iterations = 100
@@ -50,6 +56,10 @@ simulations = clustering.mc_samples(points,
                                     time_slices, 
                                     inclusion_probs, 
                                     num_iterations = num_iterations)
+
+plot_mc_points(simulations, 
+                   iter = 0, 
+                   t = 9)
 
 # Define distances for Ripley's K function
 distances = np.linspace(1, 200, num=40)
@@ -84,6 +94,11 @@ pairwise_density, support = clustering.temporal_pairwise(simulations,
                                                          density = False, 
                                                          max_distance = max_distance)
 
+clustering_heatmap(pairwise_density,
+                    support,
+                    time_slices,
+                    result_type = 'K')
+
 # CSR baseline---the following is for comparing the observed point data to a comparable set 
 # (same number of points, same chronological/temporal traits) but representing 
 # Compelte Spatial Randomness (CSR)
@@ -94,8 +109,8 @@ y_min, y_max = 1, 200
 csr_points = clustering.csr_sample(points, x_min, x_max, y_min, y_max)
 
 # Visualize the CSR sample
-csr_x_coords = [p[0] for p in csr_points]
-csr_y_coords = [p[1] for p in csr_points]
+csr_x_coords = [point.x for point in csr_points]
+csr_y_coords = [point.y for point in csr_points]
 plt.scatter(csr_x_coords, csr_y_coords, alpha=0.6)
 plt.xlabel('X')
 plt.ylabel('Y')

@@ -49,6 +49,8 @@ def clustering_heatmap(results,
     plt.xlabel('Time Slices')
     plt.ylabel('Distances')
     plt.title(f"Heatmap of Mean {result_type}(d) Function Over Time and Distance")
+
+    plt.gca().invert_yaxis()
     plt.show()
 
 def pdiff_heatmap(p_diff_array, time_slices, support):

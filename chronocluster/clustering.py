@@ -1,9 +1,90 @@
 import numpy as np
 import random
 import pointpats.distance_statistics as dstats
-from scipy.stats import norm, gaussian_kde
+from scipy.stats import norm, gaussian_kde, uniform
+from scipy.integrate import simps
 from scipy.spatial import distance
 
+class Point:
+    __slots__ = ['x', 'y', 'start_distribution', 'end_distribution']
+
+    def __init__(self, x, y, start_distribution, end_distribution, verbose=False):
+        self.x = x
+        self.y = y
+        self.start_distribution = start_distribution
+        self.end_distribution = end_distribution
+
+        if verbose:
+            print("Temporal consistency check...")
+
+        # Perform checks
+        self._check_distributions(verbose)
+
+    def _check_distributions(self, verbose):
+        overlap_ratio = self._calculate_overlap_ratio()
+        if overlap_ratio > 0.25:
+            print(f"Warning: Significant overlap between start and end distributions. Overlap ratio: {overlap_ratio:.2f}")
+
+        start_mean = self.start_distribution.mean()
+        end_mean = self.end_distribution.mean()
+        if end_mean < start_mean:
+            print(f"Warning: End date distribution mean ({end_mean}) is earlier than start date distribution mean ({start_mean}). Possible data error.")
+
+    def _calculate_overlap_ratio(self):
+        # Define a reasonable range for integration
+        range_min = min(self.start_distribution.ppf(0.01), self.end_distribution.ppf(0.01))
+        range_max = max(self.start_distribution.ppf(0.99), self.end_distribution.ppf(0.99))
+        
+        # Generate a dense range of values for the PDFs
+        x = np.linspace(range_min, range_max, 1000)
+        
+        # Compute the PDF values
+        start_pdf = self.start_distribution.pdf(x)
+        end_pdf = self.end_distribution.pdf(x)
+        
+        # Calculate the overlap area using the minimum of the two PDFs
+        overlap_pdf = np.minimum(start_pdf, end_pdf)
+        overlap_area = simps(overlap_pdf, x)
+        
+        # Calculate the total area of the two distributions
+        total_area_start = simps(start_pdf, x)
+        total_area_end = simps(end_pdf, x)
+        
+        # Calculate the overlap ratio
+        overlap_ratio = overlap_area / (total_area_start + total_area_end)
+        
+        return overlap_ratio
+
+    def calculate_inclusion_probability(self, time_slice):
+        start_prob = self.start_distribution.cdf(time_slice)
+        if start_prob <= 0:  # If start probability is zero or negative
+            return 0.0
+        end_prob = self._conditional_end_cdf(time_slice, start_prob)
+        return start_prob * end_prob
+
+    def _conditional_end_cdf(self, time_slice, start_prob):
+        # Compute the conditional CDF of the end distribution given the start distribution
+        # P(end > time_slice | start <= time_slice)
+        
+        # Use the survival function (1 - CDF) for the end distribution
+        survival_end = self.end_distribution.sf(time_slice)
+        
+        # Conditional probability P(end > time_slice | start <= time_slice)
+        conditional_end_prob = survival_end / start_prob if start_prob > 0 else 0.0
+        
+        return conditional_end_prob
+    
+    def _repr_distribution(self, dist):
+        params = {key: value for key, value in dist.__dict__.items() if not key.startswith('_')}
+        param_str = ', '.join([f"{key}={value}" for key, value in params.items()])
+        return f"{dist.dist.name}({param_str})"
+
+    def __repr__(self):
+        start_repr = self._repr_distribution(self.start_distribution)
+        end_repr = self._repr_distribution(self.end_distribution)
+        return (f"Point(x={self.x}, y={self.y}, "
+                f"start_distribution={start_repr}, "
+                f"end_distribution={end_repr})")
 
 def in_prob(mean, 
             std_dev, 
@@ -26,55 +107,47 @@ def in_prob(mean,
     total_integral = density_func.cdf(end_time)
     return integral / total_integral
 
-def in_probs(points, 
-             time_slices, 
-             end_time):
-    """
-    Precompute the inclusion probabilities for all points across all time slices.
-
-    Parameters:
-    points (array-like): List of points with [x, y, mean, std_dev].
-    time_slices (array-like): Array of time slices.
-    end_time (float): The end time for the calculation.
-
-    Returns:
-    np.ndarray: A 2D array of inclusion probabilities.
-    """
+def in_probs(points, time_slices):
     n_points = len(points)
     n_slices = len(time_slices)
     inclusion_probs = np.zeros((n_points, n_slices))
-    
-    for i, (x, y, mean, std_dev) in enumerate(points):
-        density_func = norm(loc=mean, scale=std_dev)
-        total_integral = density_func.cdf(end_time)
+
+    for i, point in enumerate(points):
         for j, t in enumerate(time_slices):
-            integral = density_func.cdf(t)
-            inclusion_probs[i, j] = integral / total_integral
-    
+            inclusion_probs[i, j] = point.calculate_inclusion_probability(t)
+
     return inclusion_probs
 
 def mc_samples(points, 
                time_slices, 
-               inclusion_probs, 
-               num_iterations = 1000):
+               inclusion_probs=None, 
+               num_iterations=1000):
     """
-    Generate Monte Carlo samples for each time slice based on precomputed inclusion probabilities.
+    Generate Monte Carlo samples for each time slice based on precomputed or dynamically
+    calculated inclusion probabilities.
 
     Parameters:
-    points (array-like): List of points with [x, y, mean, std_dev].
+    points (list of Point objects): List of Point objects.
     time_slices (array-like): Array of time slices.
-    inclusion_probs (np.ndarray): Precomputed inclusion probabilities.
+    inclusion_probs (np.ndarray, optional): Precomputed inclusion probabilities. Default is None.
     num_iterations (int): Number of Monte Carlo iterations.
 
     Returns:
     list: A list of lists where each sublist contains tuples of time slice and included points.
     """
+    if inclusion_probs is None:
+        # Calculate inclusion probabilities dynamically
+        inclusion_probs = np.zeros((len(points), len(time_slices)))
+        for i, point in enumerate(points):
+            for j, t in enumerate(time_slices):
+                inclusion_probs[i, j] = point.calculate_inclusion_probability(t)
+
     point_sets = []
 
     for _ in range(num_iterations):
         iteration_set = []
         for j, t in enumerate(time_slices):
-            included_points = np.array([[p[0], p[1]] for p, prob in zip(points, inclusion_probs[:, j]) if random.random() < prob])
+            included_points = np.array([[point.x, point.y] for point, prob in zip(points, inclusion_probs[:, j]) if random.random() < prob])
             iteration_set.append((t, included_points))
         point_sets.append(iteration_set)
     
@@ -197,24 +270,22 @@ def csr_sample(points, x_min, x_max, y_min, y_max):
     Generate a CSR sample by randomizing the locations of the points while keeping their temporal information intact.
     
     Parameters:
-    points (list of lists): List of original points, where each element is a list [x, y, mean, std_dev].
+    points (list of Point): List of original Point objects.
     x_min (float): Minimum x coordinate for the randomization.
     x_max (float): Maximum x coordinate for the randomization.
     y_min (float): Minimum y coordinate for the randomization.
     y_max (float): Maximum y coordinate for the randomization.
     
     Returns:
-    list of lists: List of CSR sampled points with the same structure as the input points.
+    list of Point: List of CSR sampled Point objects with randomized locations.
     """
-    n_points = len(points)
     randomized_points = []
 
-    for _ in range(n_points):
+    for point in points:
         new_x = np.random.uniform(x_min, x_max)
         new_y = np.random.uniform(y_min, y_max)
-        mean = points[_][2]
-        std_dev = points[_][3]
-        randomized_points.append([new_x, new_y, mean, std_dev])
+        randomized_point = Point(new_x, new_y, point.start_distribution, point.end_distribution)
+        randomized_points.append(randomized_point)
 
     return randomized_points
 
