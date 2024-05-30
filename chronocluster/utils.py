@@ -1,6 +1,69 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from scipy.stats import rv_continuous
+
+class ddelta(rv_continuous):
+    """Probability functions approximating the Dirac Delta"""
+    
+    def __init__(self, d):
+        super().__init__(name='ddelta')
+        self.d = d
+        self.dist = self
+        self.badvalue = np.nan
+        self.a = d
+        self.b = d
+        self.xtol = 1e-14
+        self.moment_type = 1
+        self.shapes = None
+        self.numargs = 0
+        self.vecentropy = np.vectorize(self._entropy)
+        self.generic_moment = np.vectorize(self._moment)
+
+    def _pdf(self, x):
+        """Probability density function"""
+        return np.inf if x == self.d else 0
+
+    def _cdf(self, x):
+        """Cumulative distribution function"""
+        return 1.0 if x >= self.d else 0.0
+    
+    def _sf(self, x):
+        """Survival function"""
+        return 1.0 - self._cdf(x)
+
+    def _ppf(self, q):
+        """Percent point function (inverse of cdf)"""
+        return self.d
+
+    def _rvs(self, size=None, random_state=None):
+        """Random variates"""
+        return np.full(size, self.d)
+
+    def mean(self):
+        """Mean of the distribution"""
+        return self.d
+    
+    def var(self):
+        """Variance of the distribution"""
+        return 0.0
+
+    def std(self):
+        """Standard deviation of the distribution"""
+        return 0.0
+
+    def _entropy(self, *args, **kwargs):
+        """Entropy of the distribution"""
+        return 0.0
+
+    def _moment(self, n, *args, **kwargs):
+        """nth moment of the distribution"""
+        if n == 1:
+            return self.mean()
+        elif n == 2:
+            return self.var()**2
+        else:
+            return np.nan
 
 def _largest_divisor(n, max_divisors=10):
     'Utility function for legible axis tick mark density.'

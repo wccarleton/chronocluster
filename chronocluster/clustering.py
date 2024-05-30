@@ -23,17 +23,22 @@ class Point:
     def _check_distributions(self, verbose):
         overlap_ratio = self._calculate_overlap_ratio()
         if overlap_ratio > 0.25:
-            print(f"Warning: Significant overlap between start and end distributions. Overlap ratio: {overlap_ratio:.2f}")
+            print(f"Warning: Significant overlap between start and end "
+                  f"distributions. Overlap ratio: {overlap_ratio:.2f}")
 
         start_mean = self.start_distribution.mean()
         end_mean = self.end_distribution.mean()
         if end_mean < start_mean:
-            print(f"Warning: End date distribution mean ({end_mean}) is earlier than start date distribution mean ({start_mean}). Possible data error.")
+            print(f"Warning: End date distribution mean ({end_mean}) is earlier "
+                  f"than start date distribution mean ({start_mean}). Possible "
+                  f"data error.")
 
     def _calculate_overlap_ratio(self):
         # Define a reasonable range for integration
-        range_min = min(self.start_distribution.ppf(0.01), self.end_distribution.ppf(0.01))
-        range_max = max(self.start_distribution.ppf(0.99), self.end_distribution.ppf(0.99))
+        range_min = min(self.start_distribution.ppf(0.01), 
+                        self.end_distribution.ppf(0.01))
+        range_max = max(self.start_distribution.ppf(0.99), 
+                        self.end_distribution.ppf(0.99))
         
         # Generate a dense range of values for the PDFs
         x = np.linspace(range_min, range_max, 1000)
@@ -50,8 +55,16 @@ class Point:
         total_area_start = simps(start_pdf, x)
         total_area_end = simps(end_pdf, x)
         
+        # Calculate combined area
+        combined_area = total_area_start + total_area_end
+        
         # Calculate the overlap ratio
-        overlap_ratio = overlap_area / (total_area_start + total_area_end)
+        if combined_area == 0:
+            print(f"Warning: Sum of density integrals is zero! Check that start "
+                  f"and end dates are present and, if constant, not identical.")
+            overlap_ratio = np.nan
+        else:
+            overlap_ratio = overlap_area / combined_area
         
         return overlap_ratio
 
@@ -59,25 +72,20 @@ class Point:
         start_prob = self.start_distribution.cdf(time_slice)
         if start_prob <= 0:  # If start probability is zero or negative
             return 0.0
-        end_prob = self._conditional_end_cdf(time_slice, start_prob)
+        end_prob = self.end_distribution.sf(time_slice)
         return start_prob * end_prob
-
-    def _conditional_end_cdf(self, time_slice, start_prob):
-        # Compute the conditional CDF of the end distribution given the start distribution
-        # P(end > time_slice | start <= time_slice)
-        
-        # Use the survival function (1 - CDF) for the end distribution
-        survival_end = self.end_distribution.sf(time_slice)
-        
-        # Conditional probability P(end > time_slice | start <= time_slice)
-        conditional_end_prob = survival_end / start_prob if start_prob > 0 else 0.0
-        
-        return conditional_end_prob
     
     def _repr_distribution(self, dist):
-        params = {key: value for key, value in dist.__dict__.items() if not key.startswith('_')}
-        param_str = ', '.join([f"{key}={value}" for key, value in params.items()])
-        return f"{dist.dist.name}({param_str})"
+        if dist.dist.name == 'norm':
+            loc = dist.mean()
+            scale = dist.std()
+            return f"norm(loc={loc}, scale={scale})"
+        elif dist.dist.name == 'ddelta':
+            return f"ddelta(d={dist.d})"
+        else:
+            params = {key: value for key, value in dist.__dict__.items() if not key.startswith('_')}
+            param_str = ', '.join([f"{key}={value}" for key, value in params.items()])
+            return f"{dist.dist.name}({param_str})"
 
     def __repr__(self):
         start_repr = self._repr_distribution(self.start_distribution)
@@ -85,27 +93,6 @@ class Point:
         return (f"Point(x={self.x}, y={self.y}, "
                 f"start_distribution={start_repr}, "
                 f"end_distribution={end_repr})")
-
-def in_prob(mean, 
-            std_dev, 
-            time_slice, 
-            end_time):
-    """
-    Calculate the inclusion probability of a point being included in a time slice.
-
-    Parameters:
-    mean (float): Mean of the Gaussian distribution.
-    std_dev (float): Standard deviation of the Gaussian distribution.
-    time_slice (float): The time slice for which to calculate the probability.
-    end_time (float): The end time for the calculation.
-
-    Returns:
-    float: The inclusion probability.
-    """
-    density_func = norm(loc=mean, scale=std_dev)
-    integral = density_func.cdf(time_slice)
-    total_integral = density_func.cdf(end_time)
-    return integral / total_integral
 
 def in_probs(points, time_slices):
     n_points = len(points)
@@ -123,8 +110,8 @@ def mc_samples(points,
                inclusion_probs=None, 
                num_iterations=1000):
     """
-    Generate Monte Carlo samples for each time slice based on precomputed or dynamically
-    calculated inclusion probabilities.
+    Generate Monte Carlo samples for each time slice based on precomputed or 
+    dynamically calculated inclusion probabilities.
 
     Parameters:
     points (list of Point objects): List of Point objects.
@@ -147,7 +134,11 @@ def mc_samples(points,
     for _ in range(num_iterations):
         iteration_set = []
         for j, t in enumerate(time_slices):
-            included_points = np.array([[point.x, point.y] for point, prob in zip(points, inclusion_probs[:, j]) if random.random() < prob])
+            included_points = np.array([
+                [point.x, point.y] 
+                for point, prob in zip(points, inclusion_probs[:, j]) 
+                if random.random() < prob
+            ])
             iteration_set.append((t, included_points))
         point_sets.append(iteration_set)
     

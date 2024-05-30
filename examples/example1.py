@@ -51,14 +51,14 @@ time_slices = np.arange(start_time, end_time, time_interval)
 inclusion_probs = clustering.in_probs(points, time_slices)
 
 # Run the Monte Carlo simulation
-num_iterations = 100
+num_iterations = 1
 simulations = clustering.mc_samples(points, 
                                     time_slices, 
                                     inclusion_probs, 
                                     num_iterations = num_iterations)
 
 plot_mc_points(simulations, 
-                   iter = 0, 
+                   iter = 1, 
                    t = 9)
 
 # Define distances for Ripley's K function
