@@ -4,3 +4,5 @@ env/
 build/
 dist/
 *.egg-info/
+README_files/
+README.html
