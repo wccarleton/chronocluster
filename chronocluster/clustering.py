@@ -6,9 +6,59 @@ from scipy.integrate import simps
 from scipy.spatial import distance
 
 class Point:
+    """
+    A class to represent a point with spatial coordinates and temporal distributions.
+
+    Attributes:
+    -----------
+    x : float
+        The x-coordinate of the point.
+    y : float
+        The y-coordinate of the point.
+    start_distribution : scipy.stats.rv_continuous
+        The probability distribution for the start date.
+    end_distribution : scipy.stats.rv_continuous
+        The probability distribution for the end date.
+
+    Methods:
+    --------
+    __init__(self, x, y, start_distribution, end_distribution, verbose=False):
+        Initializes a new Point instance with the given coordinates and distributions.
+
+    _check_distributions(self, verbose):
+        Checks the temporal consistency of the start and end distributions.
+
+    _calculate_overlap_ratio(self):
+        Calculates the overlap ratio between the start and end distributions.
+
+    calculate_inclusion_probability(self, time_slice):
+        Calculates the inclusion probability of the point for a given time slice.
+
+    _repr_distribution(self, dist):
+        Returns a string representation of the distribution.
+
+    __repr__(self):
+        Returns a string representation of the Point instance.
+    """
     __slots__ = ['x', 'y', 'start_distribution', 'end_distribution']
 
     def __init__(self, x, y, start_distribution, end_distribution, verbose=False):
+        """
+        Initializes a new Point instance with the given coordinates and distributions.
+
+        Parameters:
+        -----------
+        x : float
+            The x-coordinate of the point.
+        y : float
+            The y-coordinate of the point.
+        start_distribution : scipy.stats.rv_continuous
+            The probability distribution for the start date.
+        end_distribution : scipy.stats.rv_continuous
+            The probability distribution for the end date.
+        verbose : bool, optional
+            If True, prints messages about the temporal consistency check (default is False).
+        """
         self.x = x
         self.y = y
         self.start_distribution = start_distribution
@@ -21,6 +71,14 @@ class Point:
         self._check_distributions(verbose)
 
     def _check_distributions(self, verbose):
+        """
+        Checks the temporal consistency of the start and end distributions.
+
+        Parameters:
+        -----------
+        verbose : bool
+            If True, prints warnings about significant overlap or chronological inconsistencies.
+        """
         overlap_ratio = self._calculate_overlap_ratio()
         if overlap_ratio > 0.25:
             print(f"Warning: Significant overlap between start and end "
@@ -34,6 +92,14 @@ class Point:
                   f"data error.")
 
     def _calculate_overlap_ratio(self):
+        """
+        Calculates the overlap ratio between the start and end distributions.
+
+        Returns:
+        --------
+        float
+            The overlap ratio between the start and end distributions.
+        """
         # Define a reasonable range for integration
         range_min = min(self.start_distribution.ppf(0.01), 
                         self.end_distribution.ppf(0.01))
@@ -69,6 +135,19 @@ class Point:
         return overlap_ratio
 
     def calculate_inclusion_probability(self, time_slice):
+        """
+        Calculates the inclusion probability of the point for a given time slice.
+
+        Parameters:
+        -----------
+        time_slice : float
+            The specific time slice to calculate the inclusion probability for.
+
+        Returns:
+        --------
+        float
+            The inclusion probability for the given time slice.
+        """
         start_prob = self.start_distribution.cdf(time_slice)
         if start_prob <= 0:  # If start probability is zero or negative
             return 0.0
@@ -76,6 +155,19 @@ class Point:
         return start_prob * end_prob
     
     def _repr_distribution(self, dist):
+        """
+        Returns a string representation of the distribution.
+
+        Parameters:
+        -----------
+        dist : scipy.stats.rv_continuous
+            The distribution to represent as a string.
+
+        Returns:
+        --------
+        str
+            The string representation of the distribution.
+        """
         if dist.dist.name == 'norm':
             loc = dist.mean()
             scale = dist.std()
@@ -88,6 +180,14 @@ class Point:
             return f"{dist.dist.name}({param_str})"
 
     def __repr__(self):
+        """
+        Returns a string representation of the Point instance.
+
+        Returns:
+        --------
+        str
+            The string representation of the Point instance.
+        """
         start_repr = self._repr_distribution(self.start_distribution)
         end_repr = self._repr_distribution(self.end_distribution)
         return (f"Point(x={self.x}, y={self.y}, "
