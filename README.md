@@ -97,10 +97,13 @@ clustering_heatmap(k_results, distances, time_slices)
 
 ## Features
 
--Generate random points with spatial and temporal uncertainty.
--Visualize spatial point patterns.
--Perform clustering analysis using Ripley's K, L, and G functions while accounting for temporality (change over time) and chronological uncertainty.
--Compare observed data to CSR baselines.
+- Generate random points with spatial and temporal uncertainty.
+
+- Visualize spatial point patterns.
+
+- Perform clustering analysis using Ripley's K, L, and G functions while accounting for temporality (change over time) and chronological uncertainty.
+
+- Compare observed data to CSR baselines.
 
 ## Contributing
 
