@@ -219,6 +219,43 @@ def plot_mc_points(simulations,
     plt.title(f'Simulation Points for Iteration {iter} and Time Slice {t}')
     plt.show()
 
+def get_box(points, buffer=0):
+    """
+    Calculate the bounding box that contains all points with an optional buffer.
+
+    Parameters:
+    points (list of Point): A list of Point objects, each with 'x' and 'y' attributes.
+    buffer (float, optional): The buffer to add to each side of the bounding box. Default is 0.
+
+    Returns:
+    tuple: A tuple (min_x, min_y, max_x, max_y) representing the coordinates of the bounding box.
+
+    Raises:
+    ValueError: If the points list is empty.
+    
+    Example:
+    >>> points = [Point(1, 2), Point(2, 3), Point(3, 4)]
+    >>> buffer = 1
+    >>> calculate_bounding_box(points, buffer)
+    (0, 1, 4, 5)
+    """
+    
+    if not points:
+        raise ValueError("The points list cannot be empty.")
+
+    # Extract x and y coordinates
+    x_coords = [point.x for point in points]
+    y_coords = [point.y for point in points]
+
+    # Determine the minimum and maximum coordinates with the buffer
+    min_x = min(x_coords) - buffer
+    max_x = max(x_coords) + buffer
+    min_y = min(y_coords) - buffer
+    max_y = max(y_coords) + buffer
+
+    # Return the bounding box as a tuple: (min_x, min_y, max_x, max_y)
+    return (min_x, min_y, max_x, max_y)
+
 # Exceptions
 
 class NoPointsInTimeSliceException(Exception):
