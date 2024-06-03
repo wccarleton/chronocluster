@@ -224,8 +224,6 @@ for x, y in cluster_centers:
 # Create focal point mc_simulations
 focal_simulations = clustering.mc_samples(focal_points, time_slices, num_iterations=num_iterations)
 
-focal_simulations[0][0][1].shape
-
 # Calculate K-function for focal points
 focal_k_results, focal_l_results, focal_g_results = clustering.temporal_cluster(
     simulations, distances, time_slices, calc_K=True, calc_L=True, calc_G=True, focal_points=focal_simulations)
@@ -267,4 +265,24 @@ plt.show()
 clustering_heatmap(focal_k_results, distances, time_slices)
 
 # Produce pairwise distances to explore clustering structure for focal points
-clustering_heatmap(focal_pairwise_density, focal_support, time_slices, result_type='Pairwise Distances (Focal Points)')
+clustering_heatmap(focal_pairwise_density, 
+                   focal_support, 
+                   time_slices, 
+                   result_type='Pairwise Distances (Focal Points)')
+
+# And, now, a CSR comparison
+
+# Calculate the CSR version of the same clustering stats for focal points
+csr_focal_k_results, csr_focal_l_results, csr_focal_g_results = clustering.temporal_cluster(
+    csr_simulations, distances, time_slices, calc_K=True, calc_L=True, calc_G=True, focal_points=focal_simulations)
+
+# Calculate the pairwise distances for the CSR focal points sample
+csr_focal_pairwise_density, csr_focal_support = clustering.temporal_pairwise(
+    csr_simulations, time_slices, bw=1.0, density=False, max_distance=max_distance, focal_points=focal_simulations)
+
+# Calculate the p-values for density differences between the observed focal points and 
+# the simulated CSR focal points baseline per distance and temporal slice
+p_diff_focal_array = clustering.p_diff(focal_pairwise_density, csr_focal_pairwise_density)
+
+# Plot the heatmap of probabilities for focal points
+pdiff_heatmap(p_diff_focal_array, time_slices, focal_support)

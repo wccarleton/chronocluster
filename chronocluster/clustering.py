@@ -359,7 +359,7 @@ def temporal_pairwise(point_sets,
         for sim in range(num_iterations):
             distances_for_time_slices = []
             for time in range(num_slices):
-                t, pts = simulations[sim][time]
+                t, pts = point_sets[sim][time]
                 _, f_pts = focal_points[sim][time]
                 if (len(pts) < 1) or (len(f_pts) < 1):
                     distances_for_time_slices.append(None)  # Use None to indicate no distances
