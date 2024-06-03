@@ -260,9 +260,10 @@ def mc_samples(points,
 def temporal_cluster(point_sets, 
                      distances, 
                      time_slices,  
-                     calc_K = True, 
-                     calc_L = False, 
-                     calc_G = False):
+                     calc_K=True, 
+                     calc_L=False, 
+                     calc_G=False,
+                     focal_points=None):
     """
     Calculate Ripley's K, Ripley's L, and pair correlation function over time.
 
@@ -273,10 +274,14 @@ def temporal_cluster(point_sets,
     calc_K (bool): Whether to calculate Ripley's K function. Default is True.
     calc_L (bool): Whether to calculate Ripley's L function. Default is False.
     calc_G (bool): Whether to calculate the pair correlation function. Default is False.
+    focal_points (list, optional): List of focal points for each mc iteration. Default is None.
 
     Returns:
-    tuple: A tuple containing the results for K, L, and/or g functions as 3D arrays.
+    tuple: A tuple containing the results for K, L, and/or G functions as 3D arrays.
     """
+    if focal_points and len(point_sets) != len(focal_points):
+        raise ValueError("The length of simulations must match the length of focal_points.")
+    
     num_distances = len(distances)
     num_slices = len(time_slices)
     num_iterations = len(point_sets)
@@ -291,81 +296,95 @@ def temporal_cluster(point_sets,
                 continue
             
             coordinates = np.array(points)
-            if calc_K:
-                support, k_estimate = dstats.k(coordinates, support=distances)
-                k_results[:, t_index, iteration_index] = k_estimate
-            if calc_L:
-                support, l_estimate = dstats.l(coordinates, support=distances)
-                l_results[:, t_index, iteration_index] = l_estimate
-            if calc_G:
-                support, k_estimate = dstats.k(coordinates, support=distances)
-                g_estimate = np.gradient(k_estimate, distances) / (2 * np.pi * distances)
-                g_results[:, t_index, iteration_index] = g_estimate
+            if focal_points:
+                focal_coords = np.array(focal_points[iteration_index][t_index][1])
+                if calc_K:
+                    dists = distance.cdist(focal_coords, coordinates)
+                    k_values = np.sum(dists <= distances[:, None, None], axis=1).sum(axis=-1)
+                    k_results[:, t_index, iteration_index] = k_values / (len(focal_coords) * len(coordinates))
+                if calc_L:
+                    dists = distance.cdist(focal_coords, coordinates)
+                    l_values = np.sqrt(k_values / np.pi) - distances
+                    l_results[:, t_index, iteration_index] = l_values
+                if calc_G:
+                    dists = distance.cdist(focal_coords, coordinates)
+                    k_values = np.sum(dists <= distances[:, None, None], axis=1).sum(axis=-1)
+                    g_values = np.gradient(k_values, distances) / (2 * np.pi * distances)
+                    g_results[:, t_index, iteration_index] = g_values
+            else:
+                if calc_K:
+                    support, k_estimate = dstats.k(coordinates, support=distances)
+                    k_results[:, t_index, iteration_index] = k_estimate
+                if calc_L:
+                    support, l_estimate = dstats.l(coordinates, support=distances)
+                    l_results[:, t_index, iteration_index] = l_estimate
+                if calc_G:
+                    support, k_estimate = dstats.k(coordinates, support=distances)
+                    g_estimate = np.gradient(k_estimate, distances) / (2 * np.pi * distances)
+                    g_results[:, t_index, iteration_index] = g_estimate
     
     return k_results, l_results, g_results
 
 def temporal_pairwise(simulations, 
                       time_slices, 
-                      bw = 1, 
-                      density = False, 
-                      max_distance = None):
+                      bw=1.0, 
+                      density=False, 
+                      max_distance=None, 
+                      focal_points=None):
     """
-    Calculate pairwise distance densities over time.
+    Calculate pairwise distances over time.
 
     Parameters:
-    simulations (list): List of simulated point sets from mc_samples.
-    time_slices (array-like): Array of time slices.
-    bw (float): Bin width for histograms or bandwidth for KDE.
-    density (bool): If True, use KDE; otherwise, use histograms.
+    simulations (list): List of point sets for each mc iteration.
+    time_slices (np.ndarray): Array of time slices.
+    bw (float): Bandwidth for kernel density estimation. Default is 1.0.
+    density (bool): Whether to calculate density. Default is False.
+    max_distance (float, optional): Maximum distance to consider. Default is None.
+    focal_points (list, optional): List of focal points for each mc iteration. Default is None.
 
     Returns:
-    np.ndarray: A 3D array where the dimensions are distances (support), time slices, and iterations.
+    tuple: A tuple containing the pairwise distances and the support for the distances.
     """
+    if focal_points and len(simulations) != len(focal_points):
+        raise ValueError("The length of simulations must match the length of focal_points.")
+    
     num_slices = len(time_slices)
     num_iterations = len(simulations)
-    all_distances = []
-
-    # Loop over simulations and time slices to collect pairwise distances
-    for simulation in simulations:
-        distances_for_time_slices = []
-        for time, points in simulation:
-            if len(points) < 2:
-                distances_for_time_slices.append(None)  # Use None to indicate no distances
-                continue
-            pairwise_distances = distance.pdist(points)
-            distances_for_time_slices.append(pairwise_distances)
-        all_distances.append(distances_for_time_slices)
 
     if max_distance is None:
-        # Flatten the list of distances to determine the maximum pairwise distance for binning/KDE
-        flat_distances = [dist for sublist in all_distances for dist in sublist if dist is not None]
-        if not flat_distances:
-            raise ValueError("No valid distances found.")
-        max_distance = np.max([np.max(d) for d in flat_distances])
+        max_distance = np.inf
 
-    # Create bins or support for KDE
-    if density:
-        support = np.linspace(0, max_distance, 100)
-    else:
-        bins = np.arange(0, max_distance + bw, bw)
-        support = bins[:-1] + (bw / 2)  # Midpoints of bins
+    pairwise_density = np.zeros((num_slices, num_slices, num_iterations))
 
-    # Initialize the results array
-    pairwise_density = np.zeros((len(support), num_slices, num_iterations))
-
-    # Calculate densities for each time slice and iteration
-    for iteration_index in range(num_iterations):
-        for t_index in range(num_slices):
-            distances_for_slice = all_distances[iteration_index][t_index]
-            if distances_for_slice is None:
-                pairwise_density[:, t_index, iteration_index] = None  # Set to None if no distances
-                continue
-            if density:
-                kde = gaussian_kde(distances_for_slice, bw_method=bw)
-                pairwise_density[:, t_index, iteration_index] = kde(support)
+    for iteration_index, iteration_set in enumerate(simulations):
+        for i, (t1, points1) in enumerate(iteration_set):
+            if focal_points:
+                focal_coords = np.array(focal_points[iteration_index][i][1])
+                for j, (t2, points2) in enumerate(iteration_set):
+                    if j < i:
+                        continue
+                    coords2 = np.array(points2)
+                    dists = distance.cdist(focal_coords, coords2)
+                    dists = dists[dists <= max_distance]
+                    pairwise_density[i, j, iteration_index] = np.sum(dists)
+                    if i != j:
+                        pairwise_density[j, i, iteration_index] = pairwise_density[i, j, iteration_index]
             else:
-                hist, _ = np.histogram(distances_for_slice, bins=bins, density=True)
-                pairwise_density[:, t_index, iteration_index] = hist
+                for j, (t2, points2) in enumerate(iteration_set):
+                    if j < i:
+                        continue
+                    coords1 = np.array(points1)
+                    coords2 = np.array(points2)
+                    dists = distance.pdist(np.vstack([coords1, coords2]))
+                    dists = dists[dists <= max_distance]
+                    pairwise_density[i, j, iteration_index] = np.sum(dists)
+                    if i != j:
+                        pairwise_density[j, i, iteration_index] = pairwise_density[i, j, iteration_index]
+
+    if density:
+        pairwise_density /= (2 * np.pi * max_distance)
+
+    support = np.linspace(0, max_distance, num_slices)
 
     return pairwise_density, support
 

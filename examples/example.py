@@ -3,7 +3,7 @@ import numpy as np
 from chronocluster.data.simdata import generate_random_points
 from chronocluster import clustering
 from chronocluster.data.simdata import generate_random_points
-from chronocluster.utils import clustering_heatmap, pdiff_heatmap, plot_mc_points, get_box
+from chronocluster.utils import clustering_heatmap, pdiff_heatmap, plot_mc_points, get_box, ddelta
 
 # plotting
 import matplotlib.pyplot as plt
@@ -38,7 +38,7 @@ for point in points[:5]:
 # Get a bounding box for use later and to extract sensible distance limits
 x_min, y_min, x_max, y_max = get_box(points)
 
-max_distance = np.ceil(np.sqrt((max_x - min_x)**2 + (max_y - min_y)**2))
+max_distance = np.ceil(np.sqrt((x_max - x_min)**2 + (y_max - y_min)**2))
 
 # Visualize the generated points
 x_coords = [point.x for point in points]
@@ -205,3 +205,64 @@ p_diff_array = clustering.p_diff(pairwise_density, csr_pairwise_density)
 
 # Plot the heatmap of probabilities
 pdiff_heatmap(p_diff_array, time_slices, support)
+
+# Now consider an analysis using focal points (do points cluster around given
+# focal points?):
+
+# Parameters for ddelta
+start_d = 500
+end_d = 1500
+
+# Generate focal points
+focal_points = []
+for x, y in cluster_centers:
+    focal_points.append(clustering.Point(x = x, 
+                              y = y, 
+                              start_distribution = ddelta(start_d), 
+                              end_distribution = ddelta(end_d)))
+
+# Create focal point mc_simulations
+focal_simulations = clustering.mc_samples(focal_points, time_slices, num_iterations=num_iterations)
+
+# Calculate K-function for focal points
+focal_k_results, focal_l_results, focal_g_results = clustering.temporal_cluster(
+    simulations, distances, time_slices, calc_K=True, calc_L=True, calc_G=True, focal_points=focal_simulations)
+
+# Calculate pairwise distances for focal points
+focal_pairwise_density, focal_support = clustering.temporal_pairwise(
+    simulations, time_slices, bw=1.0, density=False, max_distance=max_distance, focal_points=focal_simulations)
+
+# Plot to see results for a random time slice for focal points
+rnd_t = int(np.random.uniform(low = 0, high = len(time_slices)))
+
+# Create a 3-panel plot for focal points
+fig, axs = plt.subplots(3, 1, figsize=(10, 15))
+
+# Plot K results
+axs[0].plot(distances, np.mean(focal_k_results[:, rnd_t, :], axis=1))
+axs[0].set_xlabel('Distance')
+axs[0].set_ylabel('Normalized Ripley\'s K')
+axs[0].set_title(f'Ripley\'s K Function for Time Slice {time_slices[rnd_t]} (Focal Points)')
+
+# Plot L results
+axs[1].plot(distances, np.mean(focal_l_results[:, rnd_t, :], axis=1))
+axs[1].set_xlabel('Distance')
+axs[1].set_ylabel('Normalized Ripley\'s L')
+axs[1].set_title(f'Ripley\'s L Function for Time Slice {time_slices[rnd_t]} (Focal Points)')
+
+# Plot G results
+axs[2].plot(distances, np.mean(focal_g_results[:, rnd_t, :], axis=1))
+axs[2].set_xlabel('Distance')
+axs[2].set_ylabel('Normalized Ripley\'s G')
+axs[2].set_title(f'Ripley\'s G Function for Time Slice {time_slices[rnd_t]} (Focal Points)')
+
+# Adjust layout
+plt.tight_layout()
+plt.subplots_adjust(hspace=0.4)
+plt.show()
+
+# Plot the heatmap of mean K values (averaging over chronological uncertainty) for focal points
+clustering_heatmap(focal_k_results, distances, time_slices)
+
+# Produce pairwise distances to explore clustering structure for focal points
+clustering_heatmap(focal_pairwise_density, focal_support, time_slices, result_type='Pairwise Distances (Focal Points)')
