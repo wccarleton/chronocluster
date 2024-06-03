@@ -208,16 +208,18 @@ def in_probs(points, time_slices):
 def mc_samples(points, 
                time_slices, 
                inclusion_probs=None, 
-               num_iterations=1000):
+               num_iterations=1000,
+               csr=False):
     """
     Generate Monte Carlo samples for each time slice based on precomputed or 
-    dynamically calculated inclusion probabilities.
+    dynamically calculated inclusion probabilities. Supports CSR sampling.
 
     Parameters:
     points (list of Point objects): List of Point objects.
     time_slices (array-like): Array of time slices.
     inclusion_probs (np.ndarray, optional): Precomputed inclusion probabilities. Default is None.
     num_iterations (int): Number of Monte Carlo iterations.
+    csr (bool): Whether to perform CSR sampling. Default is False.
 
     Returns:
     list: A list of lists where each sublist contains tuples of time slice and included points.
@@ -231,12 +233,23 @@ def mc_samples(points,
 
     point_sets = []
 
+    if csr:
+        # Calculate bounding box and get CSR sample
+        x_min, x_max, y_min, y_max = get_box(points)
+
     for _ in range(num_iterations):
+        if csr:
+            # get new point coordinates
+            csr_points = csr_sample(points, x_min, x_max, y_min, y_max)
+            current_points = csr_points
+        else:
+            current_points = points
+
         iteration_set = []
         for j, t in enumerate(time_slices):
             included_points = np.array([
                 [point.x, point.y] 
-                for point, prob in zip(points, inclusion_probs[:, j]) 
+                for point, prob in zip(current_points, inclusion_probs[:, j]) 
                 if random.random() < prob
             ])
             iteration_set.append((t, included_points))
