@@ -224,6 +224,8 @@ for x, y in cluster_centers:
 # Create focal point mc_simulations
 focal_simulations = clustering.mc_samples(focal_points, time_slices, num_iterations=num_iterations)
 
+focal_simulations[0][0][1].shape
+
 # Calculate K-function for focal points
 focal_k_results, focal_l_results, focal_g_results = clustering.temporal_cluster(
     simulations, distances, time_slices, calc_K=True, calc_L=True, calc_G=True, focal_points=focal_simulations)

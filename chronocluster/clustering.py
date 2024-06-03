@@ -347,39 +347,52 @@ def temporal_pairwise(simulations,
     """
     if focal_points and len(simulations) != len(focal_points):
         raise ValueError("The length of simulations must match the length of focal_points.")
-    
+
     num_slices = len(time_slices)
     num_iterations = len(simulations)
 
+    all_distances = []
+
+    for iteration_index, iteration_set in enumerate(simulations):
+        distances_for_time_slices = []
+        for i, (t, points) in enumerate(iteration_set):
+            if focal_points:
+                focal_coords = np.array(focal_points[iteration_index][i][1])
+                coords2 = np.array(points)
+                if (len(coords2) < 1) | (len(focal_coords) < 1) :
+                    distances_for_time_slices.append(None)
+                    continue
+                dists = distance.cdist(focal_coords, coords2)
+                distances_for_time_slices.append(dists[dists <= max_distance])
+            else:
+                coords = np.array(points)
+                if len(coords) < 2:
+                    distances_for_time_slices.append(None)
+                    continue
+                dists = distance.pdist(coords)
+                distances_for_time_slices.append(dists[dists <= max_distance])
+        all_distances.append(distances_for_time_slices)
+
     if max_distance is None:
-        max_distance = np.inf
+        flat_distances = [dist for sublist in all_distances for dist in sublist if dist is not None]
+        if not flat_distances:
+            raise ValueError("No valid distances found.")
+        max_distance = np.max([np.max(d) for d in flat_distances])
 
     pairwise_density = np.zeros((num_slices, num_slices, num_iterations))
 
-    for iteration_index, iteration_set in enumerate(simulations):
-        for i, (t1, points1) in enumerate(iteration_set):
-            if focal_points:
-                focal_coords = np.array(focal_points[iteration_index][i][1])
-                for j, (t2, points2) in enumerate(iteration_set):
-                    if j < i:
-                        continue
-                    coords2 = np.array(points2)
-                    dists = distance.cdist(focal_coords, coords2)
-                    dists = dists[dists <= max_distance]
-                    pairwise_density[i, j, iteration_index] = np.sum(dists)
-                    if i != j:
-                        pairwise_density[j, i, iteration_index] = pairwise_density[i, j, iteration_index]
-            else:
-                for j, (t2, points2) in enumerate(iteration_set):
-                    if j < i:
-                        continue
-                    coords1 = np.array(points1)
-                    coords2 = np.array(points2)
-                    dists = distance.pdist(np.vstack([coords1, coords2]))
-                    dists = dists[dists <= max_distance]
-                    pairwise_density[i, j, iteration_index] = np.sum(dists)
-                    if i != j:
-                        pairwise_density[j, i, iteration_index] = pairwise_density[i, j, iteration_index]
+    for iteration_index, distances_for_time_slices in enumerate(all_distances):
+        for i in range(num_slices):
+            if distances_for_time_slices[i] is None:
+                continue
+            for j in range(i, num_slices):
+                if distances_for_time_slices[j] is None:
+                    continue
+                dists = distance.cdist(distances_for_time_slices[i], distances_for_time_slices[j])
+                dists = dists[dists <= max_distance]
+                pairwise_density[i, j, iteration_index] = np.sum(dists)
+                if i != j:
+                    pairwise_density[j, i, iteration_index] = pairwise_density[i, j, iteration_index]
 
     if density:
         pairwise_density /= (2 * np.pi * max_distance)
