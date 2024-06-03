@@ -6,3 +6,7 @@ dist/
 *.egg-info/
 README_files/
 README.html
+# Tests
+tests/__pycache__/
+tests/*.py[cod]
+tests/.pytest_cache/

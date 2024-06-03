@@ -10,12 +10,6 @@ To install the package, use:
 pip install git+https://github.com/wccarleton/ChronoCluster.git
 ```
 
-Alternatively, with Conda:
-
-```bash
-conda install -c wccarleton chronocluster
-```
-
 ## Example: Generating and Analyzing Spatial Point Patterns
 
 Here is a basic example of how to use the ChronoCluster package. For a full example, refer to the example.py script.

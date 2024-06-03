@@ -12,7 +12,7 @@ setup(
         'pymc3'
     ],
     author='Your Name',
-    author_email='your.email@example.com',
-    description='A package for temporal uncertainty in spatial point pattern analysis and clustering',
+    author_email='ccarleton@protonmail.com',
+    description='A package for temporality and chronological uncertainty in spatial point pattern analysis and clustering',
     url='https://github.com/wccarleton/ChronoCluster',
 )
