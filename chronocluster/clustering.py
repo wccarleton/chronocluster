@@ -279,9 +279,6 @@ def temporal_cluster(point_sets,
     Returns:
     tuple: A tuple containing the results for K, L, and/or G functions as 3D arrays.
     """
-    if focal_points and len(point_sets) != len(focal_points):
-        raise ValueError("The length of simulations must match the length of focal_points.")
-    
     num_distances = len(distances)
     num_slices = len(time_slices)
     num_iterations = len(point_sets)
@@ -290,42 +287,51 @@ def temporal_cluster(point_sets,
     l_results = np.zeros((num_distances, num_slices, num_iterations)) if calc_L else None
     g_results = np.zeros((num_distances, num_slices, num_iterations)) if calc_G else None
 
-    for iteration_index, iteration_set in enumerate(point_sets):
-        for t_index, (t, points) in enumerate(iteration_set):
-            if len(points) < 2:
-                continue
-            
-            coordinates = np.array(points)
-            if focal_points:
-                focal_coords = np.array(focal_points[iteration_index][t_index][1])
+    if focal_points:
+        for sim in range(num_iterations):
+            for t in range(num_slices):
+                _, points = point_sets[sim][t]
+                _, focal_pts = focal_points[sim][t]
+                if (len(points) < 1) or (len(focal_pts) < 1):
+                    continue
+
+                coords = np.array(points)
+                focal_coords = np.array(focal_pts)
+                
                 if calc_K:
-                    dists = distance.cdist(focal_coords, coordinates)
+                    dists = distance.cdist(focal_coords, coords)
                     k_values = np.sum(dists <= distances[:, None, None], axis=1).sum(axis=-1)
-                    k_results[:, t_index, iteration_index] = k_values / (len(focal_coords) * len(coordinates))
+                    k_results[:, t, sim] = k_values / (len(focal_coords) * len(coords))
                 if calc_L:
-                    dists = distance.cdist(focal_coords, coordinates)
-                    l_values = np.sqrt(k_values / np.pi) - distances
-                    l_results[:, t_index, iteration_index] = l_values
+                    l_values = np.sqrt(k_results[:, t, sim] / np.pi) - distances
+                    l_results[:, t, sim] = l_values
                 if calc_G:
-                    dists = distance.cdist(focal_coords, coordinates)
+                    dists = distance.cdist(focal_coords, coords)
                     k_values = np.sum(dists <= distances[:, None, None], axis=1).sum(axis=-1)
                     g_values = np.gradient(k_values, distances) / (2 * np.pi * distances)
-                    g_results[:, t_index, iteration_index] = g_values
-            else:
+                    g_results[:, t, sim] = g_values
+    else:
+        for sim in range(num_iterations):
+            for t in range(num_slices):
+                _, points = point_sets[sim][t]
+                if len(points) < 2:
+                    continue
+                
+                coords = np.array(points)
                 if calc_K:
-                    support, k_estimate = dstats.k(coordinates, support=distances)
-                    k_results[:, t_index, iteration_index] = k_estimate
+                    support, k_estimate = dstats.k(coords, support=distances)
+                    k_results[:, t, sim] = k_estimate
                 if calc_L:
-                    support, l_estimate = dstats.l(coordinates, support=distances)
-                    l_results[:, t_index, iteration_index] = l_estimate
+                    support, l_estimate = dstats.l(coords, support=distances)
+                    l_results[:, t, sim] = l_estimate
                 if calc_G:
-                    support, k_estimate = dstats.k(coordinates, support=distances)
+                    support, k_estimate = dstats.k(coords, support=distances)
                     g_estimate = np.gradient(k_estimate, distances) / (2 * np.pi * distances)
-                    g_results[:, t_index, iteration_index] = g_estimate
-    
+                    g_results[:, t, sim] = g_estimate
+
     return k_results, l_results, g_results
 
-def temporal_pairwise(simulations, 
+def temporal_pairwise(point_sets, 
                       time_slices, 
                       bw = 1, 
                       density = False, 
@@ -345,7 +351,7 @@ def temporal_pairwise(simulations,
     np.ndarray: A 3D array where the dimensions are distances (support), time slices, and iterations.
     """
     num_slices = len(time_slices)
-    num_iterations = len(simulations)
+    num_iterations = len(point_sets)
     all_distances = []
 
     # Loop over simulations and time slices to collect pairwise distances
@@ -363,7 +369,7 @@ def temporal_pairwise(simulations,
             all_distances.append(distances_for_time_slices)
 
     else:
-        for simulation in simulations:
+        for simulation in point_sets:
             distances_for_time_slices = []
             for time, points in simulation:
                 if len(points) < 2:
