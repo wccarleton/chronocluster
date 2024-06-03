@@ -327,77 +327,82 @@ def temporal_cluster(point_sets,
 
 def temporal_pairwise(simulations, 
                       time_slices, 
-                      bw=1.0, 
-                      density=False, 
-                      max_distance=None, 
-                      focal_points=None):
+                      bw = 1, 
+                      density = False, 
+                      max_distance = None,
+                      focal_points = None):
     """
-    Calculate pairwise distances over time.
+    Calculate pairwise distance densities over time.
 
     Parameters:
-    simulations (list): List of point sets for each mc iteration.
-    time_slices (np.ndarray): Array of time slices.
-    bw (float): Bandwidth for kernel density estimation. Default is 1.0.
-    density (bool): Whether to calculate density. Default is False.
-    max_distance (float, optional): Maximum distance to consider. Default is None.
+    simulations (list): List of simulated point sets from mc_samples.
+    time_slices (array-like): Array of time slices.
+    bw (float): Bin width for histograms or bandwidth for KDE.
+    density (bool): If True, use KDE; otherwise, use histograms.
     focal_points (list, optional): List of focal points for each mc iteration. Default is None.
-
+    
     Returns:
-    tuple: A tuple containing the pairwise distances and the support for the distances.
+    np.ndarray: A 3D array where the dimensions are distances (support), time slices, and iterations.
     """
-    if focal_points and len(simulations) != len(focal_points):
-        raise ValueError("The length of simulations must match the length of focal_points.")
-
     num_slices = len(time_slices)
     num_iterations = len(simulations)
-
     all_distances = []
 
-    for iteration_index, iteration_set in enumerate(simulations):
-        distances_for_time_slices = []
-        for i, (t, points) in enumerate(iteration_set):
-            if focal_points:
-                focal_coords = np.array(focal_points[iteration_index][i][1])
-                coords2 = np.array(points)
-                if (len(coords2) < 1) | (len(focal_coords) < 1) :
-                    distances_for_time_slices.append(None)
+    # Loop over simulations and time slices to collect pairwise distances
+    if focal_points:
+        for sim in range(num_iterations):
+            distances_for_time_slices = []
+            for time in range(num_slices):
+                t, pts = simulations[sim][time]
+                _, f_pts = focal_points[sim][time]
+                if (len(pts) < 1) or (len(f_pts) < 1):
+                    distances_for_time_slices.append(None)  # Use None to indicate no distances
                     continue
-                dists = distance.cdist(focal_coords, coords2)
-                distances_for_time_slices.append(dists[dists <= max_distance])
-            else:
-                coords = np.array(points)
-                if len(coords) < 2:
-                    distances_for_time_slices.append(None)
+                pairwise_distances = distance.cdist(f_pts, pts)
+                distances_for_time_slices.append(pairwise_distances)
+            all_distances.append(distances_for_time_slices)
+
+    else:
+        for simulation in simulations:
+            distances_for_time_slices = []
+            for time, points in simulation:
+                if len(points) < 2:
+                    distances_for_time_slices.append(None)  # Use None to indicate no distances
                     continue
-                dists = distance.pdist(coords)
-                distances_for_time_slices.append(dists[dists <= max_distance])
-        all_distances.append(distances_for_time_slices)
+                pairwise_distances = distance.pdist(points)
+                distances_for_time_slices.append(pairwise_distances)
+            all_distances.append(distances_for_time_slices)
 
     if max_distance is None:
+        # Flatten the list of distances to determine the maximum pairwise distance for binning/KDE
         flat_distances = [dist for sublist in all_distances for dist in sublist if dist is not None]
         if not flat_distances:
             raise ValueError("No valid distances found.")
         max_distance = np.max([np.max(d) for d in flat_distances])
 
-    pairwise_density = np.zeros((num_slices, num_slices, num_iterations))
-
-    for iteration_index, distances_for_time_slices in enumerate(all_distances):
-        for i in range(num_slices):
-            if distances_for_time_slices[i] is None:
-                continue
-            for j in range(i, num_slices):
-                if distances_for_time_slices[j] is None:
-                    continue
-                dists = distance.cdist(distances_for_time_slices[i], distances_for_time_slices[j])
-                dists = dists[dists <= max_distance]
-                pairwise_density[i, j, iteration_index] = np.sum(dists)
-                if i != j:
-                    pairwise_density[j, i, iteration_index] = pairwise_density[i, j, iteration_index]
-
+    # Create bins or support for KDE
     if density:
-        pairwise_density /= (2 * np.pi * max_distance)
+        support = np.linspace(0, max_distance, 100)
+    else:
+        bins = np.arange(0, max_distance + bw, bw)
+        support = bins[:-1] + (bw / 2)  # Midpoints of bins
 
-    support = np.linspace(0, max_distance, num_slices)
+    # Initialize the results array
+    pairwise_density = np.zeros((len(support), num_slices, num_iterations))
+
+    # Calculate densities for each time slice and iteration
+    for iteration_index in range(num_iterations):
+        for t_index in range(num_slices):
+            distances_for_slice = all_distances[iteration_index][t_index]
+            if distances_for_slice is None:
+                pairwise_density[:, t_index, iteration_index] = None  # Set to None if no distances
+                continue
+            if density:
+                kde = gaussian_kde(distances_for_slice, bw_method=bw)
+                pairwise_density[:, t_index, iteration_index] = kde(support)
+            else:
+                hist, _ = np.histogram(distances_for_slice, bins=bins, density=True)
+                pairwise_density[:, t_index, iteration_index] = hist
 
     return pairwise_density, support
 
