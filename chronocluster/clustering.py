@@ -260,9 +260,10 @@ def mc_samples(points,
 def temporal_cluster(point_sets, 
                      distances, 
                      time_slices,  
-                     calc_K = True, 
-                     calc_L = False, 
-                     calc_G = False):
+                     calc_K=True, 
+                     calc_L=False, 
+                     calc_G=False,
+                     focal_points=None):
     """
     Calculate Ripley's K, Ripley's L, and pair correlation function over time.
 
@@ -273,9 +274,10 @@ def temporal_cluster(point_sets,
     calc_K (bool): Whether to calculate Ripley's K function. Default is True.
     calc_L (bool): Whether to calculate Ripley's L function. Default is False.
     calc_G (bool): Whether to calculate the pair correlation function. Default is False.
+    focal_points (list, optional): List of focal points for each mc iteration. Default is None.
 
     Returns:
-    tuple: A tuple containing the results for K, L, and/or g functions as 3D arrays.
+    tuple: A tuple containing the results for K, L, and/or G functions as 3D arrays.
     """
     num_distances = len(distances)
     num_slices = len(time_slices)
@@ -285,30 +287,56 @@ def temporal_cluster(point_sets,
     l_results = np.zeros((num_distances, num_slices, num_iterations)) if calc_L else None
     g_results = np.zeros((num_distances, num_slices, num_iterations)) if calc_G else None
 
-    for iteration_index, iteration_set in enumerate(point_sets):
-        for t_index, (t, points) in enumerate(iteration_set):
-            if len(points) < 2:
-                continue
-            
-            coordinates = np.array(points)
-            if calc_K:
-                support, k_estimate = dstats.k(coordinates, support=distances)
-                k_results[:, t_index, iteration_index] = k_estimate
-            if calc_L:
-                support, l_estimate = dstats.l(coordinates, support=distances)
-                l_results[:, t_index, iteration_index] = l_estimate
-            if calc_G:
-                support, k_estimate = dstats.k(coordinates, support=distances)
-                g_estimate = np.gradient(k_estimate, distances) / (2 * np.pi * distances)
-                g_results[:, t_index, iteration_index] = g_estimate
-    
+    if focal_points:
+        for sim in range(num_iterations):
+            for t in range(num_slices):
+                _, points = point_sets[sim][t]
+                _, focal_pts = focal_points[sim][t]
+                if (len(points) < 1) or (len(focal_pts) < 1):
+                    continue
+
+                coords = np.array(points)
+                focal_coords = np.array(focal_pts)
+                
+                if calc_K:
+                    dists = distance.cdist(focal_coords, coords)
+                    k_values = np.sum(dists <= distances[:, None, None], axis=1).sum(axis=-1)
+                    k_results[:, t, sim] = k_values / (len(focal_coords) * len(coords))
+                if calc_L:
+                    l_values = np.sqrt(k_results[:, t, sim] / np.pi) - distances
+                    l_results[:, t, sim] = l_values
+                if calc_G:
+                    dists = distance.cdist(focal_coords, coords)
+                    k_values = np.sum(dists <= distances[:, None, None], axis=1).sum(axis=-1)
+                    g_values = np.gradient(k_values, distances) / (2 * np.pi * distances)
+                    g_results[:, t, sim] = g_values
+    else:
+        for sim in range(num_iterations):
+            for t in range(num_slices):
+                _, points = point_sets[sim][t]
+                if len(points) < 2:
+                    continue
+                
+                coords = np.array(points)
+                if calc_K:
+                    support, k_estimate = dstats.k(coords, support=distances)
+                    k_results[:, t, sim] = k_estimate
+                if calc_L:
+                    support, l_estimate = dstats.l(coords, support=distances)
+                    l_results[:, t, sim] = l_estimate
+                if calc_G:
+                    support, k_estimate = dstats.k(coords, support=distances)
+                    g_estimate = np.gradient(k_estimate, distances) / (2 * np.pi * distances)
+                    g_results[:, t, sim] = g_estimate
+
     return k_results, l_results, g_results
 
-def temporal_pairwise(simulations, 
+def temporal_pairwise(point_sets, 
                       time_slices, 
                       bw = 1, 
                       density = False, 
-                      max_distance = None):
+                      max_distance = None,
+                      focal_points = None):
     """
     Calculate pairwise distance densities over time.
 
@@ -317,24 +345,39 @@ def temporal_pairwise(simulations,
     time_slices (array-like): Array of time slices.
     bw (float): Bin width for histograms or bandwidth for KDE.
     density (bool): If True, use KDE; otherwise, use histograms.
-
+    focal_points (list, optional): List of focal points for each mc iteration. Default is None.
+    
     Returns:
     np.ndarray: A 3D array where the dimensions are distances (support), time slices, and iterations.
     """
     num_slices = len(time_slices)
-    num_iterations = len(simulations)
+    num_iterations = len(point_sets)
     all_distances = []
 
     # Loop over simulations and time slices to collect pairwise distances
-    for simulation in simulations:
-        distances_for_time_slices = []
-        for time, points in simulation:
-            if len(points) < 2:
-                distances_for_time_slices.append(None)  # Use None to indicate no distances
-                continue
-            pairwise_distances = distance.pdist(points)
-            distances_for_time_slices.append(pairwise_distances)
-        all_distances.append(distances_for_time_slices)
+    if focal_points:
+        for sim in range(num_iterations):
+            distances_for_time_slices = []
+            for time in range(num_slices):
+                t, pts = point_sets[sim][time]
+                _, f_pts = focal_points[sim][time]
+                if (len(pts) < 1) or (len(f_pts) < 1):
+                    distances_for_time_slices.append(None)  # Use None to indicate no distances
+                    continue
+                pairwise_distances = distance.cdist(f_pts, pts)
+                distances_for_time_slices.append(pairwise_distances)
+            all_distances.append(distances_for_time_slices)
+
+    else:
+        for simulation in point_sets:
+            distances_for_time_slices = []
+            for time, points in simulation:
+                if len(points) < 2:
+                    distances_for_time_slices.append(None)  # Use None to indicate no distances
+                    continue
+                pairwise_distances = distance.pdist(points)
+                distances_for_time_slices.append(pairwise_distances)
+            all_distances.append(distances_for_time_slices)
 
     if max_distance is None:
         # Flatten the list of distances to determine the maximum pairwise distance for binning/KDE
