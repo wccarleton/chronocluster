@@ -155,8 +155,7 @@ def plot_derivative(results,
     Plot the derivative of Ripley's K or L function over distance for a specific time slice.
     
     Parameters:
-    results (np.ndarray): A 3D array where the first dimension is the distance, 
-                          the second dimension is the time slice, and the third dimension is the iteration.
+    results (np.ndarray): A 3D array where the first dimension is the distance, the second dimension is the time slice, and the third dimension is the iteration.
     distances (array-like): Array of distances at which K or L was calculated.
     time_slices (array-like): Array of time slices.
     t_index (int): Index of the time slice desired for plotting.
