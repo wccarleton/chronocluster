@@ -10,10 +10,3 @@ README.html
 tests/__pycache__/
 tests/*.py[cod]
 tests/.pytest_cache/
-#sphinx
-# Sphinx build artifacts
-docs/_build/
-docs/build/
-# Sphinx auto-generated API docs
-docs/source/modules.rst
-docs/source/chronocluster.rst
