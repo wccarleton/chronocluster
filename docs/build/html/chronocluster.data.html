@@ -21,6 +21,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="chronocluster.data.dataio module" href="chronocluster.data.dataio.html" />
     <link rel="prev" title="chronocluster package" href="chronocluster.html" /> 
 </head>
 
@@ -48,23 +49,18 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="modules.html">chronocluster</a></li>
-<li class="toctree-l1"><a class="reference internal" href="chronocluster.html">chronocluster package</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">chronocluster.data package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-chronocluster.data.dataio">chronocluster.data.dataio module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#chronocluster.data.dataio.df_to_pts"><code class="docutils literal notranslate"><span class="pre">df_to_pts()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#chronocluster.data.dataio.pts_from_csv"><code class="docutils literal notranslate"><span class="pre">pts_from_csv()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#chronocluster.data.dataio.pts_to_csv"><code class="docutils literal notranslate"><span class="pre">pts_to_csv()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#chronocluster.data.dataio.pts_to_df"><code class="docutils literal notranslate"><span class="pre">pts_to_df()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Modules</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="chronocluster.html">chronocluster package</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">chronocluster.data package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="chronocluster.data.dataio.html">chronocluster.data.dataio module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chronocluster.data.simdata.html">chronocluster.data.simdata module</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#module-chronocluster.data.simdata">chronocluster.data.simdata module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#chronocluster.data.simdata.generate_params"><code class="docutils literal notranslate"><span class="pre">generate_params()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#chronocluster.data.simdata.generate_random_points"><code class="docutils literal notranslate"><span class="pre">generate_random_points()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="chronocluster.clustering.html">chronocluster.clustering module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chronocluster.utils.html">chronocluster.utils module</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#module-chronocluster.data">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -83,7 +79,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="modules.html">chronocluster</a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Modules</a></li>
           <li class="breadcrumb-item"><a href="chronocluster.html">chronocluster package</a></li>
       <li class="breadcrumb-item active">chronocluster.data package</li>
       <li class="wy-breadcrumbs-aside">
@@ -95,86 +91,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="chronocluster-data-package">
-<h1>chronocluster.data package<a class="headerlink" href="#chronocluster-data-package" title="Link to this heading"></a></h1>
-<section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
-</section>
-<section id="module-chronocluster.data.dataio">
-<span id="chronocluster-data-dataio-module"></span><h2>chronocluster.data.dataio module<a class="headerlink" href="#module-chronocluster.data.dataio" title="Link to this heading"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="chronocluster.data.dataio.df_to_pts">
-<span class="sig-prename descclassname"><span class="pre">chronocluster.data.dataio.</span></span><span class="sig-name descname"><span class="pre">df_to_pts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/data/dataio.html#df_to_pts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.data.dataio.df_to_pts" title="Link to this definition"></a></dt>
-<dd><p>Convert a pandas DataFrame to a list of Point objects.</p>
-<p>Parameters:
-df (pd.DataFrame): DataFrame containing the points data.</p>
-<p>Returns:
-list of Point: List of Point objects.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chronocluster.data.dataio.pts_from_csv">
-<span class="sig-prename descclassname"><span class="pre">chronocluster.data.dataio.</span></span><span class="sig-name descname"><span class="pre">pts_from_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/data/dataio.html#pts_from_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.data.dataio.pts_from_csv" title="Link to this definition"></a></dt>
-<dd><p>Load Point objects from a CSV file.</p>
-<p>Parameters:
-file_path (str): Path to the CSV file.</p>
-<p>Returns:
-list: List of Point objects.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chronocluster.data.dataio.pts_to_csv">
-<span class="sig-prename descclassname"><span class="pre">chronocluster.data.dataio.</span></span><span class="sig-name descname"><span class="pre">pts_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/data/dataio.html#pts_to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.data.dataio.pts_to_csv" title="Link to this definition"></a></dt>
-<dd><p>Save Point objects to a CSV file.</p>
-<p>Parameters:
-points (list): List of Point objects.
-file_path (str): Path to the CSV file.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chronocluster.data.dataio.pts_to_df">
-<span class="sig-prename descclassname"><span class="pre">chronocluster.data.dataio.</span></span><span class="sig-name descname"><span class="pre">pts_to_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/data/dataio.html#pts_to_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.data.dataio.pts_to_df" title="Link to this definition"></a></dt>
-<dd><p>Convert a list of Point objects to a pandas DataFrame.</p>
-<p>Parameters:
-points (list of Point): List of Point objects.</p>
-<p>Returns:
-pd.DataFrame: DataFrame containing the points data.</p>
-</dd></dl>
-
-</section>
-<section id="module-chronocluster.data.simdata">
-<span id="chronocluster-data-simdata-module"></span><h2>chronocluster.data.simdata module<a class="headerlink" href="#module-chronocluster.data.simdata" title="Link to this heading"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="chronocluster.data.simdata.generate_params">
-<span class="sig-prename descclassname"><span class="pre">chronocluster.data.simdata.</span></span><span class="sig-name descname"><span class="pre">generate_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dist_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hyperparams</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/data/simdata.html#generate_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.data.simdata.generate_params" title="Link to this definition"></a></dt>
-<dd><p>Generate distribution parameters from hyperparameters.</p>
-<p>Parameters:
-dist_type (str): Distribution type (‘norm’, ‘uniform’, ‘constant’).
-hyperparams (list of tuples): Hyperparameters for the distribution.</p>
-<p>Returns:
-list: Generated distribution parameters.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="chronocluster.data.simdata.generate_random_points">
-<span class="sig-prename descclassname"><span class="pre">chronocluster.data.simdata.</span></span><span class="sig-name descname"><span class="pre">generate_random_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_centers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_stds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_hyperparams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_hyperparams</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/data/simdata.html#generate_random_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.data.simdata.generate_random_points" title="Link to this definition"></a></dt>
-<dd><p>Generate random points with specified cluster centers, standard deviations, and temporal distributions.</p>
-<p>Parameters:
-n_points (int): Number of points to generate.
-cluster_centers (list of tuples): List of (x, y) tuples representing the centers of clusters.
-cluster_stds (list of floats): List of standard deviations for each cluster.
-start_type (str): Type of the start distribution (‘norm’, ‘uniform’, ‘constant’).
-start_hyperparams (list): Hyperparameters for the start distribution.
-end_type (str): Type of the end distribution (‘norm’, ‘uniform’, ‘constant’).
-end_hyperparams (list): Hyperparameters for the end distribution.</p>
-<p>Returns:
-list of Point: List of generated Point objects.</p>
-</dd></dl>
-
-</section>
-<section id="module-chronocluster.data">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-chronocluster.data" title="Link to this heading"></a></h2>
-</section>
+  <section id="module-chronocluster.data">
+<span id="chronocluster-data-package"></span><h1>chronocluster.data package<a class="headerlink" href="#module-chronocluster.data" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="chronocluster.data.dataio.html">chronocluster.data.dataio module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chronocluster.data.dataio.html#chronocluster.data.dataio.df_to_pts"><code class="docutils literal notranslate"><span class="pre">df_to_pts()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chronocluster.data.dataio.html#chronocluster.data.dataio.pts_from_csv"><code class="docutils literal notranslate"><span class="pre">pts_from_csv()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chronocluster.data.dataio.html#chronocluster.data.dataio.pts_to_csv"><code class="docutils literal notranslate"><span class="pre">pts_to_csv()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chronocluster.data.dataio.html#chronocluster.data.dataio.pts_to_df"><code class="docutils literal notranslate"><span class="pre">pts_to_df()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="chronocluster.data.simdata.html">chronocluster.data.simdata module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chronocluster.data.simdata.html#chronocluster.data.simdata.generate_params"><code class="docutils literal notranslate"><span class="pre">generate_params()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="chronocluster.data.simdata.html#chronocluster.data.simdata.generate_random_points"><code class="docutils literal notranslate"><span class="pre">generate_random_points()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
 </section>
 
 
@@ -182,6 +116,7 @@ list of Point: List of generated Point objects.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="chronocluster.html" class="btn btn-neutral float-left" title="chronocluster package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="chronocluster.data.dataio.html" class="btn btn-neutral float-right" title="chronocluster.data.dataio module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

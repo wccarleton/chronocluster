@@ -46,9 +46,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">chronocluster</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../chronocluster.html">chronocluster package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../chronocluster.data.html">chronocluster.data package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules</a></li>
 </ul>
 
         </div>
@@ -82,7 +81,7 @@
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">rv_continuous</span>
 
 <div class="viewcode-block" id="ddelta">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.utils.ddelta">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.ddelta">[docs]</a>
 <span class="k">class</span> <span class="nc">ddelta</span><span class="p">(</span><span class="n">rv_continuous</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Probability functions approximating the Dirac Delta&quot;&quot;&quot;</span>
     
@@ -101,70 +100,70 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">generic_moment</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_moment</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ddelta._pdf">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.utils.ddelta._pdf">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.ddelta._pdf">[docs]</a>
     <span class="k">def</span> <span class="nf">_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Probability density function&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="k">else</span> <span class="mi">0</span></div>
 
 
 <div class="viewcode-block" id="ddelta._cdf">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.utils.ddelta._cdf">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.ddelta._cdf">[docs]</a>
     <span class="k">def</span> <span class="nf">_cdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Cumulative distribution function&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mf">1.0</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="k">else</span> <span class="mf">0.0</span></div>
 
     
 <div class="viewcode-block" id="ddelta._sf">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.utils.ddelta._sf">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.ddelta._sf">[docs]</a>
     <span class="k">def</span> <span class="nf">_sf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Survival function&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cdf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ddelta._ppf">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.utils.ddelta._ppf">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.ddelta._ppf">[docs]</a>
     <span class="k">def</span> <span class="nf">_ppf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Percent point function (inverse of cdf)&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span></div>
 
 
 <div class="viewcode-block" id="ddelta._rvs">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.utils.ddelta._rvs">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.ddelta._rvs">[docs]</a>
     <span class="k">def</span> <span class="nf">_rvs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Random variates&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ddelta.mean">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.utils.ddelta.mean">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.ddelta.mean">[docs]</a>
     <span class="k">def</span> <span class="nf">mean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Mean of the distribution&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span></div>
 
     
 <div class="viewcode-block" id="ddelta.var">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.utils.ddelta.var">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.ddelta.var">[docs]</a>
     <span class="k">def</span> <span class="nf">var</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Variance of the distribution&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mf">0.0</span></div>
 
 
 <div class="viewcode-block" id="ddelta.std">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.utils.ddelta.std">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.ddelta.std">[docs]</a>
     <span class="k">def</span> <span class="nf">std</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Standard deviation of the distribution&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mf">0.0</span></div>
 
 
 <div class="viewcode-block" id="ddelta._entropy">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.utils.ddelta._entropy">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.ddelta._entropy">[docs]</a>
     <span class="k">def</span> <span class="nf">_entropy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Entropy of the distribution&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mf">0.0</span></div>
 
 
 <div class="viewcode-block" id="ddelta._moment">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.utils.ddelta._moment">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.ddelta._moment">[docs]</a>
     <span class="k">def</span> <span class="nf">_moment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;nth moment of the distribution&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -177,7 +176,7 @@
 
 
 <div class="viewcode-block" id="_largest_divisor">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.utils._largest_divisor">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils._largest_divisor">[docs]</a>
 <span class="k">def</span> <span class="nf">_largest_divisor</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">max_divisors</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
     <span class="s1">&#39;Utility function for legible axis tick mark density.&#39;</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_divisors</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
@@ -187,7 +186,7 @@
 
 
 <div class="viewcode-block" id="clustering_heatmap">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.utils.clustering_heatmap">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.clustering_heatmap">[docs]</a>
 <span class="k">def</span> <span class="nf">clustering_heatmap</span><span class="p">(</span><span class="n">results</span><span class="p">,</span>
                        <span class="n">distances</span><span class="p">,</span>
                        <span class="n">time_slices</span><span class="p">,</span>
@@ -233,7 +232,7 @@
 
 
 <div class="viewcode-block" id="pdiff_heatmap">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.utils.pdiff_heatmap">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.pdiff_heatmap">[docs]</a>
 <span class="k">def</span> <span class="nf">pdiff_heatmap</span><span class="p">(</span><span class="n">p_diff_array</span><span class="p">,</span> <span class="n">time_slices</span><span class="p">,</span> <span class="n">support</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot the heatmap of probability values.</span>
@@ -267,7 +266,7 @@
 
 
 <div class="viewcode-block" id="plot_derivative">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.utils.plot_derivative">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.plot_derivative">[docs]</a>
 <span class="k">def</span> <span class="nf">plot_derivative</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> 
                     <span class="n">distances</span><span class="p">,</span> 
                     <span class="n">time_slices</span><span class="p">,</span> 
@@ -296,7 +295,7 @@
 
 
 <div class="viewcode-block" id="plot_l_diff">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.utils.plot_l_diff">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.plot_l_diff">[docs]</a>
 <span class="k">def</span> <span class="nf">plot_l_diff</span><span class="p">(</span><span class="n">l_results</span><span class="p">,</span> <span class="n">distances</span><span class="p">,</span> <span class="n">time_slices</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot the difference d - L(d) over distance for a specific time slice.</span>
@@ -321,7 +320,7 @@
 
     
 <div class="viewcode-block" id="plot_mc_points">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.utils.plot_mc_points">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.plot_mc_points">[docs]</a>
 <span class="k">def</span> <span class="nf">plot_mc_points</span><span class="p">(</span><span class="n">simulations</span><span class="p">,</span> 
                    <span class="nb">iter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> 
                    <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
@@ -347,7 +346,7 @@
 
 
 <div class="viewcode-block" id="get_box">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.utils.get_box">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.get_box">[docs]</a>
 <span class="k">def</span> <span class="nf">get_box</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">buffer</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate the bounding box that contains all points with an optional buffer.</span>
@@ -389,7 +388,7 @@
 <span class="c1"># Exceptions</span>
 
 <div class="viewcode-block" id="NoPointsInTimeSliceException">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.utils.NoPointsInTimeSliceException">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.NoPointsInTimeSliceException">[docs]</a>
 <span class="k">class</span> <span class="nc">NoPointsInTimeSliceException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised when the selected time slice has no points.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;No points in the selected time slice.&quot;</span><span class="p">):</span>

@@ -46,9 +46,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">chronocluster</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../chronocluster.html">chronocluster package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../chronocluster.data.html">chronocluster.data package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules</a></li>
 </ul>
 
         </div>
@@ -84,7 +83,7 @@
 <span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">distance</span>
 
 <div class="viewcode-block" id="Point">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.clustering.Point">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.clustering.html#chronocluster.clustering.Point">[docs]</a>
 <span class="k">class</span> <span class="nc">Point</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class to represent a point with spatial coordinates and temporal distributions.</span>
@@ -151,7 +150,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_distributions</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Point._check_distributions">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.clustering.Point._check_distributions">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.clustering.html#chronocluster.clustering.Point._check_distributions">[docs]</a>
     <span class="k">def</span> <span class="nf">_check_distributions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks the temporal consistency of the start and end distributions.</span>
@@ -175,7 +174,7 @@
 
 
 <div class="viewcode-block" id="Point._calculate_overlap_ratio">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.clustering.Point._calculate_overlap_ratio">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.clustering.html#chronocluster.clustering.Point._calculate_overlap_ratio">[docs]</a>
     <span class="k">def</span> <span class="nf">_calculate_overlap_ratio</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculates the overlap ratio between the start and end distributions.</span>
@@ -221,7 +220,7 @@
 
 
 <div class="viewcode-block" id="Point.calculate_inclusion_probability">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.clustering.Point.calculate_inclusion_probability">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.clustering.html#chronocluster.clustering.Point.calculate_inclusion_probability">[docs]</a>
     <span class="k">def</span> <span class="nf">calculate_inclusion_probability</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_slice</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculates the inclusion probability of the point for a given time slice.</span>
@@ -244,7 +243,7 @@
 
     
 <div class="viewcode-block" id="Point._repr_distribution">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.clustering.Point._repr_distribution">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.clustering.html#chronocluster.clustering.Point._repr_distribution">[docs]</a>
     <span class="k">def</span> <span class="nf">_repr_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dist</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a string representation of the distribution.</span>
@@ -288,7 +287,7 @@
 
 
 <div class="viewcode-block" id="in_probs">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.clustering.in_probs">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.clustering.html#chronocluster.clustering.in_probs">[docs]</a>
 <span class="k">def</span> <span class="nf">in_probs</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">time_slices</span><span class="p">):</span>
     <span class="n">n_points</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
     <span class="n">n_slices</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">time_slices</span><span class="p">)</span>
@@ -302,7 +301,7 @@
 
 
 <div class="viewcode-block" id="mc_samples">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.clustering.mc_samples">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.clustering.html#chronocluster.clustering.mc_samples">[docs]</a>
 <span class="k">def</span> <span class="nf">mc_samples</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> 
                <span class="n">time_slices</span><span class="p">,</span> 
                <span class="n">inclusion_probs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
@@ -357,7 +356,7 @@
 
 
 <div class="viewcode-block" id="temporal_cluster">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.clustering.temporal_cluster">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.clustering.html#chronocluster.clustering.temporal_cluster">[docs]</a>
 <span class="k">def</span> <span class="nf">temporal_cluster</span><span class="p">(</span><span class="n">point_sets</span><span class="p">,</span> 
                      <span class="n">distances</span><span class="p">,</span> 
                      <span class="n">time_slices</span><span class="p">,</span>  
@@ -434,7 +433,7 @@
 
 
 <div class="viewcode-block" id="temporal_pairwise">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.clustering.temporal_pairwise">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.clustering.html#chronocluster.clustering.temporal_pairwise">[docs]</a>
 <span class="k">def</span> <span class="nf">temporal_pairwise</span><span class="p">(</span><span class="n">point_sets</span><span class="p">,</span> 
                       <span class="n">time_slices</span><span class="p">,</span> 
                       <span class="n">bw</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> 
@@ -518,7 +517,7 @@
 
 
 <div class="viewcode-block" id="csr_sample">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.clustering.csr_sample">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.clustering.html#chronocluster.clustering.csr_sample">[docs]</a>
 <span class="k">def</span> <span class="nf">csr_sample</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="n">y_min</span><span class="p">,</span> <span class="n">y_max</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate a CSR sample by randomizing the locations of the points while keeping their temporal information intact.</span>
@@ -545,7 +544,7 @@
 
 
 <div class="viewcode-block" id="p_diff">
-<a class="viewcode-back" href="../../chronocluster.html#chronocluster.clustering.p_diff">[docs]</a>
+<a class="viewcode-back" href="../../chronocluster.clustering.html#chronocluster.clustering.p_diff">[docs]</a>
 <span class="k">def</span> <span class="nf">p_diff</span><span class="p">(</span><span class="n">pairwise_density</span><span class="p">,</span> <span class="n">csr_pairwise_density</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="s1">&#39;greater&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate the probability that the density difference meets a specified condition,</span>
