@@ -4,6 +4,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.patches import FancyBboxPatch
 import seaborn as sns
 from scipy.stats import rv_continuous
+from chronocluster.clustering import Point
 
 class ddelta(rv_continuous):
     """Probability functions approximating the Dirac Delta"""
@@ -256,15 +257,15 @@ def get_box(points, buffer=0):
     # Return the bounding box as a tuple: (min_x, min_y, max_x, max_y)
     return (min_x, min_y, max_x, max_y)
 
-def chrono_plot(points, ax=None, style_params=None, time_slice=None):
+def chrono_plot(points, ax=None, style_params=None, time_slice=None, plot_limits=None):
     """
     Plots a list of points in 3D, with the z-axis representing time and cylinders representing temporal distributions.
     Also adds a shadow layer to show point locations on the x-y plane at the bottom and an optional time slice plane.
 
     Parameters:
     -----------
-    points : list of Point
-        The list of Point instances to plot.
+    points : list of Point or single Point
+        The list of Point instances to plot. Can also be a single Point instance.
     ax : matplotlib.axes._subplots.Axes3DSubplot, optional
         The 3D axes to plot on. If None, a new figure and axes will be created.
     style_params : dict, optional
@@ -281,12 +282,19 @@ def chrono_plot(points, ax=None, style_params=None, time_slice=None):
             - 'time_slice_point_color': Color for the points at the time slice plane.
     time_slice : float or None, optional
         The z-axis coordinate for the time slice plane. If None, no time slice plane is added.
+    plot_limits : list of tuples or None, optional
+        List of tuples specifying the (min, max) for each axis: [(x_min, x_max), (y_min, y_max), (z_min, z_max)].
+        If None, axis limits will be determined automatically.
 
     Returns:
     --------
     ax : matplotlib.axes._subplots.Axes3DSubplot
         The 3D axes with the plot.
     """
+    # Ensure points is always a list
+    if isinstance(points, Point):
+        points = [points]
+
     fig = None
     if ax is None:
         fig = plt.figure()
@@ -325,6 +333,7 @@ def chrono_plot(points, ax=None, style_params=None, time_slice=None):
     if ax.get_legend():
         legend_labels = set([t.get_text() for t in ax.get_legend().get_texts()])
 
+    z_bottom = float('inf')
     for point in points:
         # Define cylinder base
         x = point.x
@@ -352,31 +361,52 @@ def chrono_plot(points, ax=None, style_params=None, time_slice=None):
             else:
                 ax.scatter([x], [y], [end_mean], color=end_mean_color, s=mean_point_size)
 
-        # Plot shadow points on the x-y plane at the bottom
-        z_bottom = min([point.start_distribution.ppf(ppf_limits[0]) for point in points]) - 10
-        ax.scatter([x], [y], [z_bottom], color=shadow_color, s=shadow_size, alpha=0.5, label='Shadow' if 'Shadow' not in legend_labels else "")
-        if 'Shadow' not in legend_labels:
-            legend_labels.add('Shadow')
+        # Update z_bottom
+        z_bottom = min(z_bottom, z_start)
 
-        # Plot points at the time slice
-        if time_slice is not None:
+    # Plot shadow points on the x-y plane at the bottom
+    for point in points:
+        x = point.x
+        y = point.y
+        ax.scatter([x], [y], [z_bottom - 10], color=shadow_color, s=shadow_size, alpha=0.5, label='Shadow' if 'Shadow' not in legend_labels else "")
+    if 'Shadow' not in legend_labels:
+        legend_labels.add('Shadow')
+
+    # Plot points at the time slice
+    if time_slice is not None:
+        for point in points:
+            x = point.x
+            y = point.y
             presence_prob = point.calculate_inclusion_probability(time_slice)
             ax.scatter([x], [y], [time_slice], color=time_slice_point_color, s=mean_point_size, alpha=presence_prob, label='Time Slice Point' if 'Time Slice Point' not in legend_labels else "")
-            if 'Time Slice Point' not in legend_labels:
-                legend_labels.add('Time Slice Point')
+        if 'Time Slice Point' not in legend_labels:
+            legend_labels.add('Time Slice Point')
 
     # Add time slice plane
     if time_slice is not None:
-        x_limits = ax.get_xlim()
-        y_limits = ax.get_ylim()
+        if plot_limits is not None:
+            x_min, x_max = plot_limits[0]
+            y_min, y_max = plot_limits[1]
+        else:
+            x_limits = ax.get_xlim()
+            y_limits = ax.get_ylim()
+            x_min, x_max = x_limits[0], x_limits[1]
+            y_min, y_max = y_limits[0], y_limits[1]
         
-        xx, yy = np.meshgrid(np.linspace(x_limits[0], x_limits[1], 10), np.linspace(y_limits[0], y_limits[1], 10))
+        xx, yy = np.meshgrid(np.linspace(x_min, x_max, 10), np.linspace(y_min, y_max, 10))
         zz = np.full(xx.shape, time_slice)
         ax.plot_surface(xx, yy, zz, color=time_slice_color, alpha=time_slice_alpha)
 
+    # Apply plot limits if specified
+    if plot_limits is not None:
+        ax.set_xlim(plot_limits[0])
+        ax.set_ylim(plot_limits[1])
+        ax.set_zlim(plot_limits[2])
+
+    # axis labels
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
-    ax.set_zlabel('Time')
+    ax.set_zlabel('Time', rotation=90)  # Rotate the label
 
     # Create a legend
     if legend_labels:

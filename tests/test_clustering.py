@@ -62,5 +62,34 @@ def test_p_diff():
     # Check the value ranges of the p-values result
     assert np.all((0 <= p_values) & (p_values <= 1)), "p-values should be in the range [0, 1]."
 
+def test_point_initialization():
+    # Create a Point instance with valid inputs
+    x = 10.0
+    y = 20.0
+    start_dist = norm(loc=1000, scale=50)
+    end_dist = norm(loc=2000, scale=100)
+    
+    point = Point(x, y, start_dist, end_dist)
+    
+    # Check that the attributes are correctly assigned and are of the correct type
+    assert isinstance(point.x, (int, float)), "x should be a scalar (int or float)"
+    assert isinstance(point.y, (int, float)), "y should be a scalar (int or float)"
+    assert isinstance(point.start_distribution, rv_continuous), "start_distribution should be an instance of scipy.stats.rv_continuous or its subclass"
+    assert isinstance(point.end_distribution, rv_continuous), "end_distribution should be an instance of scipy.stats.rv_continuous or its subclass"
+
+def test_invalid_initialization():
+    # Create Point instances with invalid inputs and confirm that TypeError is raised
+    with pytest.raises(TypeError):
+        Point([10.0], 20.0, norm(loc=1000, scale=50), norm(loc=2000, scale=100))
+    
+    with pytest.raises(TypeError):
+        Point(10.0, [20.0], norm(loc=1000, scale=50), norm(loc=2000, scale=100))
+    
+    with pytest.raises(TypeError):
+        Point(10.0, 20.0, [1000, 50], norm(loc=2000, scale=100))
+    
+    with pytest.raises(TypeError):
+        Point(10.0, 20.0, norm(loc=1000, scale=50), [2000, 100])
+
 if __name__ == '__main__':
     pytest.main()

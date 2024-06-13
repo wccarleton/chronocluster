@@ -59,6 +59,11 @@ class Point:
         verbose : bool, optional
             If True, prints messages about the temporal consistency check (default is False).
         """
+        if not isinstance(x, (int, float)):
+            raise TypeError("x must be a scalar (int or float)")
+        if not isinstance(y, (int, float)):
+            raise TypeError("y must be a scalar (int or float)")
+        
         self.x = x
         self.y = y
         self.start_distribution = start_distribution
