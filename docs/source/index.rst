@@ -11,6 +11,7 @@ Contents:
    :caption: Contents:
 
    introduction
+   tutorial
    modules
 
 Indices and tables
