@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>chronocluster.data.dataio &mdash; ChronoCluster 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            ChronoCluster
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial.html#Spacetime-Archaeology">Spacetime Archaeology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Modules</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">ChronoCluster</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">chronocluster.data.dataio</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for chronocluster.data.dataio</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span><span class="p">,</span> <span class="n">uniform</span>
+<span class="kn">from</span> <span class="nn">chronocluster.utils</span> <span class="kn">import</span> <span class="n">ddelta</span>
+<span class="kn">from</span> <span class="nn">chronocluster.clustering</span> <span class="kn">import</span> <span class="n">Point</span>
+
+<div class="viewcode-block" id="pts_from_csv">
+<a class="viewcode-back" href="../../../chronocluster.data.dataio.html#chronocluster.data.dataio.pts_from_csv">[docs]</a>
+<span class="k">def</span> <span class="nf">pts_from_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load Point objects from a CSV file.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    file_path (str): Path to the CSV file.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">    list: List of Point objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">skip_header</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">start_mean</span><span class="p">,</span> <span class="n">start_std</span><span class="p">,</span> <span class="n">end_mean</span><span class="p">,</span> <span class="n">end_std</span> <span class="o">=</span> <span class="n">row</span>
+        <span class="n">start_distribution</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">start_mean</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">start_std</span><span class="p">)</span>
+        <span class="n">end_distribution</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">end_mean</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">end_std</span><span class="p">)</span>
+        <span class="n">point</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">start_distribution</span><span class="p">,</span> <span class="n">end_distribution</span><span class="p">)</span>
+        <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">points</span></div>
+
+
+<div class="viewcode-block" id="pts_to_csv">
+<a class="viewcode-back" href="../../../chronocluster.data.dataio.html#chronocluster.data.dataio.pts_to_csv">[docs]</a>
+<span class="k">def</span> <span class="nf">pts_to_csv</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Save Point objects to a CSV file.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    points (list): List of Point objects.</span>
+<span class="sd">    file_path (str): Path to the CSV file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
+        <span class="n">mean_start</span> <span class="o">=</span> <span class="n">point</span><span class="o">.</span><span class="n">start_distribution</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">std_start</span> <span class="o">=</span> <span class="n">point</span><span class="o">.</span><span class="n">start_distribution</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+        <span class="n">mean_end</span> <span class="o">=</span> <span class="n">point</span><span class="o">.</span><span class="n">end_distribution</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">std_end</span> <span class="o">=</span> <span class="n">point</span><span class="o">.</span><span class="n">end_distribution</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">mean_start</span><span class="p">,</span> <span class="n">std_start</span><span class="p">,</span> <span class="n">mean_end</span><span class="p">,</span> <span class="n">std_end</span><span class="p">])</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="s1">&#39;x,y,start_mean,start_std,end_mean,end_std&#39;</span><span class="p">,</span> <span class="n">comments</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="pts_to_df">
+<a class="viewcode-back" href="../../../chronocluster.data.dataio.html#chronocluster.data.dataio.pts_to_df">[docs]</a>
+<span class="k">def</span> <span class="nf">pts_to_df</span><span class="p">(</span><span class="n">points</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a list of Point objects to a pandas DataFrame.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    points (list of Point): List of Point objects.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">    pd.DataFrame: DataFrame containing the points data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
+        <span class="n">start_type</span> <span class="o">=</span> <span class="n">point</span><span class="o">.</span><span class="n">start_distribution</span><span class="o">.</span><span class="n">dist</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">start_params</span> <span class="o">=</span> <span class="p">[</span><span class="n">point</span><span class="o">.</span><span class="n">start_distribution</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">point</span><span class="o">.</span><span class="n">start_distribution</span><span class="o">.</span><span class="n">std</span><span class="p">()]</span>
+        <span class="n">end_type</span> <span class="o">=</span> <span class="n">point</span><span class="o">.</span><span class="n">end_distribution</span><span class="o">.</span><span class="n">dist</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">end_params</span> <span class="o">=</span> <span class="p">[</span><span class="n">point</span><span class="o">.</span><span class="n">end_distribution</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">point</span><span class="o">.</span><span class="n">end_distribution</span><span class="o">.</span><span class="n">std</span><span class="p">()]</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+            <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+            <span class="s1">&#39;start_type&#39;</span><span class="p">:</span> <span class="n">start_type</span><span class="p">,</span>
+            <span class="s1">&#39;start_params&#39;</span><span class="p">:</span> <span class="n">start_params</span><span class="p">,</span>
+            <span class="s1">&#39;end_type&#39;</span><span class="p">:</span> <span class="n">end_type</span><span class="p">,</span>
+            <span class="s1">&#39;end_params&#39;</span><span class="p">:</span> <span class="n">end_params</span>
+        <span class="p">})</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="df_to_pts">
+<a class="viewcode-back" href="../../../chronocluster.data.dataio.html#chronocluster.data.dataio.df_to_pts">[docs]</a>
+<span class="k">def</span> <span class="nf">df_to_pts</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a pandas DataFrame to a list of Point objects.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    df (pd.DataFrame): DataFrame containing the points data.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">    list of Point: List of Point objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span>
+        <span class="n">start_type</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;start_type&#39;</span><span class="p">]</span>
+        <span class="n">start_params</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;start_params&#39;</span><span class="p">]</span>
+        <span class="n">end_type</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;end_type&#39;</span><span class="p">]</span>
+        <span class="n">end_params</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;end_params&#39;</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="n">start_type</span> <span class="o">==</span> <span class="s1">&#39;norm&#39;</span><span class="p">:</span>
+            <span class="n">start_distribution</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">start_params</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">scale</span><span class="o">=</span><span class="n">start_params</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">start_type</span> <span class="o">==</span> <span class="s1">&#39;uniform&#39;</span><span class="p">:</span>
+            <span class="n">start_distribution</span> <span class="o">=</span> <span class="n">uniform</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">start_params</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">scale</span><span class="o">=</span><span class="n">start_params</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">start_type</span> <span class="o">==</span> <span class="s1">&#39;constant&#39;</span><span class="p">:</span>
+            <span class="n">start_distribution</span> <span class="o">=</span> <span class="n">ddelta</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="n">start_params</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported start distribution type: </span><span class="si">{</span><span class="n">start_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">end_type</span> <span class="o">==</span> <span class="s1">&#39;norm&#39;</span><span class="p">:</span>
+            <span class="n">end_distribution</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">end_params</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">scale</span><span class="o">=</span><span class="n">end_params</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">end_type</span> <span class="o">==</span> <span class="s1">&#39;uniform&#39;</span><span class="p">:</span>
+            <span class="n">end_distribution</span> <span class="o">=</span> <span class="n">uniform</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">end_params</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">scale</span><span class="o">=</span><span class="n">end_params</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">end_type</span> <span class="o">==</span> <span class="s1">&#39;constant&#39;</span><span class="p">:</span>
+            <span class="n">end_distribution</span> <span class="o">=</span> <span class="n">ddelta</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="n">end_params</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported end distribution type: </span><span class="si">{</span><span class="n">end_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">point</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">start_distribution</span><span class="p">,</span> <span class="n">end_distribution</span><span class="p">)</span>
+        <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">points</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, W. Christopher Carleton.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
