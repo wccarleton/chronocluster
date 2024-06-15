@@ -1,5 +1,0 @@
-numpy
-scipy
-matplotlib
-pointpats
-pymc3
