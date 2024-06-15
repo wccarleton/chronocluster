@@ -8,4 +8,4 @@ This tutorial provides a comprehensive overview of the ChronoCluster package, sh
 .. toctree::
    :maxdepth: 2
 
-   ChronoCluster_Tutorial.ipynb
+   tutorialnb.ipynb
