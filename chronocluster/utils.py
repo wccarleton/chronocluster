@@ -118,7 +118,7 @@ def clustering_heatmap(results,
     plt.gca().invert_yaxis()
     plt.show()
 
-def pdiff_heatmap(p_diff_array, time_slices, support):
+def pdiff_heatmap(p_diff_array, time_slices, support, condition = 'greater'):
     """
     Plot the heatmap of probability values.
     
@@ -126,9 +126,20 @@ def pdiff_heatmap(p_diff_array, time_slices, support):
     p_diff_array (np.ndarray): Array of probability values with shape (distances, time_slices).
     time_slices (np.ndarray): Array of time slice values.
     support (np.ndarray): Array of pairwise distance values.
+    condition (str): Condition to apply for probability calculation ('greater' or 'less').
     """
     plt.figure(figsize=(12, 6))
-    ax = sns.heatmap(p_diff_array, xticklabels=time_slices, yticklabels=support, cmap='viridis', cbar_kws={'label': 'P(diff > 0)'})
+    if condition == 'greater':
+        cond_label = {'label': 'P(diff > 0)'}
+    elif condition == 'less':
+        cond_label = {'label': 'P(diff < 0)'}
+    else:
+        raise ValueError("Invalid condition. Use 'greater' or 'less'.")
+    ax = sns.heatmap(p_diff_array, 
+                     xticklabels=time_slices, 
+                     yticklabels=support, 
+                     cmap='viridis', 
+                     cbar_kws=cond_label)
     plt.xlabel('Time Slices')
     plt.ylabel('Pairwise Distances')
     plt.title('Heatmap of P(diff > 0) Over Time and Distance')

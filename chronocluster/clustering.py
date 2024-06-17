@@ -470,10 +470,10 @@ def p_diff(pairwise_density, csr_pairwise_density, condition='greater'):
     
     if condition == 'greater':
         # Calculate probability for p > 0
-        p_values = 1 - norm.cdf(z_scores)
+        p_values = norm.cdf(z_scores)
     elif condition == 'less':
         # Calculate probability for p < 0
-        p_values = norm.cdf(z_scores)
+        p_values = 1 - norm.cdf(z_scores)
     else:
         raise ValueError("Invalid condition. Use 'greater' or 'less'.")
     
