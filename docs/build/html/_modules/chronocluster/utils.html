@@ -238,7 +238,7 @@
 
 <div class="viewcode-block" id="pdiff_heatmap">
 <a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.pdiff_heatmap">[docs]</a>
-<span class="k">def</span> <span class="nf">pdiff_heatmap</span><span class="p">(</span><span class="n">p_diff_array</span><span class="p">,</span> <span class="n">time_slices</span><span class="p">,</span> <span class="n">support</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">pdiff_heatmap</span><span class="p">(</span><span class="n">p_diff_array</span><span class="p">,</span> <span class="n">time_slices</span><span class="p">,</span> <span class="n">support</span><span class="p">,</span> <span class="n">condition</span> <span class="o">=</span> <span class="s1">&#39;greater&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot the heatmap of probability values.</span>
 <span class="sd">    </span>
@@ -246,12 +246,24 @@
 <span class="sd">    p_diff_array (np.ndarray): Array of probability values with shape (distances, time_slices).</span>
 <span class="sd">    time_slices (np.ndarray): Array of time slice values.</span>
 <span class="sd">    support (np.ndarray): Array of pairwise distance values.</span>
+<span class="sd">    condition (str): Condition to apply for probability calculation (&#39;greater&#39; or &#39;less&#39;).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">p_diff_array</span><span class="p">,</span> <span class="n">xticklabels</span><span class="o">=</span><span class="n">time_slices</span><span class="p">,</span> <span class="n">yticklabels</span><span class="o">=</span><span class="n">support</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">,</span> <span class="n">cbar_kws</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;P(diff &gt; 0)&#39;</span><span class="p">})</span>
+    <span class="k">if</span> <span class="n">condition</span> <span class="o">==</span> <span class="s1">&#39;greater&#39;</span><span class="p">:</span>
+        <span class="n">cond_label</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;P( &gt; observed)&#39;</span><span class="p">}</span>
+    <span class="k">elif</span> <span class="n">condition</span> <span class="o">==</span> <span class="s1">&#39;less&#39;</span><span class="p">:</span>
+        <span class="n">cond_label</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;P( &lt;= observed)&#39;</span><span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid condition. Use &#39;greater&#39; or &#39;less&#39;.&quot;</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">p_diff_array</span><span class="p">,</span> 
+                     <span class="n">xticklabels</span><span class="o">=</span><span class="n">time_slices</span><span class="p">,</span> 
+                     <span class="n">yticklabels</span><span class="o">=</span><span class="n">support</span><span class="p">,</span> 
+                     <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis_r&#39;</span><span class="p">,</span>
+                     <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> 
+                     <span class="n">cbar_kws</span><span class="o">=</span><span class="n">cond_label</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time Slices&#39;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Pairwise Distances&#39;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Heatmap of P(diff &gt; 0) Over Time and Distance&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Probability Heat Map&#39;</span><span class="p">)</span>
     
     <span class="c1"># Adjust x and y axis ticks using the largest divisor</span>
     <span class="n">x_divisor</span> <span class="o">=</span> <span class="n">_largest_divisor</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">time_slices</span><span class="p">))</span>

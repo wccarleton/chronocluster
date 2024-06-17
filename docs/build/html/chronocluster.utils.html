@@ -257,12 +257,13 @@ ValueError: If the points list is empty.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="chronocluster.utils.pdiff_heatmap">
-<span class="sig-prename descclassname"><span class="pre">chronocluster.utils.</span></span><span class="sig-name descname"><span class="pre">pdiff_heatmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_diff_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_slices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">support</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/utils.html#pdiff_heatmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.utils.pdiff_heatmap" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">chronocluster.utils.</span></span><span class="sig-name descname"><span class="pre">pdiff_heatmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_diff_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_slices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">support</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'greater'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/utils.html#pdiff_heatmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.utils.pdiff_heatmap" title="Link to this definition"></a></dt>
 <dd><p>Plot the heatmap of probability values.</p>
 <p>Parameters:
 p_diff_array (np.ndarray): Array of probability values with shape (distances, time_slices).
 time_slices (np.ndarray): Array of time slice values.
-support (np.ndarray): Array of pairwise distance values.</p>
+support (np.ndarray): Array of pairwise distance values.
+condition (str): Condition to apply for probability calculation (‘greater’ or ‘less’).</p>
 </dd></dl>
 
 <dl class="py function">

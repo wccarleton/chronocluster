@@ -580,10 +580,10 @@
     <span class="n">z_scores</span> <span class="o">=</span> <span class="n">mean_density_diff</span> <span class="o">/</span> <span class="n">std_density_diff</span>
     
     <span class="k">if</span> <span class="n">condition</span> <span class="o">==</span> <span class="s1">&#39;greater&#39;</span><span class="p">:</span>
-        <span class="c1"># Calculate probability for p &gt; 0</span>
+        <span class="c1"># Calculate probability for p(Z &gt; z)</span>
         <span class="n">p_values</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">z_scores</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">condition</span> <span class="o">==</span> <span class="s1">&#39;less&#39;</span><span class="p">:</span>
-        <span class="c1"># Calculate probability for p &lt; 0</span>
+        <span class="c1"># Calculate probability for p(Z &lt;= z)</span>
         <span class="n">p_values</span> <span class="o">=</span> <span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">z_scores</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid condition. Use &#39;greater&#39; or &#39;less&#39;.&quot;</span><span class="p">)</span>
