@@ -130,19 +130,20 @@ def pdiff_heatmap(p_diff_array, time_slices, support, condition = 'greater'):
     """
     plt.figure(figsize=(12, 6))
     if condition == 'greater':
-        cond_label = {'label': 'P(diff > 0)'}
+        cond_label = {'label': 'P( > observed)'}
     elif condition == 'less':
-        cond_label = {'label': 'P(diff < 0)'}
+        cond_label = {'label': 'P( <= observed)'}
     else:
         raise ValueError("Invalid condition. Use 'greater' or 'less'.")
     ax = sns.heatmap(p_diff_array, 
                      xticklabels=time_slices, 
                      yticklabels=support, 
-                     cmap='viridis', 
+                     cmap='viridis_r',
+                     vmin=0, 
                      cbar_kws=cond_label)
     plt.xlabel('Time Slices')
     plt.ylabel('Pairwise Distances')
-    plt.title('Heatmap of P(diff > 0) Over Time and Distance')
+    plt.title('Probability Heat Map')
     
     # Adjust x and y axis ticks using the largest divisor
     x_divisor = _largest_divisor(len(time_slices))
