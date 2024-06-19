@@ -102,8 +102,9 @@
 <span class="sig-prename descclassname"><span class="pre">chronocluster.data.simdata.</span></span><span class="sig-name descname"><span class="pre">generate_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dist_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hyperparams</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/data/simdata.html#generate_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.data.simdata.generate_params" title="Link to this definition"></a></dt>
 <dd><p>Generate distribution parameters from hyperparameters.</p>
 <p>Parameters:
-dist_type (str): Distribution type (‘norm’, ‘uniform’, ‘constant’).
-hyperparams (list of tuples): Hyperparameters for the distribution.</p>
+dist_type (str): Distribution type (‘norm’, ‘uniform’, ‘constant’, ‘calrcarbon’).
+hyperparams (list of tuples): Hyperparameters for the distribution.
+calcurve_name (str, optional): Name of the calibration curve data required for ‘calrcarbon’ distribution.</p>
 <p>Returns:
 list: Generated distribution parameters.</p>
 </dd></dl>
@@ -116,10 +117,11 @@ list: Generated distribution parameters.</p>
 n_points (int): Number of points to generate.
 cluster_centers (list of tuples): List of (x, y) tuples representing the centers of clusters.
 cluster_stds (list of floats): List of standard deviations for each cluster.
-start_type (str): Type of the start distribution (‘norm’, ‘uniform’, ‘constant’).
+start_type (str): Type of the start distribution (‘norm’, ‘uniform’, ‘constant’, ‘calrcarbon’).
 start_hyperparams (list): Hyperparameters for the start distribution.
-end_type (str): Type of the end distribution (‘norm’, ‘uniform’, ‘constant’).
-end_hyperparams (list): Hyperparameters for the end distribution.</p>
+end_type (str): Type of the end distribution (‘norm’, ‘uniform’, ‘constant’, ‘calrcarbon’).
+end_hyperparams (list): Hyperparameters for the end distribution.
+calcurve_name (str, optional): Name of the calibration curve data required for ‘calrcarbon’ distribution.</p>
 <p>Returns:
 list of Point: List of generated Point objects.</p>
 </dd></dl>

@@ -58,9 +58,9 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">chronocluster.utils module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#chronocluster.utils.NoPointsInTimeSliceException"><code class="docutils literal notranslate"><span class="pre">NoPointsInTimeSliceException</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#chronocluster.utils._largest_divisor"><code class="docutils literal notranslate"><span class="pre">_largest_divisor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#chronocluster.utils.calrc_plot"><code class="docutils literal notranslate"><span class="pre">calrc_plot()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#chronocluster.utils.chrono_plot"><code class="docutils literal notranslate"><span class="pre">chrono_plot()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#chronocluster.utils.clustering_heatmap"><code class="docutils literal notranslate"><span class="pre">clustering_heatmap()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#chronocluster.utils.ddelta"><code class="docutils literal notranslate"><span class="pre">ddelta</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#chronocluster.utils.get_box"><code class="docutils literal notranslate"><span class="pre">get_box()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#chronocluster.utils.pdiff_heatmap"><code class="docutils literal notranslate"><span class="pre">pdiff_heatmap()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#chronocluster.utils.plot_derivative"><code class="docutils literal notranslate"><span class="pre">plot_derivative()</span></code></a></li>
@@ -116,6 +116,17 @@
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="chronocluster.utils.calrc_plot">
+<span class="sig-prename descclassname"><span class="pre">chronocluster.utils.</span></span><span class="sig-name descname"><span class="pre">calrc_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mydist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pdf'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/utils.html#calrc_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.utils.calrc_plot" title="Link to this definition"></a></dt>
+<dd><p>Plot either the PDF and histogram of samples or the CDF and empirical CDF (ECDF) from samples for a calibrated radiocarbon distribution object.</p>
+<p>Parameters:
+- mydist: instance of calrcarbon distribution
+- plot_type: ‘pdf’ or ‘cdf’ to specify the type of plot
+- num_samples: number of samples to generate for histogram and ECDF
+- bins: number of bins for the histogram</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="chronocluster.utils.chrono_plot">
 <span class="sig-prename descclassname"><span class="pre">chronocluster.utils.</span></span><span class="sig-name descname"><span class="pre">chrono_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">style_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_slice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_limits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/utils.html#chrono_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.utils.chrono_plot" title="Link to this definition"></a></dt>
 <dd><p>Plots a list of points in 3D, with the z-axis representing time and cylinders representing temporal distributions.
@@ -168,73 +179,6 @@ results (np.ndarray): A 3D array where the first dimension is the distance, the 
 time_slices (array-like): Array of time slices.
 distances (array-like): Array of distances at which K or g was calculated.
 result_type (str): The type of results being plotted (‘K’ for Ripley’s K function or ‘g’ for pair correlation function).</p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="chronocluster.utils.ddelta">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">chronocluster.utils.</span></span><span class="sig-name descname"><span class="pre">ddelta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/utils.html#ddelta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.utils.ddelta" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rv_continuous</span></code></p>
-<p>Probability functions approximating the Dirac Delta</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="chronocluster.utils.ddelta._cdf">
-<span class="sig-name descname"><span class="pre">_cdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/utils.html#ddelta._cdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.utils.ddelta._cdf" title="Link to this definition"></a></dt>
-<dd><p>Cumulative distribution function</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chronocluster.utils.ddelta._entropy">
-<span class="sig-name descname"><span class="pre">_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/utils.html#ddelta._entropy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.utils.ddelta._entropy" title="Link to this definition"></a></dt>
-<dd><p>Entropy of the distribution</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chronocluster.utils.ddelta._moment">
-<span class="sig-name descname"><span class="pre">_moment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/utils.html#ddelta._moment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.utils.ddelta._moment" title="Link to this definition"></a></dt>
-<dd><p>nth moment of the distribution</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chronocluster.utils.ddelta._pdf">
-<span class="sig-name descname"><span class="pre">_pdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/utils.html#ddelta._pdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.utils.ddelta._pdf" title="Link to this definition"></a></dt>
-<dd><p>Probability density function</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chronocluster.utils.ddelta._ppf">
-<span class="sig-name descname"><span class="pre">_ppf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/utils.html#ddelta._ppf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.utils.ddelta._ppf" title="Link to this definition"></a></dt>
-<dd><p>Percent point function (inverse of cdf)</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chronocluster.utils.ddelta._rvs">
-<span class="sig-name descname"><span class="pre">_rvs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/utils.html#ddelta._rvs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.utils.ddelta._rvs" title="Link to this definition"></a></dt>
-<dd><p>Random variates</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chronocluster.utils.ddelta._sf">
-<span class="sig-name descname"><span class="pre">_sf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/utils.html#ddelta._sf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.utils.ddelta._sf" title="Link to this definition"></a></dt>
-<dd><p>Survival function</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chronocluster.utils.ddelta.mean">
-<span class="sig-name descname"><span class="pre">mean</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/utils.html#ddelta.mean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.utils.ddelta.mean" title="Link to this definition"></a></dt>
-<dd><p>Mean of the distribution</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chronocluster.utils.ddelta.std">
-<span class="sig-name descname"><span class="pre">std</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/utils.html#ddelta.std"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.utils.ddelta.std" title="Link to this definition"></a></dt>
-<dd><p>Standard deviation of the distribution</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="chronocluster.utils.ddelta.var">
-<span class="sig-name descname"><span class="pre">var</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/utils.html#ddelta.var"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.utils.ddelta.var" title="Link to this definition"></a></dt>
-<dd><p>Variance of the distribution</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py function">

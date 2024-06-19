@@ -3,7 +3,7 @@ import numpy as np
 from chronocluster.data.simdata import generate_random_points
 from chronocluster import clustering
 from chronocluster.data.simdata import generate_random_points
-from chronocluster.utils import clustering_heatmap, pdiff_heatmap, plot_mc_points, get_box, ddelta
+from chronocluster.utils import clustering_heatmap, pdiff_heatmap, plot_mc_points, get_box
 
 # plotting
 import matplotlib.pyplot as plt

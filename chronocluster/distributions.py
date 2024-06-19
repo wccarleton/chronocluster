@@ -162,18 +162,22 @@ class ddelta_gen(rv_continuous):
 
     def _pdf(self, x, d):
         """Probability density function"""
-        return np.inf if x == d else 0
+        x = np.asarray(x)
+        return np.where(x == d, np.inf, 0.0)
 
     def _cdf(self, x, d):
         """Cumulative distribution function"""
-        return 1.0 if x >= d else 0.0
+        x = np.asarray(x)
+        return np.where(x >= d, 1.0, 0.0)
 
     def _sf(self, x, d):
         """Survival function"""
-        return 1.0 - self._cdf(x, d)
+        x = np.asarray(x)
+        return np.where(x < d, 1.0, 0.0)
 
     def _ppf(self, q, d):
         """Percent point function (inverse of cdf)"""
+        q = np.asarray(q)
         return np.full_like(q, d)
 
     def _rvs(self, d, size=None, random_state=None):
@@ -208,4 +212,4 @@ class ddelta_gen(rv_continuous):
             return np.nan
 
 # Create the instance
-ddelta = ddelta_gen()
+ddelta = ddelta_gen(name='ddelta', shapes='d')

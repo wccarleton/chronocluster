@@ -82,103 +82,8 @@
 <span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span>
 <span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">FancyBboxPatch</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">rv_continuous</span>
 <span class="kn">from</span> <span class="nn">chronocluster.clustering</span> <span class="kn">import</span> <span class="n">Point</span>
-
-<div class="viewcode-block" id="ddelta">
-<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.ddelta">[docs]</a>
-<span class="k">class</span> <span class="nc">ddelta</span><span class="p">(</span><span class="n">rv_continuous</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Probability functions approximating the Dirac Delta&quot;&quot;&quot;</span>
-    
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ddelta&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="n">d</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dist</span> <span class="o">=</span> <span class="bp">self</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">badvalue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">d</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">d</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">xtol</span> <span class="o">=</span> <span class="mf">1e-14</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">moment_type</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">shapes</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">numargs</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">vecentropy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_entropy</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">generic_moment</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_moment</span><span class="p">)</span>
-
-<div class="viewcode-block" id="ddelta._pdf">
-<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.ddelta._pdf">[docs]</a>
-    <span class="k">def</span> <span class="nf">_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Probability density function&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="k">else</span> <span class="mi">0</span></div>
-
-
-<div class="viewcode-block" id="ddelta._cdf">
-<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.ddelta._cdf">[docs]</a>
-    <span class="k">def</span> <span class="nf">_cdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Cumulative distribution function&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="mf">1.0</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="k">else</span> <span class="mf">0.0</span></div>
-
-    
-<div class="viewcode-block" id="ddelta._sf">
-<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.ddelta._sf">[docs]</a>
-    <span class="k">def</span> <span class="nf">_sf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Survival function&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cdf</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="ddelta._ppf">
-<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.ddelta._ppf">[docs]</a>
-    <span class="k">def</span> <span class="nf">_ppf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Percent point function (inverse of cdf)&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span></div>
-
-
-<div class="viewcode-block" id="ddelta._rvs">
-<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.ddelta._rvs">[docs]</a>
-    <span class="k">def</span> <span class="nf">_rvs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Random variates&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="ddelta.mean">
-<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.ddelta.mean">[docs]</a>
-    <span class="k">def</span> <span class="nf">mean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Mean of the distribution&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span></div>
-
-    
-<div class="viewcode-block" id="ddelta.var">
-<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.ddelta.var">[docs]</a>
-    <span class="k">def</span> <span class="nf">var</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Variance of the distribution&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="mf">0.0</span></div>
-
-
-<div class="viewcode-block" id="ddelta.std">
-<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.ddelta.std">[docs]</a>
-    <span class="k">def</span> <span class="nf">std</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Standard deviation of the distribution&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="mf">0.0</span></div>
-
-
-<div class="viewcode-block" id="ddelta._entropy">
-<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.ddelta._entropy">[docs]</a>
-    <span class="k">def</span> <span class="nf">_entropy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Entropy of the distribution&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="mf">0.0</span></div>
-
-
-<div class="viewcode-block" id="ddelta._moment">
-<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.ddelta._moment">[docs]</a>
-    <span class="k">def</span> <span class="nf">_moment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;nth moment of the distribution&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-        <span class="k">elif</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">var</span><span class="p">()</span><span class="o">**</span><span class="mi">2</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span></div>
-</div>
-
+<span class="kn">from</span> <span class="nn">statsmodels.distributions.empirical_distribution</span> <span class="kn">import</span> <span class="n">ECDF</span>
 
 <div class="viewcode-block" id="_largest_divisor">
 <a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils._largest_divisor">[docs]</a>
@@ -565,6 +470,65 @@
         <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">ax</span></div>
+
+
+<div class="viewcode-block" id="calrc_plot">
+<a class="viewcode-back" href="../../chronocluster.utils.html#chronocluster.utils.calrc_plot">[docs]</a>
+<span class="k">def</span> <span class="nf">calrc_plot</span><span class="p">(</span><span class="n">mydist</span><span class="p">,</span> <span class="n">plot_type</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">,</span> <span class="n">num_samples</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot either the PDF and histogram of samples or the CDF and empirical CDF (ECDF) from samples for a calibrated radiocarbon distribution object.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    - mydist: instance of calrcarbon distribution</span>
+<span class="sd">    - plot_type: &#39;pdf&#39; or &#39;cdf&#39; to specify the type of plot</span>
+<span class="sd">    - num_samples: number of samples to generate for histogram and ECDF</span>
+<span class="sd">    - bins: number of bins for the histogram</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">t_values</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mydist</span><span class="o">.</span><span class="n">_get_pdf_values</span><span class="p">(</span><span class="n">mydist</span><span class="o">.</span><span class="n">c14_mean</span><span class="p">,</span> <span class="n">mydist</span><span class="o">.</span><span class="n">c14_err</span><span class="p">)</span>
+    <span class="n">t_min</span><span class="p">,</span> <span class="n">t_max</span> <span class="o">=</span> <span class="n">t_values</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">t_values</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="n">tau_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">t_min</span><span class="p">,</span> <span class="n">t_max</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">plot_type</span> <span class="o">==</span> <span class="s1">&#39;pdf&#39;</span><span class="p">:</span>
+        <span class="n">pdf_values</span> <span class="o">=</span> <span class="n">mydist</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">tau_range</span><span class="p">)</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="n">mydist</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">num_samples</span><span class="p">)</span>
+        
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+        
+        <span class="c1"># Plot PDF</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tau_range</span><span class="p">,</span> <span class="n">pdf_values</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;PDF&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># Plot histogram of samples</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Sample Histogram&#39;</span><span class="p">)</span>
+        
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">t_min</span><span class="p">,</span> <span class="n">t_max</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Tau&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Density&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;PDF and Sample Histogram&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="k">elif</span> <span class="n">plot_type</span> <span class="o">==</span> <span class="s1">&#39;cdf&#39;</span><span class="p">:</span>
+        <span class="n">cdf_values</span> <span class="o">=</span> <span class="n">mydist</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">tau_range</span><span class="p">)</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="n">mydist</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">num_samples</span><span class="p">)</span>
+        <span class="n">ecdf</span> <span class="o">=</span> <span class="n">ECDF</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+        
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+        
+        <span class="c1"># Plot CDF</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tau_range</span><span class="p">,</span> <span class="n">cdf_values</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;CDF&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        
+        <span class="c1"># Plot ECDF</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">ecdf</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">ecdf</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Empirical CDF&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+        
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">t_min</span><span class="p">,</span> <span class="n">t_max</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Tau&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;CDF&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;CDF and Empirical CDF&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid plot_type. Use &#39;pdf&#39; or &#39;cdf&#39;.&quot;</span><span class="p">)</span></div>
 
 
 <span class="c1"># Exceptions</span>

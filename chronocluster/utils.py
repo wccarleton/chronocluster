@@ -410,10 +410,10 @@ def calrc_plot(mydist, plot_type='pdf', num_samples=10000, bins=50):
         plt.figure(figsize=(10, 6))
         
         # Plot CDF
-        plt.plot(tau_range, cdf_values, label='CDF', color='blue', linewidth=2)
+        plt.plot(tau_range, cdf_values, label='CDF', color='orange', linewidth=10)
         
         # Plot ECDF
-        plt.step(ecdf.x, ecdf.y, where='post', label='Empirical CDF', color='orange')
+        plt.step(ecdf.x, ecdf.y, where='post', label='Empirical CDF', color='blue')
         
         plt.xlim(t_min, t_max)
         plt.xlabel('Tau')

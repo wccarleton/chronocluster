@@ -79,7 +79,9 @@
   <h1>Source code for chronocluster.data.simdata</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">chronocluster.data</span> <span class="kn">import</span> <span class="n">dataio</span>
+<span class="kn">from</span> <span class="nn">chronocluster.data.dataio</span> <span class="kn">import</span> <span class="n">df_to_pts</span>
+<span class="kn">from</span> <span class="nn">chronocluster.distributions</span> <span class="kn">import</span> <span class="n">calrcarbon</span>
+<span class="kn">from</span> <span class="nn">chronocluster.calcurves</span> <span class="kn">import</span> <span class="n">calibration_curves</span>
 
 <div class="viewcode-block" id="generate_random_points">
 <a class="viewcode-back" href="../../../chronocluster.data.simdata.html#chronocluster.data.simdata.generate_random_points">[docs]</a>
@@ -97,10 +99,11 @@
 <span class="sd">    n_points (int): Number of points to generate.</span>
 <span class="sd">    cluster_centers (list of tuples): List of (x, y) tuples representing the centers of clusters.</span>
 <span class="sd">    cluster_stds (list of floats): List of standard deviations for each cluster.</span>
-<span class="sd">    start_type (str): Type of the start distribution (&#39;norm&#39;, &#39;uniform&#39;, &#39;constant&#39;).</span>
+<span class="sd">    start_type (str): Type of the start distribution (&#39;norm&#39;, &#39;uniform&#39;, &#39;constant&#39;, &#39;calrcarbon&#39;).</span>
 <span class="sd">    start_hyperparams (list): Hyperparameters for the start distribution.</span>
-<span class="sd">    end_type (str): Type of the end distribution (&#39;norm&#39;, &#39;uniform&#39;, &#39;constant&#39;).</span>
+<span class="sd">    end_type (str): Type of the end distribution (&#39;norm&#39;, &#39;uniform&#39;, &#39;constant&#39;, &#39;calrcarbon&#39;).</span>
 <span class="sd">    end_hyperparams (list): Hyperparameters for the end distribution.</span>
+<span class="sd">    calcurve_name (str, optional): Name of the calibration curve data required for &#39;calrcarbon&#39; distribution.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">    list of Point: List of generated Point objects.</span>
@@ -132,7 +135,7 @@
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
     
     <span class="c1"># Convert DataFrame to list of Point objects</span>
-    <span class="n">points</span> <span class="o">=</span> <span class="n">dataio</span><span class="o">.</span><span class="n">df_to_pts</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="n">df_to_pts</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
     
     <span class="k">return</span> <span class="n">points</span></div>
 
@@ -144,8 +147,9 @@
 <span class="sd">    Generate distribution parameters from hyperparameters.</span>
 
 <span class="sd">    Parameters:</span>
-<span class="sd">    dist_type (str): Distribution type (&#39;norm&#39;, &#39;uniform&#39;, &#39;constant&#39;).</span>
+<span class="sd">    dist_type (str): Distribution type (&#39;norm&#39;, &#39;uniform&#39;, &#39;constant&#39;, &#39;calrcarbon&#39;).</span>
 <span class="sd">    hyperparams (list of tuples): Hyperparameters for the distribution.</span>
+<span class="sd">    calcurve_name (str, optional): Name of the calibration curve data required for &#39;calrcarbon&#39; distribution.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">    list: Generated distribution parameters.</span>
@@ -161,6 +165,26 @@
         <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">hyperparams</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">scale</span><span class="o">=</span><span class="n">hyperparams</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
         <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">exponential</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="n">hyperparams</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+    <span class="k">elif</span> <span class="n">dist_type</span> <span class="o">==</span> <span class="s2">&quot;calrcarbon&quot;</span><span class="p">:</span>
+        <span class="n">calcurve_name</span> <span class="o">=</span> <span class="n">hyperparams</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">calcurve</span> <span class="o">=</span> <span class="n">calibration_curves</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">calcurve_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">calcurve</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calibration curve </span><span class="si">{</span><span class="n">calcurve_name</span><span class="si">}</span><span class="s2"> not found&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Generate a tau value from the given distribution</span>
+        <span class="n">tau</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">hyperparams</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">scale</span><span class="o">=</span><span class="n">hyperparams</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>  <span class="c1"># For example, tau could be generated from a normal distribution</span>
+        
+        <span class="c1"># Back-calibrate tau to get c14_mean and c14_err</span>
+        <span class="n">cal_rc</span> <span class="o">=</span> <span class="n">calrcarbon</span><span class="p">(</span><span class="n">calcurve</span><span class="p">)</span>
+        <span class="n">curve_mean</span><span class="p">,</span> <span class="n">curve_error</span> <span class="o">=</span> <span class="n">cal_rc</span><span class="o">.</span><span class="n">_calc_curve_params</span><span class="p">(</span><span class="n">tau</span><span class="p">)</span>
+        
+        <span class="c1"># Generate c14_mean as a normal distribution around the back-calibrated mean</span>
+        <span class="n">c14_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">curve_mean</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">curve_error</span><span class="p">)</span>
+        
+        <span class="c1"># Use the provided c14_err or a generated value</span>
+        <span class="n">c14_err</span> <span class="o">=</span> <span class="n">curve_error</span>
+        
+        <span class="n">params</span> <span class="o">=</span> <span class="p">[</span><span class="n">calcurve_name</span><span class="p">,</span> <span class="n">c14_mean</span><span class="p">,</span> <span class="n">c14_err</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported distribution type: </span><span class="si">{</span><span class="n">dist_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         

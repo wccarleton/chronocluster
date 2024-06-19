@@ -180,7 +180,8 @@ class Point:
             scale = dist.std()
             return f"norm(loc={loc}, scale={scale})"
         elif dist.dist.name == 'ddelta':
-            return f"ddelta(d={dist.d})"
+            d = dist.mean()
+            return f"ddelta(d={d})"
         else:
             params = {key: value for key, value in dist.__dict__.items() if not key.startswith('_')}
             param_str = ', '.join([f"{key}={value}" for key, value in params.items()])
