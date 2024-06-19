@@ -1,8 +1,9 @@
 import numpy as np
 import pandas as pd
 from scipy.stats import norm, uniform
-from chronocluster.utils import ddelta
+from chronocluster.distributions import ddelta, calrcarbon
 from chronocluster.clustering import Point
+from chronocluster.calcurves import calibration_curves
 
 def pts_from_csv(file_path):
     """
@@ -92,6 +93,10 @@ def df_to_pts(df):
             start_distribution = uniform(loc=start_params[0], scale=start_params[1])
         elif start_type == 'constant':
             start_distribution = ddelta(d=start_params[0])
+        elif start_type == 'calrcarbon':
+            calcurve_name, c14_mean, c14_err = start_params
+            calcurve = calibration_curves[calcurve_name]
+            start_distribution = calrcarbon(calcurve, c14_mean, c14_err)
         else:
             raise ValueError(f"Unsupported start distribution type: {start_type}")
 
@@ -101,6 +106,10 @@ def df_to_pts(df):
             end_distribution = uniform(loc=end_params[0], scale=end_params[1])
         elif end_type == 'constant':
             end_distribution = ddelta(d=end_params[0])
+        elif end_type == 'calrcarbon':
+            calcurve_name, c14_mean, c14_err = end_params
+            calcurve = calibration_curves[calcurve_name]
+            end_distribution = calrcarbon(calcurve, c14_mean, c14_err)
         else:
             raise ValueError(f"Unsupported end distribution type: {end_type}")
 

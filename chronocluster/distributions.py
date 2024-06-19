@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from scipy.stats import rv_continuous
 from scipy.stats.distributions import norm
-from scipy.interpolate import interp1d, CubicSpline
+from scipy.interpolate import CubicSpline
 
 # Get calibration curve
 # Load the IntCal20 calibration curve
@@ -10,27 +10,25 @@ url = "https://intcal.org/curves/intcal20.14c"
 intcal20 = pd.read_csv(url, skiprows=10, delimiter=",")
 intcal20.columns = ["calbp", "c14bp", "c14_sigma", "f14c", "f14c_sigma"]
 
-class calrcarbon(rv_continuous):
-    """Probability functions for radiocarbon dates"""
+class calrcarbon:
+    """Custom calibrated radiocarbon date distribution"""
+    
     _interp_mean = None
     _interp_error = None
 
-    def __init__(self, calcurve):
-        super().__init__(name='calrcarbon', shapes='c14_mean, c14_err')
-        self.dist = self
-        self.badvalue = np.nan
-        self.xtol = 1e-14
+    def __init__(self, calcurve, c14_mean=None, c14_err=None):
+        self.name = 'calrcarbon'
         self.a = -max(calcurve['calbp'])
         self.b = -min(calcurve['calbp'])
         if calrcarbon._interp_mean is None:
             calrcarbon._interp_mean = CubicSpline(-calcurve['calbp'], -calcurve['c14bp'], extrapolate=False)
             calrcarbon._interp_error = CubicSpline(-calcurve['calbp'], calcurve['c14_sigma'], extrapolate=False)
-
-    def _argcheck(self, c14_mean, c14_err):
-        return (c14_err > 0) & np.isfinite(c14_mean)
+        self.c14_mean = c14_mean
+        self.c14_err = c14_err
 
     def _calc_curve_params(self, tau):
-        curve_mean, curve_error = calrcarbon._interp_mean(tau), calrcarbon._interp_error(tau)
+        curve_mean = calrcarbon._interp_mean(tau)
+        curve_error = calrcarbon._interp_error(tau)
         return curve_mean, curve_error
 
     def _pdf(self, tau, c14_mean, c14_err):
@@ -79,82 +77,135 @@ class calrcarbon(rv_continuous):
         pdf_values /= np.trapz(pdf_values, t_values)
         return t_values, pdf_values
 
-    def mean(self, c14_mean, c14_err):
+    def pdf(self, tau, c14_mean=None, c14_err=None):
+        """Public method for the PDF"""
+        if c14_mean is None:
+            c14_mean = self.c14_mean
+        if c14_err is None:
+            c14_err = self.c14_err
+        return self._pdf(tau, c14_mean, c14_err)
+
+    def logpdf(self, tau, c14_mean=None, c14_err=None):
+        """Public method for the log PDF"""
+        if c14_mean is None:
+            c14_mean = self.c14_mean
+        if c14_err is None:
+            c14_err = self.c14_err
+        return self._logpdf(tau, c14_mean, c14_err)
+
+    def cdf(self, tau, c14_mean=None, c14_err=None):
+        """Public method for the CDF"""
+        if c14_mean is None:
+            c14_mean = self.c14_mean
+        if c14_err is None:
+            c14_err = self.c14_err
+        return self._cdf(tau, c14_mean, c14_err)
+    
+    def sf(self, tau, c14_mean=None, c14_err=None):
+        """Public method for the survival function"""
+        if c14_mean is None:
+            c14_mean = self.c14_mean
+        if c14_err is None:
+            c14_err = self.c14_err
+        return self._sf(tau, c14_mean, c14_err)
+
+    def ppf(self, q, c14_mean=None, c14_err=None):
+        """Public method for the PPF"""
+        if c14_mean is None:
+            c14_mean = self.c14_mean
+        if c14_err is None:
+            c14_err = self.c14_err
+        return self._ppf(q, c14_mean, c14_err)
+
+    def rvs(self, c14_mean=None, c14_err=None, size=None, random_state=None):
+        """Public method for generating random variates"""
+        if c14_mean is None:
+            c14_mean = self.c14_mean
+        if c14_err is None:
+            c14_err = self.c14_err
+        return self._rvs(c14_mean, c14_err, size=size, random_state=random_state)
+
+    def mean(self, c14_mean=None, c14_err=None):
+        """Public method for the mean of the distribution"""
+        if c14_mean is None:
+            c14_mean = self.c14_mean
+        if c14_err is None:
+            c14_err = self.c14_err
         t_values, pdf_values = self._get_pdf_values(c14_mean, c14_err)
         return np.sum(t_values * pdf_values) * (t_values[1] - t_values[0])
 
-    def variance(self, c14_mean, c14_err):
+    def variance(self, c14_mean=None, c14_err=None):
+        """Public method for the variance of the distribution"""
+        if c14_mean is None:
+            c14_mean = self.c14_mean
+        if c14_err is None:
+            c14_err = self.c14_err
         t_values, pdf_values = self._get_pdf_values(c14_mean, c14_err)
         mean_val = self.mean(c14_mean, c14_err)
         return np.sum((t_values - mean_val) ** 2 * pdf_values) * (t_values[1] - t_values[0])
 
-    def _munp(self, n, c14_mean, c14_err):
-        """n-th moment of the distribution"""
+    def moment(self, n, c14_mean=None, c14_err=None):
+        """Public method for the n-th moment of the distribution"""
+        if c14_mean is None:
+            c14_mean = self.c14_mean
+        if c14_err is None:
+            c14_err = self.c14_err
         t_values, pdf_values = self._get_pdf_values(c14_mean, c14_err)
         return np.sum(t_values**n * pdf_values) * (t_values[1] - t_values[0])
 
-class ddelta(rv_continuous):
-    """Probability functions approximating the Dirac Delta"""
-    
-    def __init__(self, d):
-        super().__init__(name='ddelta', shapes='d')
-        self.d = d
-        self.dist = self
-        self.badvalue = np.nan
-        self.a = d
-        self.b = d
-        self.xtol = 1e-14
-        self.moment_type = 1
-        self.shapes = None
-        self.numargs = 0
-        self.vecentropy = np.vectorize(self._entropy)
-        self.generic_moment = np.vectorize(self._moment)
+class ddelta_gen(rv_continuous):
+    """Dirac Delta distribution"""
 
     def _argcheck(self, d):
         """Check the validity of the shape parameters"""
         return np.isfinite(d)
 
-    def _pdf(self, x):
+    def _pdf(self, x, d):
         """Probability density function"""
-        return np.inf if x == self.d else 0
+        return np.inf if x == d else 0
 
-    def _cdf(self, x):
+    def _cdf(self, x, d):
         """Cumulative distribution function"""
-        return 1.0 if x >= self.d else 0.0
-    
-    def _sf(self, x):
+        return 1.0 if x >= d else 0.0
+
+    def _sf(self, x, d):
         """Survival function"""
-        return 1.0 - self._cdf(x)
+        return 1.0 - self._cdf(x, d)
 
-    def _ppf(self, q):
+    def _ppf(self, q, d):
         """Percent point function (inverse of cdf)"""
-        return self.d
+        return np.full_like(q, d)
 
-    def _rvs(self, size=None, random_state=None):
+    def _rvs(self, d, size=None, random_state=None):
         """Random variates"""
-        return np.full(size, self.d)
-
-    def mean(self):
-        """Mean of the distribution"""
-        return self.d
+        if size is None:
+            size = 1
+        return np.full(size, d)
     
-    def var(self):
+    def mean(self, d):
+        """Mean of the distribution"""
+        return d
+    
+    def var(self, d):
         """Variance of the distribution"""
         return 0.0
 
-    def std(self):
+    def std(self, d):
         """Standard deviation of the distribution"""
         return 0.0
 
-    def _entropy(self, *args, **kwargs):
+    def _entropy(self, d):
         """Entropy of the distribution"""
         return 0.0
 
-    def _moment(self, n, *args, **kwargs):
+    def _moment(self, n, d):
         """nth moment of the distribution"""
         if n == 1:
-            return self.mean()
+            return d
         elif n == 2:
-            return self.var()**2
+            return 0.0
         else:
             return np.nan
+
+# Create the instance
+ddelta = ddelta_gen()

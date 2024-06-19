@@ -173,7 +173,9 @@ class Point:
         str
             The string representation of the distribution.
         """
-        if dist.dist.name == 'norm':
+        if hasattr(dist, 'name') and dist.name == 'calrcarbon':
+            return f"calrcarbon(c14_mean={dist.c14_mean}, c14_err={dist.c14_err})"
+        elif dist.dist.name == 'norm':
             loc = dist.mean()
             scale = dist.std()
             return f"norm(loc={loc}, scale={scale})"

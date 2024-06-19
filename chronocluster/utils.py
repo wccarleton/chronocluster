@@ -4,6 +4,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.patches import FancyBboxPatch
 import seaborn as sns
 from chronocluster.clustering import Point
+from statsmodels.distributions.empirical_distribution import ECDF
 
 def _largest_divisor(n, max_divisors=10):
     'Utility function for legible axis tick mark density.'
@@ -367,6 +368,62 @@ def chrono_plot(points, ax=None, style_params=None, time_slice=None, plot_limits
         fig.tight_layout()
 
     return ax
+
+def calrc_plot(mydist, plot_type='pdf', num_samples=10000, bins=50):
+    """
+    Plot either the PDF and histogram of samples or the CDF and empirical CDF (ECDF) from samples for a calibrated radiocarbon distribution object.
+    
+    Parameters:
+    - mydist: instance of calrcarbon distribution
+    - plot_type: 'pdf' or 'cdf' to specify the type of plot
+    - num_samples: number of samples to generate for histogram and ECDF
+    - bins: number of bins for the histogram
+    """
+    t_values, _ = mydist._get_pdf_values(mydist.c14_mean, mydist.c14_err)
+    t_min, t_max = t_values.min(), t_values.max()
+    tau_range = np.linspace(t_min, t_max, 1000)
+
+    if plot_type == 'pdf':
+        pdf_values = mydist.pdf(tau_range)
+        samples = mydist.rvs(size=num_samples)
+        
+        plt.figure(figsize=(10, 6))
+        
+        # Plot PDF
+        plt.plot(tau_range, pdf_values, label='PDF', color='blue')
+        
+        # Plot histogram of samples
+        plt.hist(samples, bins=bins, density=True, alpha=0.6, color='orange', label='Sample Histogram')
+        
+        plt.xlim(t_min, t_max)
+        plt.xlabel('Tau')
+        plt.ylabel('Density')
+        plt.title('PDF and Sample Histogram')
+        plt.legend()
+        plt.show()
+
+    elif plot_type == 'cdf':
+        cdf_values = mydist.cdf(tau_range)
+        samples = mydist.rvs(size=num_samples)
+        ecdf = ECDF(samples)
+        
+        plt.figure(figsize=(10, 6))
+        
+        # Plot CDF
+        plt.plot(tau_range, cdf_values, label='CDF', color='blue', linewidth=2)
+        
+        # Plot ECDF
+        plt.step(ecdf.x, ecdf.y, where='post', label='Empirical CDF', color='orange')
+        
+        plt.xlim(t_min, t_max)
+        plt.xlabel('Tau')
+        plt.ylabel('CDF')
+        plt.title('CDF and Empirical CDF')
+        plt.legend()
+        plt.show()
+
+    else:
+        raise ValueError("Invalid plot_type. Use 'pdf' or 'cdf'.")
 
 # Exceptions
 
