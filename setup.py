@@ -9,7 +9,7 @@ setup(
         'scipy',
         'matplotlib',
         'pointpats',
-        'pymc3'
+        'pymc'
     ],
     author='Your Name',
     author_email='ccarleton@protonmail.com',
