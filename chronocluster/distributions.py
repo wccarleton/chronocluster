@@ -1,8 +1,14 @@
+#!/usr/bin/env python 3.11.0
+# -*-coding:utf-8 -*-
+# @Author  : Christopher Carleton & Shuang Song
+# @Contact   : carleton@gea.mpg.de
+# GitHub   : https://github.com/wccarleton/chronocluster_dark
+
 import numpy as np
 import pandas as pd
+from scipy.interpolate import CubicSpline
 from scipy.stats import rv_continuous
 from scipy.stats.distributions import norm
-from scipy.interpolate import CubicSpline
 
 # Get calibration curve
 # Load the IntCal20 calibration curve
@@ -10,19 +16,24 @@ url = "https://intcal.org/curves/intcal20.14c"
 intcal20 = pd.read_csv(url, skiprows=10, delimiter=",")
 intcal20.columns = ["calbp", "c14bp", "c14_sigma", "f14c", "f14c_sigma"]
 
+
 class calrcarbon:
     """Custom calibrated radiocarbon date distribution"""
-    
+
     _interp_mean = None
     _interp_error = None
 
     def __init__(self, calcurve, c14_mean=None, c14_err=None):
-        self.name = 'calrcarbon'
-        self.a = -max(calcurve['calbp'])
-        self.b = -min(calcurve['calbp'])
+        self.name = "calrcarbon"
+        self.a = -max(calcurve["calbp"])
+        self.b = -min(calcurve["calbp"])
         if calrcarbon._interp_mean is None:
-            calrcarbon._interp_mean = CubicSpline(-calcurve['calbp'], -calcurve['c14bp'], extrapolate=False)
-            calrcarbon._interp_error = CubicSpline(-calcurve['calbp'], calcurve['c14_sigma'], extrapolate=False)
+            calrcarbon._interp_mean = CubicSpline(
+                -calcurve["calbp"], -calcurve["c14bp"], extrapolate=False
+            )
+            calrcarbon._interp_error = CubicSpline(
+                -calcurve["calbp"], calcurve["c14_sigma"], extrapolate=False
+            )
         self.c14_mean = c14_mean
         self.c14_err = c14_err
 
@@ -46,7 +57,7 @@ class calrcarbon:
         cdf_values = np.cumsum(pdf_values) * (t_values[1] - t_values[0])
         cdf_values /= cdf_values[-1]
         return np.interp(tau, t_values, cdf_values)
-    
+
     def _sf(self, tau, c14_mean, c14_err):
         return 1.0 - self._cdf(tau, c14_mean, c14_err)
 
@@ -100,7 +111,7 @@ class calrcarbon:
         if c14_err is None:
             c14_err = self.c14_err
         return self._cdf(tau, c14_mean, c14_err)
-    
+
     def sf(self, tau, c14_mean=None, c14_err=None):
         """Public method for the survival function"""
         if c14_mean is None:
@@ -142,7 +153,9 @@ class calrcarbon:
             c14_err = self.c14_err
         t_values, pdf_values = self._get_pdf_values(c14_mean, c14_err)
         mean_val = self.mean(c14_mean, c14_err)
-        return np.sum((t_values - mean_val) ** 2 * pdf_values) * (t_values[1] - t_values[0])
+        return np.sum((t_values - mean_val) ** 2 * pdf_values) * (
+            t_values[1] - t_values[0]
+        )
 
     def moment(self, n, c14_mean=None, c14_err=None):
         """Public method for the n-th moment of the distribution"""
@@ -152,6 +165,7 @@ class calrcarbon:
             c14_err = self.c14_err
         t_values, pdf_values = self._get_pdf_values(c14_mean, c14_err)
         return np.sum(t_values**n * pdf_values) * (t_values[1] - t_values[0])
+
 
 class ddelta_gen(rv_continuous):
     """Dirac Delta distribution"""
@@ -185,11 +199,11 @@ class ddelta_gen(rv_continuous):
         if size is None:
             size = 1
         return np.full(size, d)
-    
+
     def mean(self, d):
         """Mean of the distribution"""
         return d
-    
+
     def var(self, d):
         """Variance of the distribution"""
         return 0.0
@@ -211,5 +225,6 @@ class ddelta_gen(rv_continuous):
         else:
             return np.nan
 
+
 # Create the instance
-ddelta = ddelta_gen(name='ddelta', shapes='d')
+ddelta = ddelta_gen(name="ddelta", shapes="d")

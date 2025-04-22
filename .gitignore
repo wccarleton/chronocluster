@@ -10,3 +10,9 @@ README.html
 tests/__pycache__/
 tests/*.py[cod]
 tests/.pytest_cache/
+
+poetry.lock
+.DS_Store
+.venv/
+.pytest_cache/
+.mypy_cache/

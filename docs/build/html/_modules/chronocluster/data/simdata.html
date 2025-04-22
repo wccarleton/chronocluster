@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>chronocluster.data.simdata &mdash; ChronoCluster 0.1 documentation</title>
+  <title>chronocluster.data.simdata &mdash; ChronoCluster 0.2.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=2709fde1"></script>
-        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=938c9ccc"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -34,9 +32,6 @@
           <a href="../../../index.html" class="icon icon-home">
             ChronoCluster
           </a>
-              <div class="version">
-                0.1
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -82,6 +77,7 @@
 <span class="kn">from</span> <span class="nn">chronocluster.data.dataio</span> <span class="kn">import</span> <span class="n">df_to_pts</span>
 <span class="kn">from</span> <span class="nn">chronocluster.distributions</span> <span class="kn">import</span> <span class="n">calrcarbon</span>
 <span class="kn">from</span> <span class="nn">chronocluster.calcurves</span> <span class="kn">import</span> <span class="n">calibration_curves</span>
+<span class="kn">from</span> <span class="nn">chronocluster.clustering</span> <span class="kn">import</span> <span class="n">Point</span>
 
 <div class="viewcode-block" id="generate_random_points">
 <a class="viewcode-back" href="../../../chronocluster.data.simdata.html#chronocluster.data.simdata.generate_random_points">[docs]</a>
@@ -189,6 +185,93 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported distribution type: </span><span class="si">{</span><span class="n">dist_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         
     <span class="k">return</span> <span class="n">params</span></div>
+
+
+<div class="viewcode-block" id="bise">
+<a class="viewcode-back" href="../../../chronocluster.data.simdata.html#chronocluster.data.simdata.bise">[docs]</a>
+<span class="k">def</span> <span class="nf">bise</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">nsim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates a null distribution of spatial coordinates based on the mean and covariance</span>
+<span class="sd">    matrix of the provided Point objects and returns the mean, covariance matrix, simulated</span>
+<span class="sd">    coordinates, and a list of new Point objects with coordinates sampled from the null distribution.</span>
+<span class="sd">    The intention is to create Basline Informed Spatial Expectation (BISE) for </span>
+<span class="sd">    use as a landscape (or other constraints) relevant null model replacement for </span>
+<span class="sd">    Complete Spatial Randomness.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    points : list of Point</span>
+<span class="sd">        List of Point objects with x, y coordinates.</span>
+<span class="sd">    nsim : int</span>
+<span class="sd">        Number of simulated coordinates to generate.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    mean_location : np.ndarray</span>
+<span class="sd">        Mean (x, y) coordinate of the original points.</span>
+<span class="sd">    cov_matrix : np.ndarray</span>
+<span class="sd">        Covariance matrix of the original points.</span>
+<span class="sd">    simulated_coords : np.ndarray</span>
+<span class="sd">        Simulated coordinates as a (num_simulated, 2) array.</span>
+<span class="sd">    simulated_points : list of Point</span>
+<span class="sd">        List of new Point objects with coordinates from the simulated null distribution.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Extract coordinates from Point objects</span>
+    <span class="n">coordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="p">]</span> <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">])</span>
+
+    <span class="c1"># Step 1: Calculate mean and covariance of the observed coordinates</span>
+    <span class="n">mean_location</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">cov_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span> <span class="n">rowvar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Step 2: Generate simulated coordinates from a bivariate normal distribution</span>
+    <span class="k">if</span> <span class="n">nsim</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">nsim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+    <span class="n">simulated_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mean_location</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">nsim</span><span class="p">)</span>
+
+    <span class="c1"># Step 3: Create new Point objects with simulated coordinates</span>
+    <span class="n">simulated_points</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">simulated_coords</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">simulated_coords</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+              <span class="n">start_distribution</span><span class="o">=</span><span class="n">point</span><span class="o">.</span><span class="n">start_distribution</span><span class="p">,</span>
+              <span class="n">end_distribution</span><span class="o">=</span><span class="n">point</span><span class="o">.</span><span class="n">end_distribution</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">point</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">points</span><span class="p">[:</span><span class="n">nsim</span><span class="p">])</span>
+    <span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">mean_location</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">simulated_coords</span><span class="p">,</span> <span class="n">simulated_points</span></div>
+
+
+<div class="viewcode-block" id="synth_sample">
+<a class="viewcode-back" href="../../../chronocluster.data.simdata.html#chronocluster.data.simdata.synth_sample">[docs]</a>
+<span class="k">def</span> <span class="nf">synth_sample</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">,</span> <span class="n">time_slice</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a synthetic, inclusion-weighted sample of points based on their inclusion probabilities.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    points : list of Point</span>
+<span class="sd">        List of Point objects, each with spatial coordinates and temporal distributions.</span>
+<span class="sd">    n_samples : int</span>
+<span class="sd">        The total number of points in the synthetic sample.</span>
+<span class="sd">    time_slice : float</span>
+<span class="sd">        The time slice for which to calculate inclusion probabilities.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    synthetic_sample : list of Point</span>
+<span class="sd">        A synthetic, inclusion-weighted sample of Point objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Calculate inclusion probabilities for the specified time slice</span>
+    <span class="n">inclusion_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">point</span><span class="o">.</span><span class="n">calculate_inclusion_probability</span><span class="p">(</span><span class="n">time_slice</span><span class="p">)</span> <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">])</span>
+    
+    <span class="c1"># Normalize inclusion probabilities to sum to 1 for use as sampling weights</span>
+    <span class="n">normalized_probs</span> <span class="o">=</span> <span class="n">inclusion_probs</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">inclusion_probs</span><span class="p">)</span>
+    
+    <span class="c1"># Resample indices based on inclusion probabilities</span>
+    <span class="n">sampled_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">normalized_probs</span><span class="p">)</span>
+    
+    <span class="c1"># Generate the synthetic sample by duplicating selected points</span>
+    <span class="n">synthetic_sample</span> <span class="o">=</span> <span class="p">[</span><span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sampled_indices</span><span class="p">]</span>
+    
+    <span class="k">return</span> <span class="n">synthetic_sample</span></div>
 
 </pre></div>
 

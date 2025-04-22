@@ -1,27 +1,25 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Introduction &mdash; ChronoCluster 0.1 documentation</title>
+  <title>Introduction &mdash; ChronoCluster 0.2.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="_static/nbsphinx-code-cells.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/nbsphinx-code-cells.css?v=2aa19091" />
 
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=2709fde1"></script>
-        <script src="_static/doctools.js?v=9a2dae69"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=938c9ccc"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -40,9 +38,6 @@
           <a href="index.html" class="icon icon-home">
             ChronoCluster
           </a>
-              <div class="version">
-                0.1
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -108,6 +103,25 @@
 <li class="toctree-l3"><a class="reference internal" href="#Other-ChronoCluster-Clustering-Statistics">Other ChronoCluster Clustering Statistics</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#Example-Code-for-Ripley's-K,-L,-and-G-Functions">Example Code for Ripley’s K, L, and G Functions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Explanation">Explanation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Baseline-Informed-Spatial-Expectation">Baseline Informed Spatial Expectation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Simulation-Example">Simulation Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#CSR-Comparison">CSR Comparison</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#BISE-Comparison">BISE Comparison</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Kernel-Density-Estimation-(KDE)">Kernel Density Estimation (KDE)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#KDE-Primer">KDE Primer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Incorporating-Temporal-Information-with-kde_time">Incorporating Temporal Information with kde_time</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Context-and-Purpose">Context and Purpose</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#KDE-in-Chronocluster">KDE in Chronocluster</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Peak-Identification">Peak Identification</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Radial-Density-and-KDE">Radial Density and KDE</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Defining-Radial-Density">Defining Radial Density</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Radial-KDE-in-chronocluster">Radial KDE in chronocluster</a></li>
 </ul>
 </li>
 </ul>
@@ -213,13 +227,15 @@ matter, historical and even palaeoclimatic) point data.</p>
 </ul>
 <p>We will need a number of libraries:</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[63]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Analysis</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">chronocluster.data.simdata</span> <span class="kn">import</span> <span class="n">generate_random_points</span>
 <span class="kn">from</span> <span class="nn">chronocluster</span> <span class="kn">import</span> <span class="n">clustering</span>
+<span class="kn">from</span> <span class="nn">chronocluster.clustering</span> <span class="kn">import</span> <span class="n">Point</span>
+<span class="kn">from</span> <span class="nn">chronocluster.data.simdata</span> <span class="kn">import</span> <span class="n">bise</span>
 <span class="kn">from</span> <span class="nn">chronocluster.utils</span> <span class="kn">import</span> <span class="n">clustering_heatmap</span><span class="p">,</span> <span class="n">pdiff_heatmap</span><span class="p">,</span> <span class="n">plot_mc_points</span><span class="p">,</span> <span class="n">get_box</span><span class="p">,</span> <span class="n">chrono_plot</span>
 <span class="kn">from</span> <span class="nn">chronocluster.distributions</span> <span class="kn">import</span> <span class="n">ddelta</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
@@ -232,7 +248,7 @@ matter, historical and even palaeoclimatic) point data.</p>
 </div>
 <p>Then, we need to generate a random point using some ChronoCluster functions and probability distributions (those will be explained further down) just to illustrate some key ideas:</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[64]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># define cluster distributions</span>
@@ -262,7 +278,7 @@ matter, historical and even palaeoclimatic) point data.</p>
 </div>
 <p>And, lastly, we can call a ChronoCluster plotting function to plot the point in a spacetime volume:</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[65]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Custom styling parameters</span>
@@ -308,7 +324,7 @@ matter, historical and even palaeoclimatic) point data.</p>
 confident the event occurred.</p>
 <p>To make this clearer, let’s visualize the start and end distributions of a single point and the resulting world line in a 2D plot focused only on time and not space. The horizontal axis will represent the time duration during which the point exists in the space-time volume.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[66]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the start and end distributions</span>
@@ -702,7 +718,7 @@ generation.</p>
 <p>Let’s take an example date to illustrate the calibration process and the methods implemented in the calrcarbon class. We will plot a calibrated radiocarbon date density (the PDF) using a ChronoCluster custom plotting method called <code class="docutils literal notranslate"><span class="pre">calrc_plot</span></code>, which will produce a density familiar to most who work with radicoarbon dates. And, then, we will use the <code class="docutils literal notranslate"><span class="pre">cdf</span></code> method to calculate the CDF from the PDF. For comparison, we will also sample the distribution (samples represented as a histogram in the
 first plot) and call the ECDF (empirical cumulative distribution function) on that sample (this sampling is handled by a custom plotting function). Plotting both the calculated CDF and the ECDF we can determine whether the <code class="docutils literal notranslate"><span class="pre">cdf</span></code> method is working as expected.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[67]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">statsmodels.distributions.empirical_distribution</span> <span class="kn">import</span> <span class="n">ECDF</span>
@@ -747,7 +763,7 @@ first plot) and call the ECDF (empirical cumulative distribution function) on th
 (<code class="docutils literal notranslate"><span class="pre">norm</span></code>), Uniform (<code class="docutils literal notranslate"><span class="pre">unif</span></code>) constant (<code class="docutils literal notranslate"><span class="pre">ddelta</span></code>) distributions. But, other functions and the <code class="docutils literal notranslate"><span class="pre">Point</span></code> class can take any valid distribution that has <code class="docutils literal notranslate"><span class="pre">.pdf</span></code>, <code class="docutils literal notranslate"><span class="pre">.cdf</span></code>, <code class="docutils literal notranslate"><span class="pre">._sf</span></code>, <code class="docutils literal notranslate"><span class="pre">.ppf</span></code>, and <code class="docutils literal notranslate"><span class="pre">.rvs</span></code> methods that return mathematically correct values.</p>
 <p>In the following example, we will create a <code class="docutils literal notranslate"><span class="pre">Point</span></code> object with: - A normal distribution for the start time, representing some uncertainty. - A <code class="docutils literal notranslate"><span class="pre">ddelta</span></code> distribution for the end time, indicating that the end time is known exactly.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[68]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">point</span> <span class="o">=</span> <span class="n">clustering</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
@@ -778,7 +794,7 @@ Point(x=10, y=10, start_distribution=norm(loc=1000.0, scale=50.0), end_distribut
 </div>
 <p>And in this second example, we will create a <code class="docutils literal notranslate"><span class="pre">Point</span></code> object with: - A <code class="docutils literal notranslate"><span class="pre">norm</span></code>al distribution for the start time, representing some uncertainty. - A <code class="docutils literal notranslate"><span class="pre">calrcarbon</span></code> distribution for the end time, indicating that the end time is based on a radiocarbon date. - <em>note that the ``calrcarbon`` class has no ``.std()`` method because they tend to be highly multimodal and a standard deviation would be misleading.</em></p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[69]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">point</span> <span class="o">=</span> <span class="n">clustering</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
@@ -835,7 +851,7 @@ Point(x=10, y=10, start_distribution=norm(loc=-5000.0, scale=50.0), end_distribu
 <li><p>Plot the Points: We use the chrono_plot function to visualize the points in the space-time volume.</p></li>
 </ol>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[70]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># define cluster distributions</span>
@@ -922,7 +938,7 @@ Point(x=10, y=10, start_distribution=norm(loc=-5000.0, scale=50.0), end_distribu
 <section id="Step-1:-Define-Time-Slices">
 <h3>Step 1: Define Time Slices<a class="headerlink" href="#Step-1:-Define-Time-Slices" title="Link to this heading"></a></h3>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[71]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the time slices</span>
@@ -937,7 +953,7 @@ Point(x=10, y=10, start_distribution=norm(loc=-5000.0, scale=50.0), end_distribu
 <section id="Step-2:-Precompute-Inclusion-Probabilities">
 <h3>Step 2: Precompute Inclusion Probabilities<a class="headerlink" href="#Step-2:-Precompute-Inclusion-Probabilities" title="Link to this heading"></a></h3>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[72]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Precompute inclusion probabilities based on age models and time slices</span>
@@ -949,7 +965,7 @@ Point(x=10, y=10, start_distribution=norm(loc=-5000.0, scale=50.0), end_distribu
 <section id="Step-3:-Run-Monte-Carlo-Simulations">
 <h3>Step 3: Run Monte Carlo Simulations<a class="headerlink" href="#Step-3:-Run-Monte-Carlo-Simulations" title="Link to this heading"></a></h3>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[73]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run the Monte Carlo simulation to get an ensemble of probable</span>
@@ -966,7 +982,7 @@ Point(x=10, y=10, start_distribution=norm(loc=-5000.0, scale=50.0), end_distribu
 <section id="Step-4:-Determine-Maximum-Distance">
 <h3>Step 4: Determine Maximum Distance<a class="headerlink" href="#Step-4:-Determine-Maximum-Distance" title="Link to this heading"></a></h3>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[74]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get a bounding box for use later and to extract sensible distance limits</span>
@@ -979,7 +995,7 @@ Point(x=10, y=10, start_distribution=norm(loc=-5000.0, scale=50.0), end_distribu
 <section id="Step-5:-Produce-Pairwise-Distances">
 <h3>Step 5: Produce Pairwise Distances<a class="headerlink" href="#Step-5:-Produce-Pairwise-Distances" title="Link to this heading"></a></h3>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[75]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Produce pairwise distances to explore clustering structure</span>
@@ -988,7 +1004,7 @@ Point(x=10, y=10, start_distribution=norm(loc=-5000.0, scale=50.0), end_distribu
                                                          <span class="n">bw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                                                          <span class="n">density</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                                          <span class="n">max_distance</span><span class="o">=</span><span class="n">max_distance</span><span class="p">)</span>
-<br/></pre></div>
+</pre></div>
 </div>
 </div>
 </section>
@@ -996,7 +1012,7 @@ Point(x=10, y=10, start_distribution=norm(loc=-5000.0, scale=50.0), end_distribu
 <h3>Step 6: Visualize Clustering<a class="headerlink" href="#Step-6:-Visualize-Clustering" title="Link to this heading"></a></h3>
 <p>We can visualize the clustering in a couple of ways. First with a heat map and then by randomly sleecting a time slice for plotting.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[76]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Visualize clustering with heatmap</span>
@@ -1015,7 +1031,7 @@ Point(x=10, y=10, start_distribution=norm(loc=-5000.0, scale=50.0), end_distribu
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[77]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot to see results for a random time slice</span>
@@ -1097,7 +1113,7 @@ with coordinate values randomized in a way that reflects the CSR assumption. Of 
 <h3>Step 1: Create CSR Data<a class="headerlink" href="#Step-1:-Create-CSR-Data" title="Link to this heading"></a></h3>
 <p>We need to create a list of MC simulations as before, but this time with the CSR data. So, we follow the same procedure as above, but replace the <code class="docutils literal notranslate"><span class="pre">points</span></code> list (original data) with a csr sample.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[78]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate CSR sample</span>
@@ -1118,7 +1134,7 @@ with coordinate values randomized in a way that reflects the CSR assumption. Of 
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[79]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Custom styling parameters</span>
@@ -1152,7 +1168,7 @@ with coordinate values randomized in a way that reflects the CSR assumption. Of 
 <section id="Step-2.-Calculate-Pairwise-Distance-Density-for-CSR-data">
 <h3>Step 2. Calculate Pairwise Distance Density for CSR data<a class="headerlink" href="#Step-2.-Calculate-Pairwise-Distance-Density-for-CSR-data" title="Link to this heading"></a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[80]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calulate the pairwise distances for the CSR sample</span>
@@ -1216,7 +1232,7 @@ that,</p>
 <p>low values imply differences that are positive if <span class="math notranslate nohighlight">\(p &lt; 0.5\)</span>. This is because the null (standard normal) is centered on zero, which would have a CDF value of <span class="math notranslate nohighlight">\(0.5\)</span>. Extremely low p-values, say <span class="math notranslate nohighlight">\(p &lt; 0.05\)</span>, would indicate that the probability of observing a more extremely positive difference is low (5% or less, in case of <span class="math notranslate nohighlight">\(p &lt; 0.05\)</span>). So, while the p-values don’t directly relate to the probability that the observed difference is greater than zero, this inequality is implied
 because of the way the differences are calculated and the nature of the test design as long as <span class="math notranslate nohighlight">\(p &lt; 0.5\)</span>. Higher p-values suggest a <em>negative difference</em>, which has a specific interpretation for some clustering statisitcs, like Ripley’s K.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[81]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate the p-values for density differences between the observed points and</span>
@@ -1230,7 +1246,7 @@ because of the way the differences are calculated and the nature of the test des
 <h3>Step 4: Plot the Heatmap of P-Values<a class="headerlink" href="#Step-4:-Plot-the-Heatmap-of-P-Values" title="Link to this heading"></a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">pdiff_heatmap</span></code> function is used to visualize the p-values, highlighting the statistical significance of the observed clustering patterns. The interpretation depends on the underlying stastic, which at the moment can be either one of the Ripley functions (K, L, or G) or the pairwise distance density.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[82]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the heatmap of probabilities</span>
@@ -1298,6 +1314,1128 @@ because of the way the differences are calculated and the nature of the test des
 <li><p>Calculate Clustering Statistics: - The temporal_cluster function is used to calculate Ripley’s K, L, and G functions for each time slice and distance. - The parameters calc_K=True, calc_L=True, and calc_G=True indicate that all three statistics should be computed.</p></li>
 <li><p>Visualize Results: - The results of the K function are visualized using a heatmap, similar to the approach taken for pairwise distances. - The clustering_heatmap function can be used to plot the results for L and G functions as well, providing insights into the clustering patterns over time and distance.</p></li>
 </ol>
+</section>
+</section>
+<section id="Baseline-Informed-Spatial-Expectation">
+<h2>Baseline Informed Spatial Expectation<a class="headerlink" href="#Baseline-Informed-Spatial-Expectation" title="Link to this heading"></a></h2>
+<p>Sometimes Complete Spatial Randomness (CSR) within an arbitrarily defined study area is an inadequate baseline (null). Imagine you’re analyzing the spatial distribution of archaeological sites in a landscape shaped by natural features like rivers, mountains, or coastlines. These geographic elements exert a powerful influence over where people choose to settle, so a null model that assumes spatial randomness risks missing meaningful patterns by ignoring the influence of the landscape itself. At
+the same time, human activity will almost never distribute uniformly at random within an arbitrary study area owing to resource heterogeneity and the tendency at large scales for humans (and other animals) to congergate. This natural spatial bias means that patterns we observe could easily reflect baseline process constraints rather than any structured point patterns that reflect specific past cultural, eonomic, and social processes of interest. As a result, the structure imposed by landscape
+and otehr baseline contraints could distort or obscure socially, culturally, or economically derived clustering. Using CSR could also potentially lead to distracting signals (effectively additional noise) in the pair-wise distance distribution (and down-stream statistics). Thus, CSR is rarely a very good null hypothesis for human activity.</p>
+<p>To address this, the Baseline Informed Spatial Expectation (BISE) null model incorporates these landscape-derived constraints directly. Instead of evaluating spatial patterns against CSR, LISE can be used to simulate a spatial distribution that conforms to broad landscape influences—such as barriers, attractors, or environmental suitability gradients—while remaining agnostic about finer-grained structures (site clustering) that might still emerge. This approach allows for a baseline that is
+more sensitive to the natural, lansdscape context of human settlement, helping to reveal spatial structures that are genuinely sociocultural, rather than simply a byproduct of the landscape. With BISE, researchers can better differentiate between patterns that reflect meaningful organization and those that stem from the physical environment itself.</p>
+<section id="Simulation-Example">
+<h3>Simulation Example<a class="headerlink" href="#Simulation-Example" title="Link to this heading"></a></h3>
+<p>Let’s imagine a collection of archaeological site locations that follow a somewhat linear landscape constraint, like sites in river valley. We can simulate, as before, a pont data set using the now familiar chronocluster tools. When plotted, as you see below, the sites trend along a line. Importantly, despite there being two separate clusters of points, the tails overlap. And, thanks to the linear trend we’ve introduced here, the ‘clustering’ is more evident in the direction transverse to the
+direction of the trend than it is around the two seperate means.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define cluster distributions, but with a linear trend across the landscape (e.g., river valley)</span>
+<span class="n">cluster_centers</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="mi">110</span><span class="p">),</span> <span class="p">(</span><span class="mi">120</span><span class="p">,</span> <span class="mi">120</span><span class="p">)]</span>
+<span class="n">cluster_stds</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+
+<span class="c1"># Define parameters for the temporal distributions</span>
+<span class="n">start_age_mean</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">start_age_err</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">end_age_mean</span> <span class="o">=</span> <span class="mi">1700</span>
+<span class="n">end_age_err</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="c1"># Define a directional trend to simulate a river valley</span>
+<span class="n">num_points_per_cluster</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">directional_slope</span> <span class="o">=</span> <span class="mf">0.5</span>  <span class="c1"># Controls the degree of directional spread</span>
+
+<span class="c1"># Generate points with clusters along a directional trend</span>
+<span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">center</span><span class="p">,</span> <span class="n">std</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cluster_centers</span><span class="p">,</span> <span class="n">cluster_stds</span><span class="p">):</span>
+    <span class="c1"># Generate base points for this cluster</span>
+    <span class="n">x_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">std</span><span class="p">,</span> <span class="n">num_points_per_cluster</span><span class="p">)</span>
+    <span class="n">y_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">std</span><span class="p">,</span> <span class="n">num_points_per_cluster</span><span class="p">)</span> <span class="c1">#+ directional_slope * x_coords</span>
+
+    <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x_coords</span><span class="p">,</span> <span class="n">y_coords</span><span class="p">):</span>
+        <span class="c1"># Create start and end distributions for each point</span>
+        <span class="n">start_dist</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">start_age_mean</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">start_age_err</span><span class="p">)</span>
+        <span class="n">end_dist</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">end_age_mean</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">end_age_err</span><span class="p">)</span>
+
+        <span class="c1"># Append the point with spatial and temporal distributions</span>
+        <span class="n">point</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">start_distribution</span><span class="o">=</span><span class="n">start_dist</span><span class="p">,</span> <span class="n">end_distribution</span><span class="o">=</span><span class="n">end_dist</span><span class="p">)</span>
+        <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
+
+<span class="c1"># Custom styling parameters</span>
+<span class="n">style_params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;start_mean_color&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># Do not plot start mean points</span>
+    <span class="s1">&#39;end_mean_color&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># Do not plot end mean points</span>
+    <span class="s1">&#39;mean_point_size&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s1">&#39;cylinder_color&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">),</span>  <span class="c1"># Dark grey</span>
+    <span class="s1">&#39;ppf_limits&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">),</span>  <span class="c1"># Use different ppf limits</span>
+    <span class="s1">&#39;shadow_color&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">),</span>  <span class="c1"># grey</span>
+    <span class="s1">&#39;shadow_size&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s1">&#39;time_slice_color&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>  <span class="c1"># Grey</span>
+    <span class="s1">&#39;time_slice_alpha&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
+    <span class="s1">&#39;time_slice_point_color&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>  <span class="c1"># Black</span>
+<span class="p">}</span>
+
+<span class="c1"># Plot the points using the chrono_plot function with custom styling and a time slice plane</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">chrono_plot</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">style_params</span><span class="o">=</span><span class="n">style_params</span><span class="p">,</span> <span class="n">time_slice</span><span class="o">=</span><span class="mi">1500</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_box_aspect</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mf">0.85</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/tutorialnb_49_0.png" src="_images/tutorialnb_49_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run the Monte Carlo simulation to get an ensemble of probable</span>
+<span class="c1"># lists of points included in each time slice.</span>
+<span class="n">num_iterations</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">simulations</span> <span class="o">=</span> <span class="n">clustering</span><span class="o">.</span><span class="n">mc_samples</span><span class="p">(</span><span class="n">points</span><span class="p">,</span>
+                                    <span class="n">time_slices</span><span class="p">,</span>
+                                    <span class="n">inclusion_probs</span><span class="p">,</span>
+                                    <span class="n">num_iterations</span><span class="o">=</span><span class="n">num_iterations</span><span class="p">)</span>
+
+<span class="c1"># Get a bounding box for use later and to extract sensible distance limits</span>
+<span class="n">x_min</span><span class="p">,</span> <span class="n">y_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="n">y_max</span> <span class="o">=</span> <span class="n">get_box</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+<span class="n">max_distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">x_max</span> <span class="o">-</span> <span class="n">x_min</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y_max</span> <span class="o">-</span> <span class="n">y_min</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+
+<span class="c1"># set consistent pairwise bandwidth (binning of distances)</span>
+<span class="n">pair_bw</span> <span class="o">=</span> <span class="mf">0.05</span>
+
+<span class="c1"># Produce pairwise distances to explore clustering structure</span>
+<span class="n">pairwise_density</span><span class="p">,</span> <span class="n">support</span> <span class="o">=</span> <span class="n">clustering</span><span class="o">.</span><span class="n">temporal_pairwise</span><span class="p">(</span><span class="n">simulations</span><span class="p">,</span>
+                                                         <span class="n">time_slices</span><span class="p">,</span>
+                                                         <span class="n">bw</span><span class="o">=</span><span class="n">pair_bw</span><span class="p">,</span>
+                                                         <span class="n">density</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                                         <span class="n">max_distance</span><span class="o">=</span><span class="n">max_distance</span><span class="p">)</span>
+
+<span class="c1"># Visualize clustering with heatmap</span>
+<span class="n">clustering_heatmap</span><span class="p">(</span><span class="n">pairwise_density</span><span class="p">,</span>
+                   <span class="n">support</span><span class="p">,</span>
+                   <span class="n">time_slices</span><span class="p">,</span>
+                   <span class="n">result_type</span><span class="o">=</span><span class="s1">&#39;Pairwise Distances&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/tutorialnb_50_0.png" src="_images/tutorialnb_50_0.png" />
+</div>
+</div>
+</section>
+<section id="CSR-Comparison">
+<h3>CSR Comparison<a class="headerlink" href="#CSR-Comparison" title="Link to this heading"></a></h3>
+<p>Now, we will use CSR as the baseline (as previously in this tutorial) to identify the statistically significant modes in the pairwise distance density surface. As you can see below, the overall span of the entire set of points is emphasized in the CSR-based comparison. The disances around 28 units is twice that of the distances between the cluster centres (14 units between successive ones).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate CSR sample</span>
+<span class="n">csr_points</span> <span class="o">=</span> <span class="n">clustering</span><span class="o">.</span><span class="n">csr_sample</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="n">y_min</span><span class="p">,</span> <span class="n">y_max</span><span class="p">)</span>
+
+<span class="c1"># Get CSR inclusion probabilities (remember these points have the same</span>
+<span class="c1"># temporal traits as the first simulated data)</span>
+<span class="n">csr_inclusion_probs</span> <span class="o">=</span> <span class="n">clustering</span><span class="o">.</span><span class="n">in_probs</span><span class="p">(</span><span class="n">csr_points</span><span class="p">,</span>
+                                          <span class="n">time_slices</span><span class="p">)</span>
+
+<span class="c1"># Get MC iterations for incorporating chronological uncertainty</span>
+<span class="n">num_iterations</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">csr_simulations</span> <span class="o">=</span> <span class="n">clustering</span><span class="o">.</span><span class="n">mc_samples</span><span class="p">(</span><span class="n">csr_points</span><span class="p">,</span>
+                                        <span class="n">time_slices</span><span class="p">,</span>
+                                        <span class="n">csr_inclusion_probs</span><span class="p">,</span>
+                                        <span class="n">num_iterations</span> <span class="o">=</span> <span class="n">num_iterations</span><span class="p">)</span>
+
+<span class="c1"># Calulate the pairwise distances for the CSR sample</span>
+<span class="n">csr_pairwise_density</span><span class="p">,</span> <span class="n">csr_support</span> <span class="o">=</span> <span class="n">clustering</span><span class="o">.</span><span class="n">temporal_pairwise</span><span class="p">(</span><span class="n">csr_simulations</span><span class="p">,</span>
+                                                                 <span class="n">time_slices</span><span class="p">,</span>
+                                                                 <span class="n">bw</span> <span class="o">=</span> <span class="n">pair_bw</span><span class="p">,</span>
+                                                                 <span class="n">density</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                                                                 <span class="n">max_distance</span> <span class="o">=</span> <span class="n">max_distance</span><span class="p">)</span>
+
+<span class="c1"># Calculate the p-values for density differences between the observed points and</span>
+<span class="c1"># the simulated CSR baseline per distance and temporal slice</span>
+<span class="n">p_diff_array</span> <span class="o">=</span> <span class="n">clustering</span><span class="o">.</span><span class="n">p_diff</span><span class="p">(</span><span class="n">pairwise_density</span><span class="p">,</span> <span class="n">csr_pairwise_density</span><span class="p">)</span>
+
+<span class="c1"># Plot the heatmap of probabilities</span>
+<span class="n">pdiff_heatmap</span><span class="p">(</span><span class="n">p_diff_array</span><span class="p">,</span>
+              <span class="n">time_slices</span><span class="p">,</span>
+              <span class="n">csr_support</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/tutorialnb_52_0.png" src="_images/tutorialnb_52_0.png" />
+</div>
+</div>
+</section>
+<section id="BISE-Comparison">
+<h3>BISE Comparison<a class="headerlink" href="#BISE-Comparison" title="Link to this heading"></a></h3>
+<p>Now, we can use the BISE as the basis for comparison. You can see in the plot below that the higher probability pairwise distance region correpsonding to the maximum distance between farthest clusters has been greatly de-emphasized. In effect, the BISE is acting like a high-pass filter, removing the effect of the overall size of the point dataset within the study area (in this case the smallest bounding box).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate LISE sample</span>
+<span class="n">mean_location</span><span class="p">,</span> <span class="n">cov_matrix</span><span class="p">,</span> <span class="n">simulated_coords</span><span class="p">,</span> <span class="n">bise_points</span> <span class="o">=</span> <span class="n">bise</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">nsim</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">))</span>
+
+<span class="c1"># Get LISE inclusion probabilities (similar temporal traits as the original data)</span>
+<span class="n">bise_inclusion_probs</span> <span class="o">=</span> <span class="n">clustering</span><span class="o">.</span><span class="n">in_probs</span><span class="p">(</span><span class="n">bise_points</span><span class="p">,</span>
+                                           <span class="n">time_slices</span><span class="p">)</span>
+
+<span class="c1"># Get MC iterations for incorporating chronological uncertainty</span>
+<span class="n">num_iterations</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">bise_simulations</span> <span class="o">=</span> <span class="n">clustering</span><span class="o">.</span><span class="n">mc_samples</span><span class="p">(</span><span class="n">bise_points</span><span class="p">,</span>
+                                         <span class="n">time_slices</span><span class="p">,</span>
+                                         <span class="n">bise_inclusion_probs</span><span class="p">,</span>
+                                         <span class="n">num_iterations</span><span class="o">=</span><span class="n">num_iterations</span><span class="p">)</span>
+
+<span class="c1"># Calulate the pairwise distances for the LISE sample</span>
+<span class="n">bise_pairwise_density</span><span class="p">,</span> <span class="n">bise_support</span> <span class="o">=</span> <span class="n">clustering</span><span class="o">.</span><span class="n">temporal_pairwise</span><span class="p">(</span><span class="n">bise_simulations</span><span class="p">,</span>
+                                                                 <span class="n">time_slices</span><span class="p">,</span>
+                                                                 <span class="n">bw</span> <span class="o">=</span> <span class="n">pair_bw</span><span class="p">,</span>
+                                                                 <span class="n">density</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                                                                 <span class="n">max_distance</span> <span class="o">=</span> <span class="n">max_distance</span><span class="p">)</span>
+
+<span class="c1"># Calculate the p-values for density differences between the observed points and</span>
+<span class="c1"># the simulated CSR baseline per distance and temporal slice</span>
+<span class="n">p_diff_array</span> <span class="o">=</span> <span class="n">clustering</span><span class="o">.</span><span class="n">p_diff</span><span class="p">(</span><span class="n">pairwise_density</span><span class="p">,</span> <span class="n">bise_pairwise_density</span><span class="p">)</span>
+
+<span class="c1"># Plot the heatmap of probabilities</span>
+<span class="n">pdiff_heatmap</span><span class="p">(</span><span class="n">p_diff_array</span><span class="p">,</span>
+              <span class="n">time_slices</span><span class="p">,</span>
+              <span class="n">bise_support</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/tutorialnb_54_0.png" src="_images/tutorialnb_54_0.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="Kernel-Density-Estimation-(KDE)">
+<h2>Kernel Density Estimation (KDE)<a class="headerlink" href="#Kernel-Density-Estimation-(KDE)" title="Link to this heading"></a></h2>
+<p>Chronocluster provides methods for Kernel Density Estimation (KDE) and for identifying specific clusters in the data. In this section, we use KDE to quantify the spatial distribution of our simulated data, providing a smooth, continuous representation of density that highlights underlying patterns at scales relevant to our analysis. KDE is a powerful, commonly-used tool for exploring how density changes across space continuousely, and it is often used for revealing subtle structure that may not
+be immediately evident in raw point data alone. It is important to note, though, that KDE is an empirical approximation to the a (presumed) underlying continuous density and is, itself, not a good predictive model. It is highly sensitive to sampling error and, in general in archaeology, cannot account for temporality or chronological uncertainty. The KDE tools in the chronocluster package, however, include support for the Point object and use inclusion probabilities to weight the KDE given a set
+of points with corresponding uncertain start-/end-distributions, temporality, and a time-slice from a given space-time volume.</p>
+<section id="KDE-Primer">
+<h3>KDE Primer<a class="headerlink" href="#KDE-Primer" title="Link to this heading"></a></h3>
+<p>Kernel Density Estimation (KDE) approximates the underlying density of a spatial dataset at any arbitrary location in a specified spatial field. In a standard Gaussian KDE, the density at each location is estimated based on its distance from all observed points, weighted by a Gaussian (normal) kernel function. This produces a continuous density surface that reflects spatial intensity.</p>
+<p>Mathematically, the KDE at a point x is given by:</p>
+<div class="math notranslate nohighlight">
+\[\hat{f}(x) = \frac{1}{n h} \sum_{i=1}^{n} K\left(\frac{x - x_i}{h}\right)\]</div>
+<p>where: - $ f^​(x) $ is the estimated density at location x, - $ n $ is the total number of observed points, - $ h $ is the bandwidth parameter controlling the smoothing scale, - $ K:nbsphinx-math:<cite>left`(:nbsphinx-math:</cite>frac{x - x_i}{h}`:nbsphinx-math:<cite>right</cite>) $ is the kernel function, typically Gaussian, centered at each observed point $ x_i $​.</p>
+<p>For a Gaussian kernel, K is defined as:</p>
+<div class="math notranslate nohighlight">
+\[K\left(\frac{x - x_i}{h}\right) = \frac{1}{\sqrt{2\pi}} \exp\left(-\frac{(x - x_i)^2}{2h^2}\right)\]</div>
+<p>This formulation calculates the influence of each point $ x_i $ on the density at location $ x $, with closer points having a larger impact due to the kernel’s shape. Adjusting the bandwidth hh tunes the KDE resolution, allowing us to highlight spatial patterns and potential clusters.</p>
+</section>
+<section id="Incorporating-Temporal-Information-with-kde_time">
+<h3>Incorporating Temporal Information with kde_time<a class="headerlink" href="#Incorporating-Temporal-Information-with-kde_time" title="Link to this heading"></a></h3>
+<p>The kde_time method in the chronocluster package builds on simple KDE by integrating temporal information through probability weighting. This temporal weighting relies on the in_probs method of the Points class, which calculates each point’s probability of persistence in the space-time volume for a specified time, based on its start and end distributions. By utilizing in_probs, kde_time factors in whether each point is likely to be present within the time-slice of interest, allowing the KDE to
+reflect temporal dynamics alongside spatial distribution.</p>
+<p>In this method, the KDE density at a point $ x $ within a time-slice $ t $ is defined as:</p>
+<div class="math notranslate nohighlight">
+\[\hat{f}_{\text{time}}(x, t) = \frac{1}{n h} \sum_{i=1}^{n} P_{i}(t) \cdot K\left(\frac{x - x_i}{h}\right)\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p>$ <span class="math">\hat{f}</span>_{<span class="math">\text{time}</span>}(x, t) $ is the density estimate at location xx for time $ t $,</p></li>
+<li><p>$ P_i(t) $ is the probability that point $ x_i $​ is present at time $ t_i $, as calculated by in_probs based on the point’s start- and end-distributions.</p></li>
+</ul>
+<p>By referencing the in_probs function within the Points class, kde_time aligns with the chronocluster paradigm, leveraging temporal uncertainty to weight spatial density. This allows us to visualize how clusters may shift over time, capturing temporal trends in density as points appear or fade from the spatial field according to their temporal likelihood.</p>
+</section>
+<section id="Context-and-Purpose">
+<h3>Context and Purpose<a class="headerlink" href="#Context-and-Purpose" title="Link to this heading"></a></h3>
+<p>In the previous tutorial sections, we used pairwise distance distributions to examine the simulated point data for structure and clustering. Here, we can introduce a useful anlaytical concept, the ``characteristic scale(s)’’—i.e., the distance(s) at which structure emerges from the point pattern. These scales refer to the statistically significant modes in the pairwise distance densties, which capture the typical distances between points that define spatial relationships in the whole point
+distribution. Through the BISE-based significance test, we identified these characteristic distances as meaningful peaks within the pairwise distance density function, indicating spatial scales at which clustering may be statistically significant (compared to an informed null expectation).</p>
+<p>For KDE analysis, the choice of bandwidth is crucial because it determines the level of detail at which patterns are visualized. In practical applications, bandwidth is often selected using general “rules of thumb,” such as Silverman’s rule or Scott’s rule, which estimate bandwidth based on the overall spread of the data. However, these rules may be too generic for archaeological datasets or spatial data with distinctive, scale-dependent patterns.</p>
+<p>In this analysis, we will take a more deliberate approach by basing the KDE bandwidth on the characteristic scale(s) identified earlier. This scale-informed bandwidth allows us to tailor the KDE to highlight clustering and spatial patterns specifically at the scales that were statistically validated through our pairwise distance analysis and BISE testing. By choosing a bandwidth grounded in these characteristic scales, we achieve several key benefits:</p>
+<ul class="simple">
+<li><p>Scientific Rigor: The bandwidth selection is not arbitrary but informed by the data’s spatial structure, leading to more reliable interpretation of clustering.</p></li>
+<li><p>Scale-Specific Insight: Using characteristic scales allows us to explore density patterns at meaningful spatial resolutions, focusing on distances where significant clustering is likely, rather than smoothing over important detail.</p></li>
+<li><p>Comparability: Employing a data-derived bandwidth makes it easier to compare results across similar datasets or different regions within a study, as the analysis is based on statistically meaningful patterns rather than rule-of-thumb estimates.</p></li>
+</ul>
+<p>This method provides a scientifically grounded approach to exploring spatial density, allowing us to interpret clustering and patterning at scales that are particularly relevant to our dataset. By integrating characteristic scales into our KDE analysis, we can create visualizations that reveal clustering patterns in a way that aligns closely with the statistical structure of the data.</p>
+</section>
+<section id="KDE-in-Chronocluster">
+<h3>KDE in Chronocluster<a class="headerlink" href="#KDE-in-Chronocluster" title="Link to this heading"></a></h3>
+<p>Chronocluster’s KDE methods offer flexible options for bandwidth selection, which controls the scale of smoothing applied to the density surface. By adjusting the bandwidth to match our characteristic scale(s), we can tune the KDE to highlight clusters at spatial scales that are most relevant to the patterns we defined with (and then recovered from) the simulated data. The KDE output will serve as the foundation for further steps, such as cluster delineation, quantifying the density at
+characteristic scales, and pinpointing core areas of interest for later analyses.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">chronocluster.density</span> <span class="kn">import</span> <span class="n">kde_time</span><span class="p">,</span> <span class="n">custom_kde</span><span class="p">,</span> <span class="n">kde_peaks</span>
+
+<span class="c1"># Define grid resolution and create the 2D grid for KDE evaluation</span>
+<span class="c1"># Get a bounding box for use later and to extract sensible distance limits</span>
+<span class="n">x_min</span><span class="p">,</span> <span class="n">y_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="n">y_max</span> <span class="o">=</span> <span class="n">get_box</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+<span class="n">max_distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">x_max</span> <span class="o">-</span> <span class="n">x_min</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y_max</span> <span class="o">-</span> <span class="n">y_min</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+
+<span class="n">grid_resolution</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">x_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="n">grid_resolution</span><span class="p">)</span>
+<span class="n">y_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">y_min</span><span class="p">,</span> <span class="n">y_max</span><span class="p">,</span> <span class="n">grid_resolution</span><span class="p">)</span>
+<span class="n">x_mesh</span><span class="p">,</span> <span class="n">y_mesh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x_grid</span><span class="p">,</span> <span class="n">y_grid</span><span class="p">)</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">x_mesh</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">y_mesh</span><span class="o">.</span><span class="n">ravel</span><span class="p">()])</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set parameters for KDE, including arbitrary time_slice from simulated data</span>
+<span class="n">time_slice</span> <span class="o">=</span> <span class="n">time_slices</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">bandwidth</span> <span class="o">=</span>  <span class="mf">1.5</span>
+
+<span class="c1"># Calculate KDE for the chosen time slice</span>
+<span class="n">kde_values</span> <span class="o">=</span> <span class="n">kde_time</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">time_slice</span><span class="p">,</span> <span class="n">bandwidth</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">output_shape</span><span class="o">=</span><span class="n">x_mesh</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">kde_method</span><span class="o">=</span><span class="n">custom_kde</span><span class="p">)</span>
+
+<span class="c1"># Plotting</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">x_mesh</span><span class="p">,</span> <span class="n">y_mesh</span><span class="p">,</span> <span class="n">kde_values</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;KDE Density&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;X Coordinate&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Y Coordinate&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;KDE for Time Slice </span><span class="si">{</span><span class="n">time_slice</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/tutorialnb_57_0.png" src="_images/tutorialnb_57_0.png" />
+</div>
+</div>
+</section>
+<section id="Peak-Identification">
+<h3>Peak Identification<a class="headerlink" href="#Peak-Identification" title="Link to this heading"></a></h3>
+<p>It’s clearly useful to have a rigourous and pricipled approach to identifying characteristic scales, clustering at those scales, and then to visualize the density of points with a KDE. But, it is also frequently important to identify where the clusters actually are in space.</p>
+<p>The peak-finding functionality in chronocluster is designed to offer flexibility and modularity. At the core of this structure is the kde_peaks function, which acts as a high-level wrapper for several peak-finding methods. By allowing the user to select the most appropriate method and customize the peak-finding process, kde_peaks provides a unified interface for detecting peaks in KDE surfaces or point distributions.</p>
+<section id="The-kde_peaks-Wrapper-Function">
+<h4>The <code class="docutils literal notranslate"><span class="pre">kde_peaks</span></code> Wrapper Function<a class="headerlink" href="#The-kde_peaks-Wrapper-Function" title="Link to this heading"></a></h4>
+<p>The kde_peaks function serves as a single entry point for identifying peaks across different types of data structures (e.g., KDE grids, raw point distributions) and analysis needs. It takes a range of arguments, including:</p>
+<ul class="simple">
+<li><p>kde_values, x_mesh, y_mesh: Used when analyzing a KDE surface grid, these parameters represent the KDE values and corresponding coordinate grids. These inputs are essential for peak-finding methods like find_peaks and peak_local_max.</p></li>
+<li><p>points: A list of Point objects, each representing a point’s x and y coordinates in the dataset. This is used by the gmm_peak_finder and pymc_gmm_peak_finder methods, which operate directly on point distributions rather than KDE surfaces.</p></li>
+<li><p>num_peaks: Specifies the maximum number of peaks to identify. This parameter limits the number of clusters or density peaks returned.</p></li>
+<li><p>peak_finder: Allows the user to specify the desired peak-finding method. Options include:</p>
+<ul>
+<li><p>scipy.signal.find_peaks</p></li>
+<li><p>skimage.feature.peak_local_max</p></li>
+<li><p>gmm_peak_finder (Gaussian Mixture Model-based)</p></li>
+<li><p>pymc_gmm_peak_finder (Bayesian GMM with temporal weighting)</p></li>
+<li><p>*args and **kwargs: These allow additional parameters to be passed to the specific peak-finding function, making kde_peaks highly customizable.</p></li>
+</ul>
+</li>
+</ul>
+<p>Within the kde_peaks function, different peak-finding methods are called based on the user’s selection via peak_finder. Here’s how each method is integrated into the pipeline:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">find_peaks</span></code> (from scipy.signal) This function is used to find local maxima in a flattened KDE surface. When find_peaks is selected, kde_peaks first verifies that kde_values, x_mesh, and y_mesh are provided. The function then applies find_peaks to identify peak locations on the KDE grid, extracting the x and y coordinates of the top-ranked peaks.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">peak_local_max</span></code> (from skimage.feature) If peak_local_max is selected, kde_peaks ensures the necessary grid inputs are provided and then calls this function to find local maxima on the 2D KDE surface. The identified peaks are returned as a set of coordinates based on local density maxima.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gmm_peak_finder</span></code> (Gaussian Mixture Model) This method operates on raw point data rather than a KDE grid, so points must be provided as input. When selected, kde_peaks calls gmm_peak_finder, which applies a Gaussian Mixture Model (GMM) to fit multiple Gaussian components to the points, representing clusters as Gaussian ellipses. The peaks are sorted by their weights (i.e., the significance of each component) and returned as ranked coordinates.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pymc_gmm_peak_finder</span></code> (Bayesian Gaussian Mixture Model) This option extends the GMM approach with a Bayesian framework, integrating temporal uncertainty. Using PyMC, pymc_gmm_peak_finder fits a Bayesian GMM model to the point distribution, weighting points according to their likelihood of being present in a given time_slice. Parameters like target_scale and target_scale_sd allow further control over component size and variance. This method is particularly useful for archaeological
+applications where both spatial and temporal dimensions are critical.</p></li>
+</ul>
+<p>Each peak-finding function in the pipeline has its own specific requirements and return structure, providing both deterministic and probabilistic options for peak detection. By wrapping these methods, kde_peaks allows users to seamlessly switch between techniques, customize parameters, and receive results in a consistent format, making Chronocluster’s peak-finding functionality both versatile and accessible.</p>
+</section>
+<section id="Scikit-Learn-GMM">
+<h4>Scikit-Learn GMM<a class="headerlink" href="#Scikit-Learn-GMM" title="Link to this heading"></a></h4>
+<p>In addition to standard and widely-used approaches to peak finding, chronocluster implements a novel one: Gaussian Mixture Models (GMM). To demonstrate the flexibility of the GMM approach, we first explore the gmm_peak_finder function. This method leverages the Scikit-Learn implementation of GMM as a peak-finding tool, a novel solution to identify clusters in spatial data distributions—even when these clusters don’t strictly follow Gaussian shapes.</p>
+<p>Typically, GMM is used as a probabilistic model that a mixture of one or more Gaussian-distributions to a given dataset. However, by increasing the number of components (peaks), the GMM can serve as a highly flexible function approximation method, capable of capturing intricate functions and surfaces, including clustering structures. This flexibility allows <code class="docutils literal notranslate"><span class="pre">gmm_peak_finder</span></code> to approximate non-Gaussian clusters by combining multiple Gaussian components, each centered on a local peak.</p>
+<section id="GMM-Primer">
+<h5>GMM Primer<a class="headerlink" href="#GMM-Primer" title="Link to this heading"></a></h5>
+<p>To really get an intuition for the GMM approach (important for the more advanced Bayesian version provided by chronocluster), we should start with a brief GMM primer. GMMs are a potentially powerful probabilistic tool for clustering data, representing complex distributions as a combination of multiple Gaussian distributions (called “components”). Each Gaussian component has parameters that define its center, spread, and importance within the overall composite distribution.</p>
+<p>At its core, a GMM assumes that the data points are drawn from a mixture of several Gaussian distributions, each representing a cluster. A common example would be body mass in a sexually dimorphic population, like chimpanzees, with one sex being on average larger than the other. The total distribution of bodymasses, then, agnostic toward sex would be somewhat bimodal, and this total ‘mixed sex’ distribution could be modelled with a Gaussian mixture model that combines two normal distributions,
+one for the males and one for the females.</p>
+<p>Each Gaussian component in a GMM is defined by three key parameters:</p>
+<ul class="simple">
+<li><p>Mean ($ :nbsphinx-math:<a href="#id2"><span class="problematic" id="id3">`</span></a>mu <a href="#id4"><span class="problematic" id="id5">`</span></a>$): The center of the component, which represents the peak location in the spatial distribution.</p></li>
+<li><p>Covariance ($ :nbsphinx-math:<a href="#id6"><span class="problematic" id="id7">`</span></a>Sigma <a href="#id8"><span class="problematic" id="id9">`</span></a>$): The shape and spread of the component, which defines how dispersed or elongated the cluster is around its center.</p></li>
+<li><p>Weight ($ :nbsphinx-math:<a href="#id10"><span class="problematic" id="id11">`</span></a>pi <a href="#id12"><span class="problematic" id="id13">`</span></a>$): The relative importance of each component, where higher weights indicate more significant clusters within the mixture.</p></li>
+</ul>
+<p>Mathematically, the probability density of a point $ x $ in a GMM with $ K $ components is expressed as:</p>
+<div class="math notranslate nohighlight">
+\[p(x) = \sum_{k=1}^K \pi_k \cdot \mathcal{N}(x \mid \mu_k, \Sigma_k)\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p>$ <span class="math">\pi</span><em>k $​ is the weight of the $ k</em>{th} $ component (with $ <span class="math">\sum</span>_{k=1}^K <span class="math">\pi</span>_k = 1 $),</p></li>
+<li><p>$ <span class="math">\mathcal{N}`(x :nbsphinx-math:</span>mid <cite>:nbsphinx-math:</cite>mu`_k, <span class="math">\Sigma</span>_k) $ is the probability density function of the Gaussian distribution centered at $ <span class="math">\mu</span>_k $ with covariance ​$ <span class="math">\Sigma</span>_k $.</p></li>
+</ul>
+<p>Each data point’s likelihood is the weighted sum of probabilities under each Gaussian component, and the overall likelihood of the model is the product of these probabilities for all points. By fitting a GMM to the data, we aim to maximize this likelihood, adjusting each component’s mean, covariance, and weight to best represent the observed point distribution.</p>
+</section>
+</section>
+<section id="Why-this-Works-for-Peak-Finding">
+<h4>Why this Works for Peak Finding<a class="headerlink" href="#Why-this-Works-for-Peak-Finding" title="Link to this heading"></a></h4>
+<p>GMMs are particularly suitable for peak finding in point distributions due to their probabilistic, likelihood-based nature, which makes them adaptable and statistically parsimonious:</p>
+<p><strong>Likelihood Maximization and Parsimony:</strong> When fitting a GMM, we maximize the likelihood of observing the data given the parameters of each Gaussian component. The model finds the most probable arrangement of peaks (up to a specified maximum number of components) that can explain the distribution of points. This likelihood maximization inherently favors parsimonious solutions, effectively balancing model complexity with data fit. Thus, with a specified maximum number of peaks, GMM provides a
+robust way to capture the dominant clustering patterns without overfitting to noise.</p>
+<p><strong>Component Weights as a Measure of Peak Importance:</strong> The weight $ <span class="math">\pi</span>_k $ of each component represents the proportion of the dataset that falls under the influence of that component. This weight not only provides a measure of each peak’s prominence but also enables a principled approach to determining relative peak importance. By exploring the likelihood surface, the Gaussian Mixture Model (GMM) automatically down-weights redundant or overlapping peaks, thus effectively
+reducing noise and ensuring that only the most statistically meaningful peaks receive higher weights. Importantly, the max_peaks parameter quite high in theory, as any “excess” components will naturally be assigned lower weights if they do not correspond to distinct and prominent peaks in the data. Additional tools (e.g., model selection by varying the number of peaks) could also be used to identify the best number of peaks to include.</p>
+<p><strong>Flexibility to Capture Complex Cluster Shapes:</strong> By combining multiple Gaussian components, GMM can approximate non-Gaussian shapes in the data. For instance, an elongated or irregular cluster can be represented as a combination of several Gaussians, allowing GMM to adapt to a wide range of spatial patterns. This flexibility is especially useful in archaeology and spatial analysis, where clusters may not follow simple, circular distributions.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">chronocluster.density</span> <span class="kn">import</span> <span class="n">kde_peaks</span><span class="p">,</span> <span class="n">gmm_peak_finder</span>
+
+<span class="c1"># Set up parameters for GMM peak finding using kde_peaks</span>
+<span class="n">num_components</span> <span class="o">=</span> <span class="mi">8</span>  <span class="c1"># Set the maximum number of peaks/components expected</span>
+
+<span class="c1"># Run kde_peaks with GMM as the peak-finding method</span>
+<span class="c1"># Assuming coordinates is your dataset of temple locations, passed as Point objects</span>
+<span class="n">peaks</span><span class="p">,</span> <span class="n">weights</span> <span class="o">=</span> <span class="n">kde_peaks</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="n">points</span><span class="p">,</span> <span class="n">num_peaks</span><span class="o">=</span><span class="n">num_components</span><span class="p">,</span> <span class="n">peak_finder</span><span class="o">=</span><span class="n">gmm_peak_finder</span><span class="p">)</span>
+
+<span class="c1"># Rank peaks by weight for interpretation</span>
+<span class="n">ranked_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">weights</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># Sort weights in descending order</span>
+<span class="n">ranked_peaks</span> <span class="o">=</span> <span class="n">peaks</span><span class="p">[</span><span class="n">ranked_indices</span><span class="p">]</span>
+<span class="n">ranked_weights</span> <span class="o">=</span> <span class="n">weights</span><span class="p">[</span><span class="n">ranked_indices</span><span class="p">]</span>
+
+<span class="c1"># Print or plot ranked peaks for interpretation</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ranked Peaks (from most to least important):&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">coord</span><span class="p">,</span> <span class="n">weight</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">ranked_peaks</span><span class="p">,</span> <span class="n">ranked_weights</span><span class="p">),</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rank </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: Peak at </span><span class="si">{</span><span class="n">coord</span><span class="si">}</span><span class="s2">, Weight = </span><span class="si">{</span><span class="n">weight</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Plot KDE with ranked peaks labeled by importance</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">x_mesh</span><span class="p">,</span> <span class="n">y_mesh</span><span class="p">,</span> <span class="n">kde_values</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">ranked_peaks</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">ranked_peaks</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;GMM Peaks&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ranked_peaks</span><span class="p">[:,:]):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Rank </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;X Coordinate&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Y Coordinate&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;KDE with GMM Peaks Ranked by Importance&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Ranked Peaks (from most to least important):
+Rank 1: Peak at [110.04995081 109.72515766], Weight = 0.1954
+Rank 2: Peak at [119.8910784  120.22295756], Weight = 0.1890
+Rank 3: Peak at [99.85063395 99.54529942], Weight = 0.1476
+Rank 4: Peak at [110.01985209 110.42219561], Weight = 0.1379
+Rank 5: Peak at [100.48441647 100.49851671], Weight = 0.0942
+Rank 6: Peak at [120.33326388 119.66382022], Weight = 0.0934
+Rank 7: Peak at [ 99.5635469  100.39735664], Weight = 0.0915
+Rank 8: Peak at [119.49482185 119.34126056], Weight = 0.0510
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+c:\Users\carleton\AppData\Local\miniconda3\envs\pybayes\Lib\site-packages\sklearn\cluster\_kmeans.py:1426: UserWarning: KMeans is known to have a memory leak on Windows with MKL, when there are less chunks than available threads. You can avoid it by setting the environment variable OMP_NUM_THREADS=1.
+  warnings.warn(
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/tutorialnb_59_2.png" src="_images/tutorialnb_59_2.png" />
+</div>
+</div>
+</section>
+<section id="chronocluster-Bayesian-GMM">
+<h4>chronocluster Bayesian GMM<a class="headerlink" href="#chronocluster-Bayesian-GMM" title="Link to this heading"></a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">pymc_gmm_peak_finder</span></code> method in chronocluster improves over the standard GMM approach in two key ways. First, it incorporates the characteristic scale directly as a prior for the variance of the Gaussian components, anchoring the analysis in a scale relevant to the data’s spatial structure. Second, it accounts for chronological uncertainty by weighting observations based on temporal inclusion probabilities, allowing the analysis to focus on a specified time slice while respecting
+uncertainties in the temporal data.</p>
+</section>
+<section id="Why-Use-a-Bayesian-GMM?">
+<h4>Why Use a Bayesian GMM?<a class="headerlink" href="#Why-Use-a-Bayesian-GMM?" title="Link to this heading"></a></h4>
+<p>While the standard GMM provides a flexible way to identify clusters or peaks, it lacks mechanisms for handling temporal weighting and chronological uncertainty directly:</p>
+<ol class="arabic simple">
+<li><p><em>No Native Support for Temporality:</em> Standard GMM does not allow for weighting observations based on their likelihood of inclusion in a particular time slice. This makes it difficult to focus on temporally specific patterns without creating cumbersome workarounds, such as bootstrapping to resample data.</p></li>
+<li><p><em>Handling Chronological Uncertainty:</em> In archaeological data, dates are usually uncertain, which is handled in chronocluster with probabilistic start-/end-distribution class members. By duplicating points based on their inclusion probabilities (again, calculated with a <code class="docutils literal notranslate"><span class="pre">Point</span></code> class method, <code class="docutils literal notranslate"><span class="pre">in_probs</span></code>) for a specific time slice, the Bayesian approach can naturally accommodate these uncertainties in the likelihood estimation.</p></li>
+</ol>
+<p>The Bayesian GMM in Chronocluster overcomes these limitations, providing a more versatile and scientifically grounded framework for analyzing spatial data with temporal dimensions.</p>
+</section>
+<section id="Key-Features-of-the-Bayesian-GMM-in-Chronocluster">
+<h4>Key Features of the Bayesian GMM in Chronocluster<a class="headerlink" href="#Key-Features-of-the-Bayesian-GMM-in-Chronocluster" title="Link to this heading"></a></h4>
+<ol class="arabic">
+<li><p>Incorporation of Characteristic Scale as a Variance Prior</p>
+<p>In the Bayesian GMM approach, the characteristic scale—a statistically significant distance that defines the typical spatial relationships in the data—is used to set a prior for the variance of each Gaussian component. This characteristic scale is derived from previous analyses (such as pairwise distance distributions) and provides a meaningful constraint on the spread of each cluster. By setting this prior, we guide the model to favor clusters that align with known spatial patterns,
+ensuring that the estimated clusters are interpretable and relevant.</p>
+<p>Mathematically, we define this prior for the variance of each Gaussian component using a Truncated Normal distribution, centered on the characteristic scale with a specified standard deviation:</p>
+<div class="math notranslate nohighlight">
+\[\sigma_k \sim \text{TruncatedNormal}(\mu = \xi, \sigma = \xi_\sigma, l = 0)\]</div>
+<p>where</p>
+<p>$ <span class="math">\xi `$ refers to the characteristic scale (statistically significant mode(s) in the pairwise distance density), $:nbsphinx-math:</span>xi`_:nbsphinx-math:<a href="#id14"><span class="problematic" id="id15">`</span></a>sigma <a href="#id16"><span class="problematic" id="id17">`</span></a>$ refers to the variability/uncertainty of that characeristic scale, and $ l $ refers to the lower bound of the distribution.</p>
+<p>This prior constrains each component’s spread around the characteristic scale, encouraging the model to fit clusters that reflect real spatial patterns identified in a systematic way.</p>
+</li>
+<li><p>Handling of Chronological Uncertainty Through Temporal Weighting</p>
+<p>The Bayesian GMM approach in Chronocluster addresses chronological uncertainty by leveraging temporal inclusion probabilities, which estimate each point’s likelihood of being present within the time slice of interest. To implement this weighting, we generate a simulated dataset in which points are duplicated in proportion to their inclusion probability, effectively weighting the likelihood calculation.</p>
+<p>For example, if a point has a 0.6 probability of inclusion in the given time slice, it will appear approximately 60% more frequently in the simulated dataset than a point with a 0.1 inclusion probability. This approach lets us approximate a weighted distribution without requiring complex modifications to the GMM’s structure.</p>
+<p>This duplication-based weighting allows the model to incorporate temporal uncertainty and focus on clusters that are likely to be relevant in the specified time slice, without needing to repeatedly sample or bootstrap the data, looping over the whole estimation procedure each time.</p>
+<p>While this may initially appear ad-hoc, the process of duplicating points effectively reweights the likelihood in a way that is statistically coherent.</p>
+<p><em>Likelihood Reweighting:</em> In a typical Bayesian GMM, the likelihood for a dataset of $ n $ points <span class="math notranslate nohighlight">\(x_i\)</span> with mixture components $ k $ is given by:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}(x_i) = \prod_{i=1}^n \sum_{k=1}^K \pi_k \cdot \mathcal{N}(x_i \mid \mu_k, \Sigma_k)\]</div>
+<p>where $ <span class="math">\pi</span>_k $ is again the weight for component $ k $, and $ <span class="math">\mathcal{N}`(x_i :nbsphinx-math:</span>mid <cite>:nbsphinx-math:</cite>mu`_k, <span class="math">\Sigma</span>_k) $ is the Gaussian density for component $ k $ at point $ x_i $.</p>
+<p><em>Incorporating Temporal Inclusion Probabilities:</em> When we duplicate a point $ x_i $ based on its inclusion probability​ $ P_i $ (derived from <code class="docutils literal notranslate"><span class="pre">in_probs</span></code>), we effectively increase the point’s contribution to the overall likelihood by a factor proportional to ​. Each duplication increases the likelihood by:</p>
+<div class="math notranslate nohighlight">
+\[\prod_{j=1}^{P_i \cdot N} \sum_{k=1}^K \pi_k \cdot \mathcal{N}(x_i \mid \mu_k, \Sigma_k)\]</div>
+<p>where <span class="math notranslate nohighlight">\(P_i \cdot N\)</span> is the effective number of synthetic samples for $ x_i $.</p>
+<p><em>Effect on Likelihood Approximation:</em> By duplicating points in proportion to $ P_i $​, the synthetic dataset approximates the likelihood as if each observation $ x_i $ were weighted by $ P_i $​. The duplication approach effectively inflates the contribution of high-probability points and deflates low-probability points. By doing so, we avoid the complexity of formal statistical weights, and the computational overhead of bootstrapping, while maintaining statistical coherence, as the likelihood
+now reflects both spatial clustering and temporal relevance.</p>
+</li>
+</ol>
+</section>
+<section id="Setting-Up-the-Bayesian-GMM-in-Chronocluster">
+<h4>Setting Up the Bayesian GMM in Chronocluster<a class="headerlink" href="#Setting-Up-the-Bayesian-GMM-in-Chronocluster" title="Link to this heading"></a></h4>
+<p>With these improvements, we can apply the Bayesian GMM as follows:</p>
+<ol class="arabic simple">
+<li><p><strong>Specify the Key Parameters</strong></p></li>
+</ol>
+<ul class="simple">
+<li><p>Characteristic Scale: Use this as the prior mean for the Gaussian component variance, aligning each component’s spread with known spatial patterns.</p></li>
+<li><p>Inclusion Probabilities: Set up a simulated dataset by duplicating points based on their inclusion probabilities for the selected time slice, providing a temporally weighted dataset. This can be done with the chronocluster function, <code class="docutils literal notranslate"><span class="pre">synth_sample</span></code>.</p></li>
+</ul>
+<ol class="arabic simple" start="2">
+<li><p><strong>Fit the Bayesian Model</strong></p></li>
+</ol>
+<ul class="simple">
+<li><p>The Bayesian GMM uses the <code class="docutils literal notranslate"><span class="pre">pymc_gmm_peak_finder</span></code> method, which constructs a Dirichlet Process for mixture weights, defining each component’s center, variance, and weight. Given the characteristic scale as a variance prior and the temporally weighted dataset, the model iteratively adjusts parameters to maximize the posterior probability, producing clusters that reflect both spatial and temporal structures.</p></li>
+</ul>
+<ol class="arabic simple" start="3">
+<li><p><strong>Interpret the Results</strong></p></li>
+</ol>
+<ul class="simple">
+<li><p>Peak Coordinates: The posterior mean of each component’s center indicates the coordinates of a peak, weighted by both spatial density and temporal relevance.</p></li>
+<li><p>Component Weights: These weights indicate the relative prominence of each peak within the time slice, allowing us to rank and filter clusters based on significance. The <code class="docutils literal notranslate"><span class="pre">pymc_gmm_peak_finder</span></code> model incorporates a threshold parameter for identifying important components based on weights (defaults to <span class="math notranslate nohighlight">\(\frac{1}{w}\)</span>). A posterior distribution for each component, $ <span class="math">\delta</span><em>k $ is produced that reflects $ w_k - w</em>{threshold} $. This way, we can easily use credible
+intervals to identify important peaks where $ P(<span class="math">\delta</span><em>k &gt; 0) &gt; 1 - :nbsphinx-math:`alpha `$ given a p-value-like threshold for $ :nbsphinx-math:`alpha `$ (e.g., 0.05) or $ HDI</em>{95}(<span class="math">\delta</span>_k) &gt; 0 $.</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pymc</span> <span class="k">as</span> <span class="nn">pm</span>
+<span class="kn">from</span> <span class="nn">chronocluster.density</span> <span class="kn">import</span> <span class="n">pymc_gmm_peak_finder</span>
+
+<span class="c1"># Calculate the spatial extent based on bounding box to constrain the prior for</span>
+<span class="c1"># the component means (parameter space outside this area is going to be fruitless)</span>
+<span class="n">x_min</span><span class="p">,</span> <span class="n">y_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="n">y_max</span> <span class="o">=</span> <span class="n">get_box</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+<span class="n">max_distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">x_max</span> <span class="o">-</span> <span class="n">x_min</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y_max</span> <span class="o">-</span> <span class="n">y_min</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">bounding_box_variance</span> <span class="o">=</span> <span class="p">(</span> <span class="n">max_distance</span><span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+
+<span class="c1"># Set maximum number of components to allow in the model</span>
+<span class="n">max_components</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">w_threshold</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">max_components</span> <span class="c1"># used for idenitifying peak importance</span>
+
+<span class="c1"># Priors for spatial scale (variance) based on pairwise distance density analysis</span>
+<span class="n">target_scale</span> <span class="o">=</span> <span class="mf">1.5</span>  <span class="c1"># This is our target spatial scale for each component</span>
+<span class="n">target_scale_sd</span> <span class="o">=</span> <span class="mf">0.3</span>  <span class="c1"># Some variation around this value</span>
+
+<span class="c1"># time slice (set earlier on, but to jog the memory)</span>
+<span class="n">time_slice</span> <span class="o">=</span> <span class="n">time_slices</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+<span class="c1"># Run kde_peaks with GMM as the peak-finding method</span>
+<span class="c1"># Assuming coordinates is your dataset of temple locations, passed as Point objects</span>
+<span class="n">peaks</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">trace</span> <span class="o">=</span> <span class="n">kde_peaks</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="n">points</span><span class="p">,</span>
+                                    <span class="n">num_peaks</span><span class="o">=</span><span class="n">max_components</span><span class="p">,</span>
+                                    <span class="n">peak_finder</span><span class="o">=</span><span class="n">pymc_gmm_peak_finder</span><span class="p">,</span>
+                                    <span class="n">time_slice</span> <span class="o">=</span> <span class="n">time_slice</span><span class="p">,</span>
+                                    <span class="n">target_scale</span> <span class="o">=</span> <span class="n">target_scale</span><span class="p">,</span>
+                                    <span class="n">target_scale_sd</span> <span class="o">=</span> <span class="n">target_scale_sd</span><span class="p">,</span>
+                                    <span class="n">w_threshold</span> <span class="o">=</span> <span class="n">w_threshold</span><span class="p">,</span>
+                                    <span class="n">draws</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span>
+                                    <span class="n">tune</span> <span class="o">=</span> <span class="mi">6000</span><span class="p">,</span>
+                                    <span class="n">chains</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Sequential sampling (1 chains in 1 job)
+NUTS: [w, means, chol]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "9b7f4c7d61334c8da32c82427a965418", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"></pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">
+</pre></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Sampling 1 chain for 4_000 tune and 2_000 draw iterations (4_000 + 2_000 draws total) took 761 seconds.
+There were 1 divergences after tuning. Increase `target_accept` or reparameterize.
+Only one chain was sampled, this makes it impossible to run some convergence checks
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">chronocluster.density</span> <span class="kn">import</span> <span class="n">rank_peaks</span>
+
+<span class="n">importance_hdi</span> <span class="o">=</span> <span class="mf">0.95</span>
+<span class="n">summary_df</span> <span class="o">=</span> <span class="n">rank_peaks</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span> <span class="n">significance</span><span class="o">=</span><span class="n">importance_hdi</span><span class="p">,</span> <span class="n">source_param</span><span class="o">=</span><span class="s1">&#39;importance&#39;</span><span class="p">)</span>
+
+<span class="c1"># isolate important peaks</span>
+<span class="c1"># Filter rows where the lower bound of the HDI is greater than importance_threshold</span>
+<span class="n">importance_threshold</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">condition</span> <span class="o">=</span> <span class="n">summary_df</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">importance_hdi</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span><span class="si">}</span><span class="s1">% HDI (Importance)&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">hdi</span><span class="p">:</span> <span class="n">hdi</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">importance_threshold</span><span class="p">)</span>
+<span class="n">important_peaks</span> <span class="o">=</span> <span class="n">summary_df</span><span class="p">[</span><span class="n">condition</span><span class="p">]</span> <span class="c1"># isloated for plotting below</span>
+<span class="n">summary_df</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Rank</th>
+      <th>Importance</th>
+      <th>Coordinates</th>
+      <th>94% HDI (Importance)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>0.105332</td>
+      <td>(99.76378307410232, 99.89893518077652)</td>
+      <td>(0.0554383073006188, 0.14903909300715418)</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>0.083037</td>
+      <td>(110.0694863982973, 110.16789728029953)</td>
+      <td>(-0.06717312492427938, 0.15074774085422843)</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>0.046629</td>
+      <td>(120.26596153558248, 119.86954570912528)</td>
+      <td>(-0.023997382087060842, 0.0993326944283342)</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>-0.000654</td>
+      <td>(100.48424406221739, 100.40982754900358)</td>
+      <td>(-0.0387477139901936, 0.04816024210388181)</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>-0.016397</td>
+      <td>(119.64296211884407, 120.07054228884512)</td>
+      <td>(-0.058344168478520364, 0.02405810082613133)</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>6</td>
+      <td>-0.037437</td>
+      <td>(109.58644907619221, 109.83659348941625)</td>
+      <td>(-0.09767962877920745, 0.11074465309619352)</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>7</td>
+      <td>-0.085692</td>
+      <td>(110.5825390002075, 109.2740912309594)</td>
+      <td>(-0.10858786954540917, -0.06433491752473684)</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>8</td>
+      <td>-0.094818</td>
+      <td>(119.12531040662812, 119.2876128681013)</td>
+      <td>(-0.11691521791045235, -0.03917915112747197)</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot KDE density surface</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">x_mesh</span><span class="p">,</span> <span class="n">y_mesh</span><span class="p">,</span> <span class="n">kde_values</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
+
+<span class="c1"># Extract the X and Y coordinates from the Coordinates column for plotting</span>
+<span class="n">x_coords</span> <span class="o">=</span> <span class="n">important_peaks</span><span class="p">[</span><span class="s1">&#39;Coordinates&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">coord</span><span class="p">:</span> <span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">y_coords</span> <span class="o">=</span> <span class="n">important_peaks</span><span class="p">[</span><span class="s1">&#39;Coordinates&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">coord</span><span class="p">:</span> <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># Plot the GMM peaks with red &#39;x&#39; markers</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_coords</span><span class="p">,</span> <span class="n">y_coords</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;GMM Peaks&#39;</span><span class="p">)</span>
+
+<span class="c1"># Annotate each component with its rank</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">rank</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">x_coords</span><span class="p">,</span> <span class="n">y_coords</span><span class="p">,</span> <span class="n">important_peaks</span><span class="p">[</span><span class="s1">&#39;Rank&#39;</span><span class="p">]),</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Rank </span><span class="si">{</span><span class="n">rank</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="c1"># Add legend, labels, and title</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;X Coordinate&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Y Coordinate&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;KDE with GMM Peaks Ranked by Importance&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/tutorialnb_63_0.png" src="_images/tutorialnb_63_0.png" />
+</div>
+</div>
+</section>
+<section id="MCMC-Sampling-Considerations">
+<h4>MCMC Sampling Considerations<a class="headerlink" href="#MCMC-Sampling-Considerations" title="Link to this heading"></a></h4>
+<p>The Bayesian GMM can be a powerful technique for identifying peaks and provides the flexibility of including both the characteristic scale and temporal uncertainty, but it comes at the cost of having to deal with Markov-Chain Monte Carlo (MCMC) tools, diagnostics, and computational challenges.</p>
+<p>One important consideration is <em>convergnce</em>. Convergence refers to the point at which the MCMC chain(s) have thoroughly explored the parameter space and stabilized around a posterior distribution. In other words, when the sampling process has reached a stationary distribution that accurately reflects the underlying posterior, we can be confident in the results. A typical Bayesian analysis nowadays frequently involves using multiple chains to improve and diagnosis convergence (multiple MCMC
+simulations with different starting parameters that ideally lead to the same conclusions, but explore the potential parameter space(s) more thoroughly and quickly). In PyMC, it’s possible to set a parameter, <code class="docutils literal notranslate"><span class="pre">chains</span></code>, to use multiple chains and automatically run some convergence checks and then combine the chains for efficient posterior inference. This parameter can be passed through to the PyMC model from <code class="docutils literal notranslate"><span class="pre">kde_peaks</span></code> with by including it in the function call as a named parameter—it gets
+passed through with <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> to PyMCs <code class="docutils literal notranslate"><span class="pre">sample</span></code> method inside the model context.</p>
+<p>But, with a GMM, there’s a phenomenon called ‘label switching’ that can lead to poor convergence and multimodal posteriors if we use multiple chains. This occurs because the components in a mixture model aren’t inherently ordered. Each chain, in principle, can assign different labels to the same underlying cluster (in one run, the model calls a given cluster ‘component[0]’ and in another run the same cluster is by chance called ‘component[1]’, even though the labels refer to the same underlying
+object), resulting in posterior distributions that appear multimodal when they’re actually capturing the same clusters with inconsistent labels across chains.</p>
+<p>So, instead, I recommend using a single chain for a longer time (pass the <code class="docutils literal notranslate"><span class="pre">**kwargs</span></code> <code class="docutils literal notranslate"><span class="pre">draws</span> <span class="pre">=</span> <span class="pre">N</span></code> where <code class="docutils literal notranslate"><span class="pre">N</span></code> is some large integer and <code class="docutils literal notranslate"><span class="pre">chains</span> <span class="pre">=</span> <span class="pre">1</span></code> in the <code class="docutils literal notranslate"><span class="pre">kde_peaks</span></code> function call). By doing this, you avoid the complications of label-switching, as there’s no need for the MCMC sampler to align labels across chains. Of course, this approach isn’t without trade-offs. Running multiple chains allows for certain convergence diagnostics, like the Gelman-Rubin statistic, which measures
+consistency across chains. With a single chain, you lose that particular diagnostic. Instead, you’ll need to rely on tools like the Geweke diagnostic, which compares different segments of a single chain to check for convergence, or just inspect the trace plots to verify that the chain has stabilized.</p>
+<p>Another downside to a single-chain approach is the inability to parallelize. When you’re working with large datasets, the ability to run multiple chains simultaneously can speed up sampling considerably. With one chain, you’re limited to sequential sampling, which may lead to longer runtimes depending on the complexity of the data and model.</p>
+<p>For most practical purposes, though, sticking with one chain is the cleaner approach. If you do need to use multiple chains and find that label switching has occurred, there are ad hoc methods to try aligning the clusters afterwards. However, these are often complicated and prone to introducing their own issues. Generally, running a single, longer chain will be better, even if it means giving up some parallelization and diagnostic options.</p>
+<p>Some standard PyMC related methods for plotting and checking posterior chains and densities are as follows:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">arviz</span> <span class="k">as</span> <span class="nn">az</span>
+
+<span class="c1"># Plot trace and posterior density for each parameter</span>
+<span class="c1"># Make sure `trace` is an InferenceData object returned from pm.sample</span>
+<span class="n">az</span><span class="o">.</span><span class="n">plot_trace</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="s1">&#39;means&#39;</span><span class="p">,</span><span class="s1">&#39;chol&#39;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Plot posterior density</span>
+<span class="n">az</span><span class="o">.</span><span class="n">plot_posterior</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="s1">&#39;means&#39;</span><span class="p">,</span> <span class="s1">&#39;chol&#39;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/tutorialnb_65_0.png" src="_images/tutorialnb_65_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/tutorialnb_65_1.png" src="_images/tutorialnb_65_1.png" />
+</div>
+</div>
+<p>And, then, to summarize the posteriors:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Summary to see mean cluster coordinate values and credible intervals, for example</span>
+<span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;means&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+arviz - WARNING - Shape validation failed: input_shape: (1, 2000), minimum_shape: (chains=2, draws=4)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mean</th>
+      <th>sd</th>
+      <th>hdi_3%</th>
+      <th>hdi_97%</th>
+      <th>mcse_mean</th>
+      <th>mcse_sd</th>
+      <th>ess_bulk</th>
+      <th>ess_tail</th>
+      <th>r_hat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>means[0, 0]</th>
+      <td>110.583</td>
+      <td>0.110</td>
+      <td>110.386</td>
+      <td>110.773</td>
+      <td>0.028</td>
+      <td>0.020</td>
+      <td>17.0</td>
+      <td>278.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>means[0, 1]</th>
+      <td>109.274</td>
+      <td>0.168</td>
+      <td>108.955</td>
+      <td>109.573</td>
+      <td>0.009</td>
+      <td>0.007</td>
+      <td>326.0</td>
+      <td>427.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>means[1, 0]</th>
+      <td>100.484</td>
+      <td>0.053</td>
+      <td>100.386</td>
+      <td>100.577</td>
+      <td>0.005</td>
+      <td>0.004</td>
+      <td>98.0</td>
+      <td>810.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>means[1, 1]</th>
+      <td>100.410</td>
+      <td>0.149</td>
+      <td>100.134</td>
+      <td>100.618</td>
+      <td>0.055</td>
+      <td>0.041</td>
+      <td>8.0</td>
+      <td>88.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>means[2, 0]</th>
+      <td>109.586</td>
+      <td>0.186</td>
+      <td>109.322</td>
+      <td>109.969</td>
+      <td>0.024</td>
+      <td>0.017</td>
+      <td>75.0</td>
+      <td>35.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>means[2, 1]</th>
+      <td>109.837</td>
+      <td>0.141</td>
+      <td>109.622</td>
+      <td>110.056</td>
+      <td>0.024</td>
+      <td>0.017</td>
+      <td>48.0</td>
+      <td>29.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>means[3, 0]</th>
+      <td>119.125</td>
+      <td>0.144</td>
+      <td>118.876</td>
+      <td>119.385</td>
+      <td>0.016</td>
+      <td>0.011</td>
+      <td>91.0</td>
+      <td>206.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>means[3, 1]</th>
+      <td>119.288</td>
+      <td>0.303</td>
+      <td>118.900</td>
+      <td>119.971</td>
+      <td>0.081</td>
+      <td>0.059</td>
+      <td>22.0</td>
+      <td>69.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>means[4, 0]</th>
+      <td>119.643</td>
+      <td>0.142</td>
+      <td>119.461</td>
+      <td>119.984</td>
+      <td>0.023</td>
+      <td>0.017</td>
+      <td>71.0</td>
+      <td>62.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>means[4, 1]</th>
+      <td>120.071</td>
+      <td>0.079</td>
+      <td>119.935</td>
+      <td>120.216</td>
+      <td>0.004</td>
+      <td>0.003</td>
+      <td>642.0</td>
+      <td>628.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>means[5, 0]</th>
+      <td>120.266</td>
+      <td>0.076</td>
+      <td>120.155</td>
+      <td>120.437</td>
+      <td>0.018</td>
+      <td>0.013</td>
+      <td>27.0</td>
+      <td>80.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>means[5, 1]</th>
+      <td>119.870</td>
+      <td>0.073</td>
+      <td>119.706</td>
+      <td>119.988</td>
+      <td>0.020</td>
+      <td>0.015</td>
+      <td>14.0</td>
+      <td>108.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>means[6, 0]</th>
+      <td>99.764</td>
+      <td>0.062</td>
+      <td>99.637</td>
+      <td>99.851</td>
+      <td>0.022</td>
+      <td>0.016</td>
+      <td>10.0</td>
+      <td>176.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>means[6, 1]</th>
+      <td>99.899</td>
+      <td>0.060</td>
+      <td>99.802</td>
+      <td>100.024</td>
+      <td>0.015</td>
+      <td>0.011</td>
+      <td>20.0</td>
+      <td>41.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>means[7, 0]</th>
+      <td>110.069</td>
+      <td>0.104</td>
+      <td>109.964</td>
+      <td>110.232</td>
+      <td>0.024</td>
+      <td>0.018</td>
+      <td>12.0</td>
+      <td>30.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>means[7, 1]</th>
+      <td>110.168</td>
+      <td>0.157</td>
+      <td>110.014</td>
+      <td>110.669</td>
+      <td>0.039</td>
+      <td>0.028</td>
+      <td>11.0</td>
+      <td>33.0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</section>
+</section>
+</section>
+<section id="Radial-Density-and-KDE">
+<h2>Radial Density and KDE<a class="headerlink" href="#Radial-Density-and-KDE" title="Link to this heading"></a></h2>
+<p>Once important peaks have been identified, there is more we can do with them. Imagine a situation where we are investigating archaeological settlement patterns and where a prominent feature—such as a settlement or natural resource—forms a focal point. In such contexts, it can be informative to characterize how point density changes with increasing distance from this central feature. Geographers, especially Urban Geographers, describe these patterns with radial density profiles, which offer a
+way to measure and visualize how density decreases or increases radially outward from a given point. For example, in a cityscape, we might expect a central peak of density representing the urban core, with density gradually decreasing as we move outward.</p>
+<section id="Defining-Radial-Density">
+<h3>Defining Radial Density<a class="headerlink" href="#Defining-Radial-Density" title="Link to this heading"></a></h3>
+<p>Radial density profiles estimate the density of points within circular bands (or “rings”) at increasing distances from a central point. Imagine a series of concentric rings around a peak—each ring represents a distance from the center, and within each ring, we measure how many points exist per unit area. This approach captures how density is organized around a focal point, allowing for comparisons across distances that could reveal patterns like clustering, uniform spread, or gradients.</p>
+<section id="Estimating-Radial-Density-Using-Radial-Bins">
+<h4>Estimating Radial Density Using Radial Bins<a class="headerlink" href="#Estimating-Radial-Density-Using-Radial-Bins" title="Link to this heading"></a></h4>
+<p>The traditional approach to estimating radial density involves dividing the area around the peak into a series of radial bins, each defined by a specific distance from the central point. For each bin, we calculate the density as the number of points within the bin divided by its area, giving a sense of how dense the region is at that distance. This total density within the ring is actually also the average density, which is a much more helpful way to interpret the resulting profile that tracks
+changes in this metric with increasing distance (radii) from the central point.</p>
+<p>For intuition-building, consider a simple case: dividing each radial bin into smaller, equally-sized segments (like slicing each ring into thin pie slices). If we calculate the density within each segment, then average these segment densities, we approach the overall density of the full ring. It’s easy to see this when we consider that densities are simple ratios and we are holding the magnitude of the denominator (the size of the slices) constant.</p>
+<p>Consider a radial bin at some distance $ r $ from a center point, with an outer radius $ r:nbsphinx-math:<a href="#id18"><span class="problematic" id="id19">`</span></a>Delta <a href="#id20"><span class="problematic" id="id21">`</span></a>r $. The area $ A $ of this ring (bin) is:</p>
+<div class="math notranslate nohighlight">
+\[A = \pi(r + \Delta r)^2 - r^2 = \pi\Delta r \cdot (2r + \Delta r)\]</div>
+<p>Now, imagine that we divide this radial bin into $ n $ equally-sized segments, like thin pie slices, where each <span class="math notranslate nohighlight">\(i^{th}\)</span> segment has an area <span class="math notranslate nohighlight">\(A_i\)</span> and contains <span class="math notranslate nohighlight">\(p_i\)</span> points. The density $ d_i $ within each segment is simply:</p>
+<div class="math notranslate nohighlight">
+\[d_i = \frac{p_i}{A_i}\]</div>
+<p>If we sum the points in all segments and then average their densities, $ <span class="math">\hat{A}</span> $ , we get:</p>
+<div class="math notranslate nohighlight">
+\[\hat{A} = \frac{a}{n} \sum_{i=1}^n d_i = \frac{a}{n} \sum_{i=1}^n \frac{p_i}{A_i}\]</div>
+<p>Since each segment’s area $ A_i $ is the same by construction, we can factor it out and rewrite this expression as:</p>
+<div class="math notranslate nohighlight">
+\[\hat{A} \approx A = \frac{\sum_{i=1}^n p_i}{\sum_{i=1}^n A_i} = \frac{\text{Total Points}}{\text{Total Area}}\]</div>
+<p>This is just the total density within the entire radial bin.</p>
+<p>As $ n <span class="math">\to `:nbsphinx-math:</span>infty <a href="#id22"><span class="problematic" id="id23">`</span></a>$, the segments become infinitely thin, and this average density converges to the density calculated over the entire ring area. This shows that the radial density within a bin is effectively an aggregate of densities around the ring at that distance. In other words, when we calculate radial density by averaging over smaller segments, we are capturing the density around the ring in a way that approaches the total density for that radius as our
+segments get infinitely thin. IT also demonstrates that we can interpret the total density within a radial bin as the average density around the ring.</p>
+</section>
+<section id="Introducing-Radial-KDE-as-a-Continuous-Extension">
+<h4>Introducing Radial KDE as a Continuous Extension<a class="headerlink" href="#Introducing-Radial-KDE-as-a-Continuous-Extension" title="Link to this heading"></a></h4>
+<p>The binning approach described above is effective but inherently discrete, as it relies on fixed-width radial bins. A natural extension to this method is Radial KDE (Kernel Density Estimation), which allows us to estimate density smoothly and continuously at any given radius from the peak. Radial KDE takes the continuous KDE surface, integrates it along a ring at the specified radius, and produces a density estimate. This approach smooths out local variations that might emerge from binning,
+giving a clearer view of the general density trend across distances. Importantly, it’s conceptually similar to the bin-segment averaging explained above in that the resulting single value per ring ammounts to an average (continuous) density estimate and this average gets better (more accurate) the higher our sampling density on the ring is.</p>
+<p>Slightly more formally, for Radial KDE, we start by defining a sequence of concentric rings at increasing radii, <span class="math notranslate nohighlight">\(\{ r_1, r_2, … , r_n ​\}\)</span>​, from a central point (typically one of the identified peaks from before). For each radius $ r_i $​, we sample the continuous KDE surface along the circumference of the ring defined by $ r_i $ to obtain an average density at that distance.</p>
+<ol class="arabic">
+<li><p>Defining the Ring: At a given radius $ r $ from the central point, the circumference of the ring is $ C(r) = 2:nbsphinx-math:<a href="#id24"><span class="problematic" id="id25">`</span></a>pi <a href="#id26"><span class="problematic" id="id27">`</span></a>r $.</p></li>
+<li><p>Sampling the KDE Surface: Sample points along the circumference of the ring at $ k $ equal angular intervals, say $ { <span class="math">\theta</span>_1, <span class="math">\theta</span>_2, …, <span class="math">\theta</span>_k } $ ​, where $ <span class="math">\theta</span>_j = <span class="math">\frac{2\pi rj}{k}</span> $ for $ j = 1, 2, …, k $. Each sample point on the ring then has coordinates:</p>
+<p>$ (x_j, y_j) = (x_:nbsphinx-math:<cite>theta `+ r cos⁡(:nbsphinx-math:</cite>theta`_j), y:nbsphinx-math:<cite>theta `+ r sin⁡(:nbsphinx-math:</cite>theta`_j)) $</p>
+<p>where $ (x_:nbsphinx-math:<cite>theta</cite>, y_:nbsphinx-math:<cite>theta</cite>) (x_:nbsphinx-math:<cite>theta`​, y_:nbsphinx-math:</cite>theta`​) $ is the central point (the peak) and $ r $ is the radius of the ring.</p>
+</li>
+<li><p>Evaluating the KDE at Each Sample Point: For each point $ (x_j, y_j) $ on the ring, we evaluate the KDE surface to get a density estimate $ KDE(x_j, y_j) $.</p></li>
+<li><p>Averaging the Densities: The density estimate for the ring at radius $ r $ is the average of the KDE values around the ring:</p>
+<p>$ KDE_{rad}(r) = <span class="math">\frac{1}{k}</span> <span class="math">\sum</span>_{j=1}^k KDE(x_j, y_j) $</p>
+<p>where $ k $ is the number of sample points along the ring. The more points we sample (i.e., the larger $ k $), the closer this estimate will be to the true density profile around the ring.</p>
+</li>
+<li><p>Constructing the Radial KDE Profile: By repeating this process for each radius $ r_i $ in our sequence $ { r_1, r_2, … , r_n } $, we construct a radial density profile. This profile is a smooth function of distance from the central peak, providing a continuous view of how density changes with distance.</p></li>
+</ol>
+<p>Radial KDE has another advantage when used with the chronocluster package: when applied to a KDE surface that has already been weighted by temporal probabilities (such as inclusion probabilities from time-sliced KDEs), it implicitly incorporates chronological uncertainty. This unified profile provides a more robust view of density trends as they would appear over time in archaeological research.</p>
+</section>
+</section>
+<section id="Radial-KDE-in-chronocluster">
+<h3>Radial KDE in chronocluster<a class="headerlink" href="#Radial-KDE-in-chronocluster" title="Link to this heading"></a></h3>
+<p>With all of that in mind, there are functions in the chronocluster package for producing radial KDEs and radial densities. The two are <code class="docutils literal notranslate"><span class="pre">radial_density</span></code> and <code class="docutils literal notranslate"><span class="pre">radial_kde</span></code>. The latter is the primary tool that uses the chronocluster paradigm since it calls the previously described functions for producing a KDE given the characteristic scale(s) identified and the time slice in a STV for which the KDE profile is desired.</p>
+<p>We can begin by simply calling <code class="docutils literal notranslate"><span class="pre">radial_kde</span></code> as follows, passing in one of the important peaks contained in <code class="docutils literal notranslate"><span class="pre">summary_df</span></code> that was identified with the <code class="docutils literal notranslate"><span class="pre">kde_peaks</span></code> method:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">chronocluster.density</span> <span class="kn">import</span> <span class="n">radial_kde</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">halfnorm</span>
+
+<span class="c1"># Define parameters</span>
+<span class="n">center</span> <span class="o">=</span> <span class="n">summary_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Coordinates&#39;</span><span class="p">]</span>
+<span class="n">radii</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>  <span class="c1"># Radii from 500 to 5000 meters</span>
+<span class="n">point_density</span> <span class="o">=</span> <span class="mf">0.01</span>  <span class="c1"># 0.01 points per meter along each ring</span>
+<span class="n">time_slice</span> <span class="o">=</span> <span class="n">time_slices</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">bandwidth</span> <span class="o">=</span> <span class="mf">1.5</span>
+
+<span class="c1"># Compute radial KDE profile</span>
+<span class="n">radial_profile</span> <span class="o">=</span> <span class="n">radial_kde</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">time_slice</span><span class="p">,</span> <span class="n">bandwidth</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">radii</span><span class="p">,</span> <span class="n">point_density</span><span class="p">)</span>
+
+<span class="c1"># Scale the radial profile to max = 1</span>
+<span class="n">scaled_radial_profile</span> <span class="o">=</span> <span class="n">radial_profile</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">radial_profile</span><span class="p">)</span>
+
+<span class="c1"># Compute and scale the half-normal density</span>
+<span class="n">half_normal_density</span> <span class="o">=</span> <span class="n">halfnorm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">radii</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">target_scale</span><span class="p">)</span>
+<span class="n">scaled_half_normal_density</span> <span class="o">=</span> <span class="n">half_normal_density</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">half_normal_density</span><span class="p">)</span>
+
+<span class="c1"># Plot scaled radial profile and scaled half-normal density</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">radii</span><span class="p">,</span> <span class="n">scaled_radial_profile</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Radial Density (Scaled KDE)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">radii</span><span class="p">,</span> <span class="n">scaled_half_normal_density</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Half-Normal (Scaled)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Radius (meters)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Density (Scaled)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Radial Density Profile vs. Half-Normal Distribution&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/tutorialnb_70_0.png" src="_images/tutorialnb_70_0.png" />
+</div>
+</div>
+<p>As anticipated, the radial KDE looks like the profile of a half-normal density. This means that the radial KDE function is performing as expected and we have identified a valid peak in the density that corresponds to the simulated data parameters. The standard deviation also looks approximately correct, at around 1-1.5.</p>
 </section>
 </section>
 </section>

@@ -1,0 +1,380 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>chronocluster.density module &mdash; ChronoCluster 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=938c9ccc"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ChronoCluster
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Modules</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ChronoCluster</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">chronocluster.density module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/chronocluster.density.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-chronocluster.density">
+<span id="chronocluster-density-module"></span><h1>chronocluster.density module<a class="headerlink" href="#module-chronocluster.density" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="chronocluster.density.custom_kde">
+<span class="sig-prename descclassname"><span class="pre">chronocluster.density.</span></span><span class="sig-name descname"><span class="pre">custom_kde</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bw_method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/density.html#custom_kde"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.density.custom_kde" title="Link to this definition"></a></dt>
+<dd><p>Custom KDE function compatible with kde_time, following the interface of gaussian_kde.
+This function returns a callable that computes the KDE with a fixed Gaussian bandwidth
+in data units.</p>
+<section id="parameters">
+<h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>dataset<span class="classifier">np.ndarray</span></dt><dd><p>A 2D array with shape (2, n_points) or (n_points, 2) containing the spatial coordinates
+of data points. If shape is (2, n_points), it will be transposed internally.</p>
+</dd>
+<dt>bw_method<span class="classifier">float</span></dt><dd><p>The desired bandwidth in data units (e.g., meters for UTM coordinates).</p>
+</dd>
+<dt>weights<span class="classifier">np.ndarray, optional</span></dt><dd><p>An array of weights for each point in <cite>dataset</cite>. Defaults to uniform weights if None.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h2>Returns:<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>callable</dt><dd><p>A function that takes a grid of points (in any shape) and evaluates the KDE
+over that grid, reshaping the result to match the grid’s original shape.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chronocluster.density.gmm_peak_finder">
+<span class="sig-prename descclassname"><span class="pre">chronocluster.density.</span></span><span class="sig-name descname"><span class="pre">gmm_peak_finder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_components</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/density.html#gmm_peak_finder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.density.gmm_peak_finder" title="Link to this definition"></a></dt>
+<dd><p>Uses a Gaussian Mixture Model (GMM) to identify peaks in a point distribution.</p>
+<section id="id1">
+<h2>Parameters:<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>points<span class="classifier">list of Point</span></dt><dd><p>List of Point objects, each with x and y attributes.</p>
+</dd>
+<dt>num_components<span class="classifier">int, optional</span></dt><dd><p>Number of GMM components (peaks) to fit. Default is 8.</p>
+</dd>
+</dl>
+</section>
+<section id="id2">
+<h2>Returns:<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>ranked_peaks<span class="classifier">np.ndarray</span></dt><dd><p>Array of shape (num_components, 2) containing the x, y coordinates of the identified peaks.</p>
+</dd>
+<dt>ranked_weights<span class="classifier">np.ndarray</span></dt><dd><p>Array of weights for each peak, in descending order of importance.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chronocluster.density.kde_peaks">
+<span class="sig-prename descclassname"><span class="pre">chronocluster.density.</span></span><span class="sig-name descname"><span class="pre">kde_peaks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kde_values=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_mesh=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_mesh=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_peaks=5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peak_finder=&lt;function</span> <span class="pre">find_peaks&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/density.html#kde_peaks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.density.kde_peaks" title="Link to this definition"></a></dt>
+<dd><p>Identifies peaks in the KDE surface or point distribution using a specified peak-finding algorithm.</p>
+<section id="id3">
+<h2>Parameters:<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>kde_values<span class="classifier">np.ndarray, optional</span></dt><dd><p>2D array of KDE values over the grid, directly from kde_time. Only required for <cite>find_peaks</cite> and <cite>peak_local_max</cite>.</p>
+</dd>
+<dt>x_mesh, y_mesh<span class="classifier">np.ndarray, optional</span></dt><dd><p>Mesh grids of x and y coordinates used to evaluate kde_values. Only required for <cite>find_peaks</cite> and <cite>peak_local_max</cite>.</p>
+</dd>
+<dt>points<span class="classifier">list of Point, optional</span></dt><dd><p>List of Point objects with x and y coordinates, used when peak_finder is <cite>gmm_peak_finder</cite> or <cite>pymc_gmm_peak_finder</cite>.</p>
+</dd>
+<dt>num_peaks<span class="classifier">int</span></dt><dd><p>Maximum number of peaks to identify on the KDE surface or point distribution.</p>
+</dd>
+<dt>peak_finder<span class="classifier">callable</span></dt><dd><p>Peak-finding function to use. Options include <cite>scipy.signal.find_peaks</cite>, <cite>peak_local_max</cite>, <cite>gmm_peak_finder</cite>, or <cite>pymc_gmm_peak_finder</cite>.</p>
+</dd>
+<dt><a href="#id4"><span class="problematic" id="id5">*</span></a>args, <a href="#id6"><span class="problematic" id="id7">**</span></a>kwargs :</dt><dd><p>Additional arguments passed to the peak-finding function.</p>
+</dd>
+</dl>
+</section>
+<section id="id8">
+<h2>Returns:<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>peaks<span class="classifier">np.ndarray</span></dt><dd><p>Array of shape (num_peaks, 2) containing the x, y coordinates of the identified peaks.</p>
+</dd>
+<dt>weights<span class="classifier">np.ndarray or None</span></dt><dd><p>Array of sorted weights corresponding to each peak, in descending order, if applicable.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chronocluster.density.kde_time">
+<span class="sig-prename descclassname"><span class="pre">chronocluster.density.</span></span><span class="sig-name descname"><span class="pre">kde_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_slice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bandwidth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_shape=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kde_method=&lt;class</span> <span class="pre">'scipy.stats._kde.gaussian_kde'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/density.html#kde_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.density.kde_time" title="Link to this definition"></a></dt>
+<dd><p>Computes a KDE for a given time slice, incorporating the inclusion
+probabilities of each point as weights. Allows for flexibility in KDE
+calculation by passing in different KDE methods.</p>
+<section id="id9">
+<h2>Parameters:<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>points<span class="classifier">list of Point</span></dt><dd><p>List of Point objects, each with spatial coordinates and temporal distributions.</p>
+</dd>
+<dt>time_slice<span class="classifier">float</span></dt><dd><p>The time slice for which to calculate the KDE.</p>
+</dd>
+<dt>bandwidth<span class="classifier">float</span></dt><dd><p>Bandwidth for the KDE.</p>
+</dd>
+<dt>grid<span class="classifier">np.ndarray</span></dt><dd><p>A 2D array of spatial coordinates for KDE evaluation.</p>
+</dd>
+<dt>kde_method<span class="classifier">callable, optional</span></dt><dd><p>A method for calculating a KDE with the following signature:
+kde_method(dataset : array_like, bw_method : scalar or callable, weights : array_like, <a href="#id10"><span class="problematic" id="id11">*</span></a>args, <a href="#id12"><span class="problematic" id="id13">**</span></a>kwargs) -&gt; callable
+This function should return a callable that can be used to evaluate the KDE
+over a given grid of points. Defaults to <cite>scipy.stats.gaussian_kde</cite>.</p>
+</dd>
+<dt><a href="#id14"><span class="problematic" id="id15">*</span></a>args<span class="classifier">tuple</span></dt><dd><p>Additional positional arguments passed to <cite>kde_method</cite>.</p>
+</dd>
+<dt><a href="#id16"><span class="problematic" id="id17">**</span></a>kwargs<span class="classifier">dict</span></dt><dd><p>Additional keyword arguments passed to <cite>kde_method</cite>.</p>
+</dd>
+</dl>
+</section>
+<section id="id18">
+<h2>Returns:<a class="headerlink" href="#id18" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>kde_values<span class="classifier">np.ndarray</span></dt><dd><p>KDE values evaluated over the grid.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chronocluster.density.peak_local_max_finder">
+<span class="sig-prename descclassname"><span class="pre">chronocluster.density.</span></span><span class="sig-name descname"><span class="pre">peak_local_max_finder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kde_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_peaks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/density.html#peak_local_max_finder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.density.peak_local_max_finder" title="Link to this definition"></a></dt>
+<dd><p>Uses the <cite>peak_local_max</cite> function from <cite>skimage.feature</cite> to identify peaks in a 2D KDE surface.</p>
+<section id="id19">
+<h2>Parameters:<a class="headerlink" href="#id19" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>kde_values<span class="classifier">np.ndarray</span></dt><dd><p>2D array of KDE values over the grid.</p>
+</dd>
+<dt>x_mesh, y_mesh<span class="classifier">np.ndarray</span></dt><dd><p>Mesh grids of x and y coordinates used to evaluate kde_values.</p>
+</dd>
+<dt>min_distance<span class="classifier">int, optional</span></dt><dd><p>Minimum number of pixels separating peaks in a region of <cite>2 * min_distance + 1</cite> (i.e., a peak is
+only detected if it has the maximum value within its local region).</p>
+</dd>
+<dt>num_peaks<span class="classifier">int, optional</span></dt><dd><p>Maximum number of peaks to return.</p>
+</dd>
+</dl>
+</section>
+<section id="id20">
+<h2>Returns:<a class="headerlink" href="#id20" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>peak_coords<span class="classifier">np.ndarray</span></dt><dd><p>Array of shape (num_peaks, 2) containing the x, y coordinates of the identified peaks.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chronocluster.density.pymc_gmm_peak_finder">
+<span class="sig-prename descclassname"><span class="pre">chronocluster.density.</span></span><span class="sig-name descname"><span class="pre">pymc_gmm_peak_finder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_slice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_components</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_scale</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_scale_sd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MH'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/density.html#pymc_gmm_peak_finder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.density.pymc_gmm_peak_finder" title="Link to this definition"></a></dt>
+<dd><p>Identifies peaks using a Bayesian GMM implemented in PyMC, with bounding box derived from data.</p>
+<section id="id21">
+<h2>Parameters:<a class="headerlink" href="#id21" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>points<span class="classifier">list of Point</span></dt><dd><p>List of Point objects with x and y coordinates.</p>
+</dd>
+<dt>time_slice<span class="classifier">int</span></dt><dd><p>The specific time slice for which to calculate the KDE and sample points.</p>
+</dd>
+<dt>n_samples<span class="classifier">int, optional</span></dt><dd><p>Number of synthetic samples to generate for weighting.</p>
+</dd>
+<dt>num_components<span class="classifier">int, optional</span></dt><dd><p>Maximum number of components (peaks) for the GMM.</p>
+</dd>
+<dt>target_scale<span class="classifier">float, optional</span></dt><dd><p>Centered scale for the covariance of the components.</p>
+</dd>
+<dt>target_scale_sd<span class="classifier">float, optional</span></dt><dd><p>Standard deviation around the target scale.</p>
+</dd>
+<dt>w_threshold<span class="classifier">float, optional</span></dt><dd><p>Threshold for component weights to be considered as significant peaks.</p>
+</dd>
+<dt>sampler<span class="classifier">str, optional</span></dt><dd><p>Select the sampler used for the PyMC model (e.g., ‘MH’ for
+Metropolis-Hastings or ‘NUTS’ for No-U-Turn Sampler). Deafults to ‘MH’.</p>
+</dd>
+<dt><a href="#id22"><span class="problematic" id="id23">**</span></a>kwargs<span class="classifier">dict</span></dt><dd><p>Additional parameters for PyMC’s pm.sample function (e.g., draws, chains, tune).</p>
+</dd>
+</dl>
+</section>
+<section id="id24">
+<h2>Returns:<a class="headerlink" href="#id24" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>peak_coords<span class="classifier">np.ndarray</span></dt><dd><p>Array of shape (num_peaks, 2) containing the x, y coordinates of the identified peaks.</p>
+</dd>
+<dt>weights<span class="classifier">np.ndarray</span></dt><dd><p>Array of weights corresponding to each identified peak.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chronocluster.density.radial_density">
+<span class="sig-prename descclassname"><span class="pre">chronocluster.density.</span></span><span class="sig-name descname"><span class="pre">radial_density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coordinates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radial_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/density.html#radial_density"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.density.radial_density" title="Link to this definition"></a></dt>
+<dd><p>Calculates radial density profiles for a given set of centers.</p>
+<section id="id25">
+<h2>Parameters:<a class="headerlink" href="#id25" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>coordinates<span class="classifier">np.ndarray</span></dt><dd><p>Array of shape (n_points, 2) containing the x, y coordinates of the data points.</p>
+</dd>
+<dt>centers<span class="classifier">np.ndarray</span></dt><dd><p>Array of shape (num_centers, 2) containing the x, y coordinates of the KDE peaks.</p>
+</dd>
+<dt>radial_steps<span class="classifier">int</span></dt><dd><p>Number of radial steps to calculate the density.</p>
+</dd>
+<dt>max_radius<span class="classifier">float</span></dt><dd><p>Maximum radius for the radial density profile.</p>
+</dd>
+</dl>
+</section>
+<section id="id26">
+<h2>Returns:<a class="headerlink" href="#id26" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>radial_profiles<span class="classifier">dict</span></dt><dd><p>Dictionary with center indices as keys and lists of density values at each radius as values.</p>
+</dd>
+<dt>radii<span class="classifier">np.ndarray</span></dt><dd><p>Array of radius values corresponding to each radial step.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chronocluster.density.radial_kde">
+<span class="sig-prename descclassname"><span class="pre">chronocluster.density.</span></span><span class="sig-name descname"><span class="pre">radial_kde</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_slice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bandwidth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radii</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ring_sample_density</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/density.html#radial_kde"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.density.radial_kde" title="Link to this definition"></a></dt>
+<dd><p>Computes a radial density profile by evaluating a KDE at points along rings of increasing radii.</p>
+<section id="id27">
+<h2>Parameters:<a class="headerlink" href="#id27" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>points<span class="classifier">list of Point</span></dt><dd><p>List of Point objects, each with spatial coordinates and temporal distributions.</p>
+</dd>
+<dt>time_slice<span class="classifier">float</span></dt><dd><p>The time slice for which to calculate the KDE.</p>
+</dd>
+<dt>bandwidth<span class="classifier">float</span></dt><dd><p>Bandwidth for the KDE.</p>
+</dd>
+<dt>center<span class="classifier">tuple</span></dt><dd><p>The (x, y) coordinates of the center point from which to measure radii.</p>
+</dd>
+<dt>radii<span class="classifier">array_like</span></dt><dd><p>Array of radii at which to evaluate the KDE.</p>
+</dd>
+<dt>ring_sample_density<span class="classifier">float</span></dt><dd><p>Density of points per unit length of each ring.</p>
+</dd>
+<dt><a href="#id28"><span class="problematic" id="id29">*</span></a>args<span class="classifier">tuple</span></dt><dd><p>Additional positional arguments passed to <cite>kde_time_func</cite>.</p>
+</dd>
+<dt><a href="#id30"><span class="problematic" id="id31">**</span></a>kwargs<span class="classifier">dict</span></dt><dd><p>Additional keyword arguments passed to <cite>kde_time_func</cite>.</p>
+</dd>
+</dl>
+</section>
+<section id="id32">
+<h2>Returns:<a class="headerlink" href="#id32" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>radial_density<span class="classifier">np.ndarray</span></dt><dd><p>Array of KDE values averaged over points along each radius, representing the radial density profile.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chronocluster.density.rank_peaks">
+<span class="sig-prename descclassname"><span class="pre">chronocluster.density.</span></span><span class="sig-name descname"><span class="pre">rank_peaks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">significance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.95</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_param</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'weights'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/density.html#rank_peaks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.density.rank_peaks" title="Link to this definition"></a></dt>
+<dd><p>Summarizes and ranks the importance of GMM components based on posterior weights and coordinates.</p>
+<section id="id33">
+<h2>Parameters:<a class="headerlink" href="#id33" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>trace<span class="classifier">arviz.InferenceData</span></dt><dd><p>The MCMC trace output from PyMC.</p>
+</dd>
+<dt>significance<span class="classifier">float</span></dt><dd><p>The desired credible interval width for HDI (e.g., 0.95 for a 95% HDI).</p>
+</dd>
+<dt>source_param<span class="classifier">str</span></dt><dd><p>Specifies whether to rank peaks based on ‘w’ (weights) or ‘importance’ (i.e., w_i - w_threshold).</p>
+</dd>
+</dl>
+</section>
+<section id="id34">
+<h2>Returns:<a class="headerlink" href="#id34" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>summary_df<span class="classifier">pd.DataFrame</span></dt><dd><p>DataFrame containing ranked component weights or importance, coordinates, and HDI for the selected metric.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, W. Christopher Carleton.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

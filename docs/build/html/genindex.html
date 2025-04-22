@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; ChronoCluster 0.1 documentation</title>
+  <title>Index &mdash; ChronoCluster 0.2.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=2709fde1"></script>
-        <script src="_static/doctools.js?v=9a2dae69"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=938c9ccc"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -34,9 +32,6 @@
           <a href="index.html" class="icon icon-home">
             ChronoCluster
           </a>
-              <div class="version">
-                0.1
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -80,14 +75,17 @@
 
 <div class="genindex-jumpbox">
  <a href="#_"><strong>_</strong></a>
+ | <a href="#B"><strong>B</strong></a>
  | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#I"><strong>I</strong></a>
+ | <a href="#K"><strong>K</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
  | <a href="#P"><strong>P</strong></a>
+ | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
  | <a href="#X"><strong>X</strong></a>
@@ -106,6 +104,14 @@
       <li><a href="chronocluster.utils.html#chronocluster.utils._largest_divisor">_largest_divisor() (in module chronocluster.utils)</a>
 </li>
       <li><a href="chronocluster.clustering.html#chronocluster.clustering.Point._repr_distribution">_repr_distribution() (chronocluster.clustering.Point method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="chronocluster.data.simdata.html#chronocluster.data.simdata.bise">bise() (in module chronocluster.data.simdata)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -140,8 +146,6 @@
         <li><a href="chronocluster.data.html#module-chronocluster.data">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     chronocluster.data.dataio
 
@@ -149,11 +153,20 @@
         <li><a href="chronocluster.data.dataio.html#module-chronocluster.data.dataio">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     chronocluster.data.simdata
 
       <ul>
         <li><a href="chronocluster.data.simdata.html#module-chronocluster.data.simdata">module</a>
+</li>
+      </ul></li>
+      <li>
+    chronocluster.density
+
+      <ul>
+        <li><a href="chronocluster.density.html#module-chronocluster.density">module</a>
 </li>
       </ul></li>
       <li>
@@ -166,6 +179,8 @@
       <li><a href="chronocluster.utils.html#chronocluster.utils.clustering_heatmap">clustering_heatmap() (in module chronocluster.utils)</a>
 </li>
       <li><a href="chronocluster.clustering.html#chronocluster.clustering.csr_sample">csr_sample() (in module chronocluster.clustering)</a>
+</li>
+      <li><a href="chronocluster.density.html#chronocluster.density.custom_kde">custom_kde() (in module chronocluster.density)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -191,11 +206,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="chronocluster.data.simdata.html#chronocluster.data.simdata.generate_params">generate_params() (in module chronocluster.data.simdata)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="chronocluster.data.simdata.html#chronocluster.data.simdata.generate_random_points">generate_random_points() (in module chronocluster.data.simdata)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="chronocluster.utils.html#chronocluster.utils.get_box">get_box() (in module chronocluster.utils)</a>
+</li>
+      <li><a href="chronocluster.density.html#chronocluster.density.gmm_peak_finder">gmm_peak_finder() (in module chronocluster.density)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -204,6 +221,18 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="chronocluster.clustering.html#chronocluster.clustering.in_probs">in_probs() (in module chronocluster.clustering)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="K">K</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="chronocluster.density.html#chronocluster.density.kde_peaks">kde_peaks() (in module chronocluster.density)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="chronocluster.density.html#chronocluster.density.kde_time">kde_time() (in module chronocluster.density)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -227,6 +256,8 @@
 </li>
         <li><a href="chronocluster.data.simdata.html#module-chronocluster.data.simdata">chronocluster.data.simdata</a>
 </li>
+        <li><a href="chronocluster.density.html#module-chronocluster.density">chronocluster.density</a>
+</li>
         <li><a href="chronocluster.utils.html#module-chronocluster.utils">chronocluster.utils</a>
 </li>
       </ul></li>
@@ -248,6 +279,8 @@
 </li>
       <li><a href="chronocluster.utils.html#chronocluster.utils.pdiff_heatmap">pdiff_heatmap() (in module chronocluster.utils)</a>
 </li>
+      <li><a href="chronocluster.density.html#chronocluster.density.peak_local_max_finder">peak_local_max_finder() (in module chronocluster.density)</a>
+</li>
       <li><a href="chronocluster.utils.html#chronocluster.utils.plot_derivative">plot_derivative() (in module chronocluster.utils)</a>
 </li>
       <li><a href="chronocluster.utils.html#chronocluster.utils.plot_l_diff">plot_l_diff() (in module chronocluster.utils)</a>
@@ -264,6 +297,22 @@
 </li>
       <li><a href="chronocluster.data.dataio.html#chronocluster.data.dataio.pts_to_df">pts_to_df() (in module chronocluster.data.dataio)</a>
 </li>
+      <li><a href="chronocluster.density.html#chronocluster.density.pymc_gmm_peak_finder">pymc_gmm_peak_finder() (in module chronocluster.density)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="chronocluster.density.html#chronocluster.density.radial_density">radial_density() (in module chronocluster.density)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="chronocluster.density.html#chronocluster.density.radial_kde">radial_kde() (in module chronocluster.density)</a>
+</li>
+      <li><a href="chronocluster.density.html#chronocluster.density.rank_peaks">rank_peaks() (in module chronocluster.density)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -271,6 +320,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="chronocluster.clustering.html#chronocluster.clustering.Point.start_distribution">start_distribution (chronocluster.clustering.Point attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="chronocluster.data.simdata.html#chronocluster.data.simdata.synth_sample">synth_sample() (in module chronocluster.data.simdata)</a>
 </li>
   </ul></td>
 </tr></table>

@@ -1,24 +1,22 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>chronocluster.data.simdata module &mdash; ChronoCluster 0.1 documentation</title>
+  <title>chronocluster.data.simdata module &mdash; ChronoCluster 0.2.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=2709fde1"></script>
-        <script src="_static/doctools.js?v=9a2dae69"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=938c9ccc"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -37,9 +35,6 @@
           <a href="index.html" class="icon icon-home">
             ChronoCluster
           </a>
-              <div class="version">
-                0.1
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -98,6 +93,39 @@
 <h1>chronocluster.data.simdata module<a class="headerlink" href="#chronocluster-data-simdata-module" title="Link to this heading"></a></h1>
 <p>This module provides functions for generating simulated data within the ChronoCluster package.</p>
 <dl class="py function" id="module-chronocluster.data.simdata">
+<dt class="sig sig-object py" id="chronocluster.data.simdata.bise">
+<span class="sig-prename descclassname"><span class="pre">chronocluster.data.simdata.</span></span><span class="sig-name descname"><span class="pre">bise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nsim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/data/simdata.html#bise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.data.simdata.bise" title="Link to this definition"></a></dt>
+<dd><p>Generates a null distribution of spatial coordinates based on the mean and covariance
+matrix of the provided Point objects and returns the mean, covariance matrix, simulated
+coordinates, and a list of new Point objects with coordinates sampled from the null distribution.
+The intention is to create Basline Informed Spatial Expectation (BISE) for
+use as a landscape (or other constraints) relevant null model replacement for
+Complete Spatial Randomness.</p>
+<section id="parameters">
+<h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>points<span class="classifier">list of Point</span></dt><dd><p>List of Point objects with x, y coordinates.</p>
+</dd>
+<dt>nsim<span class="classifier">int</span></dt><dd><p>Number of simulated coordinates to generate.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h2>Returns:<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>mean_location<span class="classifier">np.ndarray</span></dt><dd><p>Mean (x, y) coordinate of the original points.</p>
+</dd>
+<dt>cov_matrix<span class="classifier">np.ndarray</span></dt><dd><p>Covariance matrix of the original points.</p>
+</dd>
+<dt>simulated_coords<span class="classifier">np.ndarray</span></dt><dd><p>Simulated coordinates as a (num_simulated, 2) array.</p>
+</dd>
+<dt>simulated_points<span class="classifier">list of Point</span></dt><dd><p>List of new Point objects with coordinates from the simulated null distribution.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="chronocluster.data.simdata.generate_params">
 <span class="sig-prename descclassname"><span class="pre">chronocluster.data.simdata.</span></span><span class="sig-name descname"><span class="pre">generate_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dist_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hyperparams</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/data/simdata.html#generate_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.data.simdata.generate_params" title="Link to this definition"></a></dt>
 <dd><p>Generate distribution parameters from hyperparameters.</p>
@@ -124,6 +152,30 @@ end_hyperparams (list): Hyperparameters for the end distribution.
 calcurve_name (str, optional): Name of the calibration curve data required for ‘calrcarbon’ distribution.</p>
 <p>Returns:
 list of Point: List of generated Point objects.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chronocluster.data.simdata.synth_sample">
+<span class="sig-prename descclassname"><span class="pre">chronocluster.data.simdata.</span></span><span class="sig-name descname"><span class="pre">synth_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_slice</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chronocluster/data/simdata.html#synth_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#chronocluster.data.simdata.synth_sample" title="Link to this definition"></a></dt>
+<dd><p>Generate a synthetic, inclusion-weighted sample of points based on their inclusion probabilities.</p>
+<section id="id1">
+<h2>Parameters:<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>points<span class="classifier">list of Point</span></dt><dd><p>List of Point objects, each with spatial coordinates and temporal distributions.</p>
+</dd>
+<dt>n_samples<span class="classifier">int</span></dt><dd><p>The total number of points in the synthetic sample.</p>
+</dd>
+<dt>time_slice<span class="classifier">float</span></dt><dd><p>The time slice for which to calculate inclusion probabilities.</p>
+</dd>
+</dl>
+</section>
+<section id="id2">
+<h2>Returns:<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>synthetic_sample<span class="classifier">list of Point</span></dt><dd><p>A synthetic, inclusion-weighted sample of Point objects.</p>
+</dd>
+</dl>
+</section>
 </dd></dl>
 
 </section>

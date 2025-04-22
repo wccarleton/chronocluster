@@ -9,8 +9,8 @@
 project = 'ChronoCluster'
 copyright = '2024, W. Christopher Carleton'
 author = 'W. Christopher Carleton'
-release = '0.1'
-version = '0.1'
+release = '0.2.0'
+version = '0.2.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

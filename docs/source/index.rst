@@ -12,6 +12,7 @@ Contents:
 
    introduction
    tutorial
+   barmose
    modules
 
 Indices and tables

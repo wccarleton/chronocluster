@@ -1,0 +1,682 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>chronocluster.density &mdash; ChronoCluster 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=938c9ccc"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ChronoCluster
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Modules</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ChronoCluster</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">chronocluster.density</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for chronocluster.density</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pymc</span> <span class="k">as</span> <span class="nn">pm</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">arviz</span> <span class="k">as</span> <span class="nn">az</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">gaussian_kde</span>
+<span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">cdist</span>
+<span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">find_peaks</span>
+<span class="kn">from</span> <span class="nn">sklearn.mixture</span> <span class="kn">import</span> <span class="n">GaussianMixture</span>
+<span class="kn">from</span> <span class="nn">skimage.feature</span> <span class="kn">import</span> <span class="n">peak_local_max</span>
+<span class="kn">from</span> <span class="nn">chronocluster.data.simdata</span> <span class="kn">import</span> <span class="n">synth_sample</span>
+<span class="kn">from</span> <span class="nn">chronocluster.utils</span> <span class="kn">import</span> <span class="n">get_box</span>
+
+<div class="viewcode-block" id="kde_time">
+<a class="viewcode-back" href="../../chronocluster.density.html#chronocluster.density.kde_time">[docs]</a>
+<span class="k">def</span> <span class="nf">kde_time</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> 
+             <span class="n">time_slice</span><span class="p">,</span> 
+             <span class="n">bandwidth</span><span class="p">,</span> 
+             <span class="n">grid</span><span class="p">,</span> 
+             <span class="n">output_shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+             <span class="n">kde_method</span><span class="o">=</span><span class="n">gaussian_kde</span><span class="p">,</span> 
+             <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes a KDE for a given time slice, incorporating the inclusion </span>
+<span class="sd">    probabilities of each point as weights. Allows for flexibility in KDE </span>
+<span class="sd">    calculation by passing in different KDE methods.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    points : list of Point</span>
+<span class="sd">        List of Point objects, each with spatial coordinates and temporal distributions.</span>
+<span class="sd">    time_slice : float</span>
+<span class="sd">        The time slice for which to calculate the KDE.</span>
+<span class="sd">    bandwidth : float</span>
+<span class="sd">        Bandwidth for the KDE.</span>
+<span class="sd">    grid : np.ndarray</span>
+<span class="sd">        A 2D array of spatial coordinates for KDE evaluation.</span>
+<span class="sd">    kde_method : callable, optional</span>
+<span class="sd">        A method for calculating a KDE with the following signature:</span>
+<span class="sd">        kde_method(dataset : array_like, bw_method : scalar or callable, weights : array_like, *args, **kwargs) -&gt; callable</span>
+<span class="sd">        This function should return a callable that can be used to evaluate the KDE </span>
+<span class="sd">        over a given grid of points. Defaults to `scipy.stats.gaussian_kde`.</span>
+<span class="sd">    *args : tuple</span>
+<span class="sd">        Additional positional arguments passed to `kde_method`.</span>
+<span class="sd">    **kwargs : dict</span>
+<span class="sd">        Additional keyword arguments passed to `kde_method`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    kde_values : np.ndarray</span>
+<span class="sd">        KDE values evaluated over the grid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get inclusion probabilities for the given time slice</span>
+    <span class="n">inclusion_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">point</span><span class="o">.</span><span class="n">calculate_inclusion_probability</span><span class="p">(</span><span class="n">time_slice</span><span class="p">)</span> <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">])</span>
+    
+    <span class="c1"># Extract spatial coordinates</span>
+    <span class="n">x_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">point</span><span class="o">.</span><span class="n">x</span> <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">])</span>
+    <span class="n">y_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">point</span><span class="o">.</span><span class="n">y</span> <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">])</span>
+
+    <span class="c1"># Stack coordinates for KDE input</span>
+    <span class="n">coordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">x_coords</span><span class="p">,</span> <span class="n">y_coords</span><span class="p">])</span>
+
+    <span class="c1"># Initialize KDE with weights using the specified method</span>
+    <span class="n">kde</span> <span class="o">=</span> <span class="n">kde_method</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span> <span class="n">bw_method</span><span class="o">=</span><span class="n">bandwidth</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">inclusion_probs</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="c1"># Evaluate KDE on the grid</span>
+    <span class="n">kde_values</span> <span class="o">=</span> <span class="n">kde</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>  <span class="c1"># Transpose grid for compatibility</span>
+
+    <span class="c1"># reshape if necessary</span>
+    <span class="k">if</span> <span class="n">output_shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">kde_values</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">kde_values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">output_shape</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="custom_kde">
+<a class="viewcode-back" href="../../chronocluster.density.html#chronocluster.density.custom_kde">[docs]</a>
+<span class="k">def</span> <span class="nf">custom_kde</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> 
+               <span class="n">bw_method</span><span class="p">,</span> 
+               <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Custom KDE function compatible with kde_time, following the interface of gaussian_kde.</span>
+<span class="sd">    This function returns a callable that computes the KDE with a fixed Gaussian bandwidth </span>
+<span class="sd">    in data units.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    dataset : np.ndarray</span>
+<span class="sd">        A 2D array with shape (2, n_points) or (n_points, 2) containing the spatial coordinates </span>
+<span class="sd">        of data points. If shape is (2, n_points), it will be transposed internally.</span>
+<span class="sd">    bw_method : float</span>
+<span class="sd">        The desired bandwidth in data units (e.g., meters for UTM coordinates).</span>
+<span class="sd">    weights : np.ndarray, optional</span>
+<span class="sd">        An array of weights for each point in `dataset`. Defaults to uniform weights if None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    callable</span>
+<span class="sd">        A function that takes a grid of points (in any shape) and evaluates the KDE </span>
+<span class="sd">        over that grid, reshaping the result to match the grid&#39;s original shape.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Transpose dataset if it has shape (2, n_points)</span>
+    <span class="k">if</span> <span class="n">dataset</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">dataset</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">T</span>
+    
+    <span class="c1"># Ensure dataset is a 2D array with two columns</span>
+    <span class="k">if</span> <span class="n">dataset</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">dataset</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Dataset must be a 2D array with shape (n_points, 2)&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Set default weights if none are provided</span>
+    <span class="k">if</span> <span class="n">weights</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c1"># Define the callable function for KDE evaluation</span>
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">grid</span><span class="p">):</span>
+        <span class="c1"># Calculate squared distances between grid points and data points</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="n">cdist</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;sqeuclidean&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># Apply the Gaussian kernel</span>
+        <span class="n">kde_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">distances</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">bw_method</span><span class="o">**</span><span class="mi">2</span><span class="p">)),</span> <span class="n">weights</span><span class="p">)</span>
+
+        <span class="c1"># Normalize by bandwidth and total weights to get density estimates</span>
+        <span class="n">kde_values</span> <span class="o">/=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">bw_method</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">kde_values</span>
+
+    <span class="k">return</span> <span class="n">evaluate</span></div>
+
+
+<div class="viewcode-block" id="kde_peaks">
+<a class="viewcode-back" href="../../chronocluster.density.html#chronocluster.density.kde_peaks">[docs]</a>
+<span class="k">def</span> <span class="nf">kde_peaks</span><span class="p">(</span><span class="n">kde_values</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+              <span class="n">x_mesh</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+              <span class="n">y_mesh</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+              <span class="n">points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+              <span class="n">num_peaks</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> 
+              <span class="n">peak_finder</span><span class="o">=</span><span class="n">find_peaks</span><span class="p">,</span> 
+              <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Identifies peaks in the KDE surface or point distribution using a specified peak-finding algorithm.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    kde_values : np.ndarray, optional</span>
+<span class="sd">        2D array of KDE values over the grid, directly from kde_time. Only required for `find_peaks` and `peak_local_max`.</span>
+<span class="sd">    x_mesh, y_mesh : np.ndarray, optional</span>
+<span class="sd">        Mesh grids of x and y coordinates used to evaluate kde_values. Only required for `find_peaks` and `peak_local_max`.</span>
+<span class="sd">    points : list of Point, optional</span>
+<span class="sd">        List of Point objects with x and y coordinates, used when peak_finder is `gmm_peak_finder` or `pymc_gmm_peak_finder`.</span>
+<span class="sd">    num_peaks : int</span>
+<span class="sd">        Maximum number of peaks to identify on the KDE surface or point distribution.</span>
+<span class="sd">    peak_finder : callable</span>
+<span class="sd">        Peak-finding function to use. Options include `scipy.signal.find_peaks`, `peak_local_max`, `gmm_peak_finder`, or `pymc_gmm_peak_finder`.</span>
+<span class="sd">    *args, **kwargs :</span>
+<span class="sd">        Additional arguments passed to the peak-finding function.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    peaks : np.ndarray</span>
+<span class="sd">        Array of shape (num_peaks, 2) containing the x, y coordinates of the identified peaks.</span>
+<span class="sd">    weights : np.ndarray or None</span>
+<span class="sd">        Array of sorted weights corresponding to each peak, in descending order, if applicable.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">peak_finder</span> <span class="o">==</span> <span class="n">find_peaks</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">kde_values</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">x_mesh</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">y_mesh</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;kde_values, x_mesh, and y_mesh must be provided for find_peaks.&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Use scipy&#39;s find_peaks on the flattened KDE surface</span>
+        <span class="n">peak_indices</span> <span class="o">=</span> <span class="n">peak_finder</span><span class="p">(</span><span class="n">kde_values</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">peak_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">x_mesh</span><span class="o">.</span><span class="n">ravel</span><span class="p">()[</span><span class="n">peak_indices</span><span class="p">],</span> <span class="n">y_mesh</span><span class="o">.</span><span class="n">ravel</span><span class="p">()[</span><span class="n">peak_indices</span><span class="p">]))</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># No weights returned by find_peaks</span>
+    
+    <span class="k">elif</span> <span class="n">peak_finder</span> <span class="o">==</span> <span class="n">peak_local_max</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">kde_values</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">x_mesh</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">y_mesh</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;kde_values, x_mesh, and y_mesh must be provided for peak_local_max.&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Use skimage&#39;s peak_local_max for local maxima detection on the KDE surface</span>
+        <span class="n">peak_indices</span> <span class="o">=</span> <span class="n">peak_finder</span><span class="p">(</span><span class="n">kde_values</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">peak_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">x_mesh</span><span class="p">[</span><span class="n">peak_indices</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">peak_indices</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]],</span> 
+                                       <span class="n">y_mesh</span><span class="p">[</span><span class="n">peak_indices</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y_mesh</span><span class="p">[</span><span class="n">peak_indices</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]]]))</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># No weights returned by peak_local_max</span>
+    
+    <span class="k">elif</span> <span class="n">peak_finder</span> <span class="o">==</span> <span class="n">gmm_peak_finder</span><span class="p">:</span>
+        <span class="c1"># Ensure points are provided for GMM peak finding</span>
+        <span class="k">if</span> <span class="n">points</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The &#39;points&#39; parameter must be provided when using gmm_peak_finder.&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Use GMM to identify peaks based on point distribution</span>
+        <span class="n">ranked_peaks</span><span class="p">,</span> <span class="n">ranked_weights</span> <span class="o">=</span> <span class="n">gmm_peak_finder</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">num_components</span><span class="o">=</span><span class="n">num_peaks</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">peak_coords</span> <span class="o">=</span> <span class="n">ranked_peaks</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">ranked_weights</span>
+
+    <span class="k">elif</span> <span class="n">peak_finder</span> <span class="o">==</span> <span class="n">pymc_gmm_peak_finder</span><span class="p">:</span>
+        <span class="c1"># Ensure points are provided for PyMC GMM peak finding</span>
+        <span class="k">if</span> <span class="n">points</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The &#39;points&#39; parameter must be provided when using pymc_gmm_peak_finder.&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Check for required parameters in kwargs</span>
+        <span class="n">required_params</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;time_slice&#39;</span><span class="p">,</span> <span class="s1">&#39;target_scale&#39;</span><span class="p">,</span> <span class="s1">&#39;target_scale_sd&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">required_params</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">param</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing required parameter &#39;</span><span class="si">{</span><span class="n">param</span><span class="si">}</span><span class="s2">&#39; for pymc_gmm_peak_finder.&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Extract PyMC-specific parameters without defaults</span>
+        <span class="n">time_slice</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;time_slice&#39;</span><span class="p">)</span>
+        <span class="n">target_scale</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;target_scale&#39;</span><span class="p">)</span>
+        <span class="n">target_scale_sd</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;target_scale_sd&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># Optional parameters with defaults</span>
+        <span class="n">n_samples</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;n_samples&#39;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+        <span class="n">num_components</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;num_components&#39;</span><span class="p">,</span> <span class="n">num_peaks</span><span class="p">)</span>
+        <span class="n">w_threshold</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;w_threshold&#39;</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">num_components</span><span class="p">)</span>
+
+        <span class="c1"># Use the custom PyMC GMM model to identify peaks based on point distribution</span>
+        <span class="n">peak_coords</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">trace</span> <span class="o">=</span> <span class="n">pymc_gmm_peak_finder</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> 
+                                                            <span class="n">time_slice</span><span class="o">=</span><span class="n">time_slice</span><span class="p">,</span> 
+                                                            <span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> 
+                                                            <span class="n">num_components</span><span class="o">=</span><span class="n">num_components</span><span class="p">,</span> 
+                                                            <span class="n">target_scale</span><span class="o">=</span><span class="n">target_scale</span><span class="p">,</span> 
+                                                            <span class="n">target_scale_sd</span><span class="o">=</span><span class="n">target_scale_sd</span><span class="p">,</span> 
+                                                            <span class="n">w_threshold</span><span class="o">=</span><span class="n">w_threshold</span><span class="p">,</span> 
+                                                            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported peak-finding function. Please use find_peaks, peak_local_max, gmm_peak_finder, or pymc_gmm_peak_finder.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Sort peaks by density or weight and select the top `num_peaks`</span>
+    <span class="k">if</span> <span class="n">weights</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Sort by KDE values for non-GMM methods</span>
+        <span class="n">sorted_peak_coords</span> <span class="o">=</span> <span class="n">peak_coords</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">kde_values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()[</span><span class="n">peak_indices</span><span class="p">])[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="n">peaks</span> <span class="o">=</span> <span class="n">sorted_peak_coords</span><span class="p">[:</span><span class="n">num_peaks</span><span class="p">]</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># For GMM methods, peaks are already sorted by weight in the peak finder</span>
+        <span class="n">peaks</span> <span class="o">=</span> <span class="n">peak_coords</span><span class="p">[:</span><span class="n">num_peaks</span><span class="p">]</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span><span class="p">[:</span><span class="n">num_peaks</span><span class="p">]</span>
+
+    <span class="c1"># return</span>
+    <span class="k">if</span> <span class="n">peak_finder</span> <span class="o">==</span> <span class="n">pymc_gmm_peak_finder</span><span class="p">:</span>
+        <span class="c1"># return the trace as well</span>
+        <span class="k">return</span> <span class="n">peaks</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">trace</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">peaks</span><span class="p">,</span> <span class="n">weights</span></div>
+
+
+<div class="viewcode-block" id="peak_local_max_finder">
+<a class="viewcode-back" href="../../chronocluster.density.html#chronocluster.density.peak_local_max_finder">[docs]</a>
+<span class="k">def</span> <span class="nf">peak_local_max_finder</span><span class="p">(</span><span class="n">kde_values</span><span class="p">,</span> <span class="n">x_mesh</span><span class="p">,</span> <span class="n">y_mesh</span><span class="p">,</span> <span class="n">min_distance</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">num_peaks</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses the `peak_local_max` function from `skimage.feature` to identify peaks in a 2D KDE surface.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    kde_values : np.ndarray</span>
+<span class="sd">        2D array of KDE values over the grid.</span>
+<span class="sd">    x_mesh, y_mesh : np.ndarray</span>
+<span class="sd">        Mesh grids of x and y coordinates used to evaluate kde_values.</span>
+<span class="sd">    min_distance : int, optional</span>
+<span class="sd">        Minimum number of pixels separating peaks in a region of `2 * min_distance + 1` (i.e., a peak is </span>
+<span class="sd">        only detected if it has the maximum value within its local region).</span>
+<span class="sd">    num_peaks : int, optional</span>
+<span class="sd">        Maximum number of peaks to return.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    peak_coords : np.ndarray</span>
+<span class="sd">        Array of shape (num_peaks, 2) containing the x, y coordinates of the identified peaks.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Use `peak_local_max` to identify local maxima in the KDE surface</span>
+    <span class="n">peak_indices</span> <span class="o">=</span> <span class="n">peak_local_max</span><span class="p">(</span><span class="n">kde_values</span><span class="p">,</span> <span class="n">min_distance</span><span class="o">=</span><span class="n">min_distance</span><span class="p">,</span> <span class="n">num_peaks</span><span class="o">=</span><span class="n">num_peaks</span><span class="p">)</span>
+
+    <span class="c1"># Get x, y coordinates for the identified peaks</span>
+    <span class="n">peak_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">x_mesh</span><span class="p">[</span><span class="n">peak_indices</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">peak_indices</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]],</span>
+                                   <span class="n">y_mesh</span><span class="p">[</span><span class="n">peak_indices</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">peak_indices</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]]))</span>
+
+    <span class="k">return</span> <span class="n">peak_coords</span></div>
+
+
+<div class="viewcode-block" id="gmm_peak_finder">
+<a class="viewcode-back" href="../../chronocluster.density.html#chronocluster.density.gmm_peak_finder">[docs]</a>
+<span class="k">def</span> <span class="nf">gmm_peak_finder</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">num_components</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses a Gaussian Mixture Model (GMM) to identify peaks in a point distribution.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    points : list of Point</span>
+<span class="sd">        List of Point objects, each with x and y attributes.</span>
+<span class="sd">    num_components : int, optional</span>
+<span class="sd">        Number of GMM components (peaks) to fit. Default is 8.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    ranked_peaks : np.ndarray</span>
+<span class="sd">        Array of shape (num_components, 2) containing the x, y coordinates of the identified peaks.</span>
+<span class="sd">    ranked_weights : np.ndarray</span>
+<span class="sd">        Array of weights for each peak, in descending order of importance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Extract coordinates from points</span>
+    <span class="n">coordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="p">]</span> <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">])</span>
+    
+    <span class="c1"># Fit the GMM to the point coordinates</span>
+    <span class="n">gmm</span> <span class="o">=</span> <span class="n">GaussianMixture</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">num_components</span><span class="p">,</span> <span class="n">covariance_type</span><span class="o">=</span><span class="s1">&#39;diag&#39;</span><span class="p">)</span>
+    <span class="n">gmm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">coordinates</span><span class="p">)</span>
+    
+    <span class="c1"># Extract the means (coordinates of peaks) and weights</span>
+    <span class="n">peak_coordinates</span> <span class="o">=</span> <span class="n">gmm</span><span class="o">.</span><span class="n">means_</span>
+    <span class="n">peak_weights</span> <span class="o">=</span> <span class="n">gmm</span><span class="o">.</span><span class="n">weights_</span>
+
+    <span class="c1"># Rank-order the peaks by their weights</span>
+    <span class="n">ranked_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">peak_weights</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># Sort in descending order</span>
+    <span class="n">ranked_peaks</span> <span class="o">=</span> <span class="n">peak_coordinates</span><span class="p">[</span><span class="n">ranked_indices</span><span class="p">]</span>
+    <span class="n">ranked_weights</span> <span class="o">=</span> <span class="n">peak_weights</span><span class="p">[</span><span class="n">ranked_indices</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">ranked_peaks</span><span class="p">,</span> <span class="n">ranked_weights</span></div>
+
+
+<div class="viewcode-block" id="pymc_gmm_peak_finder">
+<a class="viewcode-back" href="../../chronocluster.density.html#chronocluster.density.pymc_gmm_peak_finder">[docs]</a>
+<span class="k">def</span> <span class="nf">pymc_gmm_peak_finder</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> 
+                         <span class="n">time_slice</span><span class="p">,</span> 
+                         <span class="n">n_samples</span><span class="p">,</span> 
+                         <span class="n">num_components</span><span class="p">,</span> 
+                         <span class="n">target_scale</span><span class="p">,</span> 
+                         <span class="n">target_scale_sd</span><span class="p">,</span> 
+                         <span class="n">w_threshold</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                         <span class="n">sampler</span> <span class="o">=</span> <span class="s1">&#39;MH&#39;</span><span class="p">,</span> 
+                         <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Identifies peaks using a Bayesian GMM implemented in PyMC, with bounding box derived from data.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    points : list of Point</span>
+<span class="sd">        List of Point objects with x and y coordinates.</span>
+<span class="sd">    time_slice : int</span>
+<span class="sd">        The specific time slice for which to calculate the KDE and sample points.</span>
+<span class="sd">    n_samples : int, optional</span>
+<span class="sd">        Number of synthetic samples to generate for weighting.</span>
+<span class="sd">    num_components : int, optional</span>
+<span class="sd">        Maximum number of components (peaks) for the GMM.</span>
+<span class="sd">    target_scale : float, optional</span>
+<span class="sd">        Centered scale for the covariance of the components.</span>
+<span class="sd">    target_scale_sd : float, optional</span>
+<span class="sd">        Standard deviation around the target scale.</span>
+<span class="sd">    w_threshold : float, optional</span>
+<span class="sd">        Threshold for component weights to be considered as significant peaks.</span>
+<span class="sd">    sampler : str, optional</span>
+<span class="sd">        Select the sampler used for the PyMC model (e.g., &#39;MH&#39; for </span>
+<span class="sd">        Metropolis-Hastings or &#39;NUTS&#39; for No-U-Turn Sampler). Deafults to &#39;MH&#39;.</span>
+<span class="sd">    **kwargs : dict</span>
+<span class="sd">        Additional parameters for PyMC&#39;s pm.sample function (e.g., draws, chains, tune).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    peak_coords : np.ndarray</span>
+<span class="sd">        Array of shape (num_peaks, 2) containing the x, y coordinates of the identified peaks.</span>
+<span class="sd">    weights : np.ndarray</span>
+<span class="sd">        Array of weights corresponding to each identified peak.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Generate weighted sample based on inclusion probabilities for the time slice</span>
+    <span class="n">synth_points</span> <span class="o">=</span> <span class="n">synth_sample</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">time_slice</span><span class="o">=</span><span class="n">time_slice</span><span class="p">)</span>
+    <span class="n">coordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="p">]</span> <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">synth_points</span><span class="p">])</span>
+
+    <span class="c1"># Calculate bounding box variance from points</span>
+    <span class="n">min_x</span><span class="p">,</span> <span class="n">min_y</span><span class="p">,</span> <span class="n">max_x</span><span class="p">,</span> <span class="n">max_y</span> <span class="o">=</span> <span class="n">get_box</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+    <span class="n">bounding_box_variance</span> <span class="o">=</span> <span class="p">((</span><span class="n">max_x</span> <span class="o">-</span> <span class="n">min_x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>  <span class="c1"># Variance to cover half the bounding box width</span>
+
+    <span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">dp_gmm_model</span><span class="p">:</span>
+        <span class="c1"># Dirichlet Process for mixture weights</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Dirichlet</span><span class="p">(</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">num_components</span><span class="p">))</span>
+
+        <span class="c1"># Means for each component</span>
+        <span class="n">data_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">means</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">MvNormal</span><span class="p">(</span><span class="s1">&#39;means&#39;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">data_mean</span><span class="p">,</span> <span class="n">cov</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">bounding_box_variance</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">num_components</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+        <span class="c1"># Covariance matrix using truncated normal prior</span>
+        <span class="n">sd_scale</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">TruncatedNormal</span><span class="o">.</span><span class="n">dist</span><span class="p">(</span><span class="n">mu</span><span class="o">=</span><span class="n">target_scale</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">target_scale_sd</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">chol</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">LKJCholeskyCov</span><span class="p">(</span>
+            <span class="s1">&#39;chol&#39;</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">eta</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sd_dist</span><span class="o">=</span><span class="n">sd_scale</span><span class="p">,</span> <span class="n">compute_corr</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Multivariate Normal for each component</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="p">[</span><span class="n">pm</span><span class="o">.</span><span class="n">MvNormal</span><span class="o">.</span><span class="n">dist</span><span class="p">(</span><span class="n">mu</span><span class="o">=</span><span class="n">means</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">chol</span><span class="o">=</span><span class="n">chol</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_components</span><span class="p">)]</span>
+
+        <span class="c1"># Mixture likelihood for observed data</span>
+        <span class="n">gmm</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Mixture</span><span class="p">(</span><span class="s1">&#39;gmm&#39;</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">comp_dists</span><span class="o">=</span><span class="n">components</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="n">coordinates</span><span class="p">)</span>
+
+        <span class="c1"># Track &quot;importance&quot; of each component relative to uniform prior</span>
+        <span class="k">if</span> <span class="n">w_threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">w_threshold</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">num_components</span>
+        <span class="n">importance</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s1">&#39;importance&#39;</span><span class="p">,</span> <span class="n">w</span> <span class="o">-</span> <span class="n">w_threshold</span><span class="p">)</span>
+
+        <span class="c1"># Set sensible defaults for pm.sample parameters if they aren&#39;t provided</span>
+        <span class="n">draws</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;draws&#39;</span><span class="p">,</span> <span class="mi">4000</span><span class="p">)</span>
+        <span class="n">chains</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;chains&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">tune</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;tune&#39;</span><span class="p">,</span> <span class="mi">3000</span><span class="p">)</span>
+
+        <span class="c1"># Select the sampling method based on the sampler parameter</span>
+        <span class="k">if</span> <span class="n">sampler</span> <span class="o">==</span> <span class="s2">&quot;MH&quot;</span><span class="p">:</span>
+            <span class="n">step</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Metropolis</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">sampler</span> <span class="o">==</span> <span class="s2">&quot;NUTS&quot;</span><span class="p">:</span>
+            <span class="n">step</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">NUTS</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported sampler. Choose &#39;MH&#39; for Metropolis-Hastings or &#39;NUTS&#39;.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Run MCMC sampling with the specified or default parameters</span>
+        <span class="n">trace</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">draws</span><span class="o">=</span><span class="n">draws</span><span class="p">,</span> <span class="n">chains</span><span class="o">=</span><span class="n">chains</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="n">step</span><span class="p">,</span> <span class="n">tune</span><span class="o">=</span><span class="n">tune</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="c1"># Extract posterior means of component weights and coordinates</span>
+    <span class="n">posterior_weights</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s1">&#39;w&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;chain&#39;</span><span class="p">,</span> <span class="s1">&#39;draw&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">posterior_means</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s1">&#39;means&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;chain&#39;</span><span class="p">,</span> <span class="s1">&#39;draw&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1"># Filter peaks by weight threshold, if provided</span>
+    <span class="n">valid_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">posterior_weights</span> <span class="o">&gt;</span> <span class="n">w_threshold</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">peak_coords</span> <span class="o">=</span> <span class="n">posterior_means</span><span class="p">[</span><span class="n">valid_indices</span><span class="p">]</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">posterior_weights</span><span class="p">[</span><span class="n">valid_indices</span><span class="p">]</span>
+
+    <span class="c1"># Sort by weight for output</span>
+    <span class="n">sorted_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">weights</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">peak_coords</span> <span class="o">=</span> <span class="n">peak_coords</span><span class="p">[</span><span class="n">sorted_indices</span><span class="p">]</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span><span class="p">[</span><span class="n">sorted_indices</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">peak_coords</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">trace</span></div>
+
+
+<div class="viewcode-block" id="rank_peaks">
+<a class="viewcode-back" href="../../chronocluster.density.html#chronocluster.density.rank_peaks">[docs]</a>
+<span class="k">def</span> <span class="nf">rank_peaks</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span> <span class="n">significance</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">source_param</span><span class="o">=</span><span class="s1">&#39;weights&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Summarizes and ranks the importance of GMM components based on posterior weights and coordinates.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    trace : arviz.InferenceData</span>
+<span class="sd">        The MCMC trace output from PyMC.</span>
+<span class="sd">    significance : float</span>
+<span class="sd">        The desired credible interval width for HDI (e.g., 0.95 for a 95% HDI).</span>
+<span class="sd">    source_param : str</span>
+<span class="sd">        Specifies whether to rank peaks based on &#39;w&#39; (weights) or &#39;importance&#39; (i.e., w_i - w_threshold).</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    summary_df : pd.DataFrame</span>
+<span class="sd">        DataFrame containing ranked component weights or importance, coordinates, and HDI for the selected metric.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Select the source for ranking: &#39;weights&#39; or &#39;importance&#39;</span>
+    <span class="k">if</span> <span class="n">source_param</span> <span class="o">==</span> <span class="s1">&#39;w&#39;</span><span class="p">:</span>
+        <span class="c1"># Compute the mean of weights across chains and draws</span>
+        <span class="n">posterior_values</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s1">&#39;w&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;chain&#39;</span><span class="p">,</span> <span class="s1">&#39;draw&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">values</span>
+    <span class="k">elif</span> <span class="n">source_param</span> <span class="o">==</span> <span class="s1">&#39;importance&#39;</span><span class="p">:</span>
+        <span class="c1"># Compute the mean of importance across chains and draws</span>
+        <span class="n">posterior_values</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s1">&#39;importance&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;chain&#39;</span><span class="p">,</span> <span class="s1">&#39;draw&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">values</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid source_param. Choose either &#39;w&#39; or &#39;importance&#39;.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Compute the mean of component means across chains and draws</span>
+    <span class="n">posterior_means</span> <span class="o">=</span> <span class="n">trace</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s1">&#39;means&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;chain&#39;</span><span class="p">,</span> <span class="s1">&#39;draw&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1"># Sort components by selected metric in descending order</span>
+    <span class="n">sorted_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">posterior_values</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">sorted_values</span> <span class="o">=</span> <span class="n">posterior_values</span><span class="p">[</span><span class="n">sorted_indices</span><span class="p">]</span>
+    <span class="n">sorted_means</span> <span class="o">=</span> <span class="n">posterior_means</span><span class="p">[</span><span class="n">sorted_indices</span><span class="p">]</span>
+
+    <span class="c1"># Calculate HDI for the selected source parameter</span>
+    <span class="n">hdi_values</span> <span class="o">=</span> <span class="n">az</span><span class="o">.</span><span class="n">hdi</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="n">source_param</span><span class="p">],</span> <span class="n">hdi_prob</span><span class="o">=</span><span class="n">significance</span><span class="p">)[</span><span class="n">source_param</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1"># Reorder HDI values based on sorted component indices and format as tuples</span>
+    <span class="n">sorted_hdi_values</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">hdi</span><span class="p">)</span> <span class="k">for</span> <span class="n">hdi</span> <span class="ow">in</span> <span class="n">hdi_values</span><span class="p">[</span><span class="n">sorted_indices</span><span class="p">]]</span>
+
+    <span class="c1"># Prepare summary table</span>
+    <span class="n">summary_data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;Rank&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sorted_values</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">source_param</span><span class="o">.</span><span class="n">capitalize</span><span class="p">():</span> <span class="n">sorted_values</span><span class="p">,</span>
+        <span class="s1">&#39;Coordinates&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">mean</span><span class="p">)</span> <span class="k">for</span> <span class="n">mean</span> <span class="ow">in</span> <span class="n">sorted_means</span><span class="p">],</span>  <span class="c1"># Store coordinates as tuples</span>
+        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">significance</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span><span class="si">}</span><span class="s1">% HDI (</span><span class="si">{</span><span class="n">source_param</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">:</span> <span class="n">sorted_hdi_values</span>  <span class="c1"># Store HDI as tuples</span>
+    <span class="p">}</span>
+    <span class="n">summary_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">summary_data</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">summary_df</span></div>
+
+
+
+<div class="viewcode-block" id="radial_kde">
+<a class="viewcode-back" href="../../chronocluster.density.html#chronocluster.density.radial_kde">[docs]</a>
+<span class="k">def</span> <span class="nf">radial_kde</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> 
+               <span class="n">time_slice</span><span class="p">,</span> 
+               <span class="n">bandwidth</span><span class="p">,</span> 
+               <span class="n">center</span><span class="p">,</span> 
+               <span class="n">radii</span><span class="p">,</span> 
+               <span class="n">ring_sample_density</span><span class="p">,</span> 
+               <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes a radial density profile by evaluating a KDE at points along rings of increasing radii.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    points : list of Point</span>
+<span class="sd">        List of Point objects, each with spatial coordinates and temporal distributions.</span>
+<span class="sd">    time_slice : float</span>
+<span class="sd">        The time slice for which to calculate the KDE.</span>
+<span class="sd">    bandwidth : float</span>
+<span class="sd">        Bandwidth for the KDE.</span>
+<span class="sd">    center : tuple</span>
+<span class="sd">        The (x, y) coordinates of the center point from which to measure radii.</span>
+<span class="sd">    radii : array_like</span>
+<span class="sd">        Array of radii at which to evaluate the KDE.</span>
+<span class="sd">    ring_sample_density : float</span>
+<span class="sd">        Density of points per unit length of each ring.</span>
+<span class="sd">    *args : tuple</span>
+<span class="sd">        Additional positional arguments passed to `kde_time_func`.</span>
+<span class="sd">    **kwargs : dict</span>
+<span class="sd">        Additional keyword arguments passed to `kde_time_func`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    radial_density : np.ndarray</span>
+<span class="sd">        Array of KDE values averaged over points along each radius, representing the radial density profile.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">radial_density</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Generate points on rings at each radius</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">radii</span><span class="p">:</span>
+        <span class="c1"># Calculate the number of points for the current ring based on its circumference</span>
+        <span class="n">circumference</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">r</span>
+        <span class="n">num_points</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">circumference</span> <span class="o">*</span> <span class="n">ring_sample_density</span><span class="p">))</span>  <span class="c1"># At least 1 point per ring</span>
+
+        <span class="c1"># Generate points evenly spaced around the ring</span>
+        <span class="n">angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">num_points</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">x_ring</span> <span class="o">=</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angles</span><span class="p">)</span>
+        <span class="n">y_ring</span> <span class="o">=</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">r</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angles</span><span class="p">)</span>
+        <span class="n">ring_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">x_ring</span><span class="p">,</span> <span class="n">y_ring</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>  <span class="c1"># Shape (num_points, 2)</span>
+
+        <span class="c1"># Evaluate KDE at the points on the ring</span>
+        <span class="n">kde_values</span> <span class="o">=</span> <span class="n">kde_time</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">time_slice</span><span class="p">,</span> <span class="n">bandwidth</span><span class="p">,</span> <span class="n">ring_points</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Average KDE values around the ring to get a single density value for this radius</span>
+        <span class="n">radial_density</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">kde_values</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">radial_density</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="radial_density">
+<a class="viewcode-back" href="../../chronocluster.density.html#chronocluster.density.radial_density">[docs]</a>
+<span class="k">def</span> <span class="nf">radial_density</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span> <span class="n">centers</span><span class="p">,</span> <span class="n">radial_steps</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_radius</span><span class="o">=</span><span class="mi">5000</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates radial density profiles for a given set of centers.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    coordinates : np.ndarray</span>
+<span class="sd">        Array of shape (n_points, 2) containing the x, y coordinates of the data points.</span>
+<span class="sd">    centers : np.ndarray</span>
+<span class="sd">        Array of shape (num_centers, 2) containing the x, y coordinates of the KDE peaks.</span>
+<span class="sd">    radial_steps : int</span>
+<span class="sd">        Number of radial steps to calculate the density.</span>
+<span class="sd">    max_radius : float</span>
+<span class="sd">        Maximum radius for the radial density profile.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    radial_profiles : dict</span>
+<span class="sd">        Dictionary with center indices as keys and lists of density values at each radius as values.</span>
+<span class="sd">    radii : np.ndarray</span>
+<span class="sd">        Array of radius values corresponding to each radial step.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">radii</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_radius</span><span class="p">,</span> <span class="n">radial_steps</span><span class="p">)</span>
+    <span class="n">radial_profiles</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">centers</span><span class="p">))}</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">center</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">centers</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">radius</span> <span class="ow">in</span> <span class="n">radii</span><span class="p">:</span>
+            <span class="c1"># Find points within the current radius</span>
+            <span class="n">distances</span> <span class="o">=</span> <span class="n">cdist</span><span class="p">([</span><span class="n">center</span><span class="p">],</span> <span class="n">coordinates</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">points_in_radius</span> <span class="o">=</span> <span class="n">coordinates</span><span class="p">[</span><span class="n">distances</span> <span class="o">&lt;=</span> <span class="n">radius</span><span class="p">]</span>
+            <span class="n">area</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">radius</span> <span class="o">**</span> <span class="mi">2</span>  <span class="c1"># Area of the circle at this radius</span>
+            <span class="n">density</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">points_in_radius</span><span class="p">)</span> <span class="o">/</span> <span class="n">area</span> <span class="k">if</span> <span class="n">area</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="n">radial_profiles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">density</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">radial_profiles</span><span class="p">,</span> <span class="n">radii</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, W. Christopher Carleton.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
