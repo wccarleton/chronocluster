@@ -288,18 +288,36 @@ def chrono_plot2d(
     **kwargs,
 ):
     """
-    Plots a 2D scatter of points with transparency reflecting inclusion probability,
-    with optional basemap and CRS handling.
+    Plot a 2D scatter of spatial points with alpha (transparency) scaled by inclusion probability at a given time slice.
 
-    Parameters:
-    -----------
-    points : list of Point or single Point
+    Optionally includes a basemap (via contextily) and supports coordinate reference system (CRS) transformations.
+
+    Parameters
+    ----------
+    points : list of Point or Point
+        A single Point or list of Points, each of which must implement a `calculate_inclusion_probability(time)` method
+        and have `.x` and `.y` attributes (e.g., shapely.geometry.Point-like).
     time : float
-        The time slice at which to evaluate inclusion probability.
-    basemap_provider : contextily tile provider or None
-        If provided, adds a basemap beneath the scatter using contextily.
+        The time slice at which to evaluate and visualize inclusion probability.
+    ax : matplotlib.axes.Axes, optional
+        The matplotlib Axes object to plot on. If None, a new figure and axes will be created.
+    style_params : dict, optional
+        Dictionary to override default plotting styles. Recognized keys include 'point_color' and 'point_size'.
+    plot_limits : tuple of tuple, optional
+        ((xmin, xmax), (ymin, ymax)) axis limits to apply to the plot.
+    save : str or Path, optional
+        If provided, saves the figure to the given file path.
+    basemap_provider : contextily tile provider, optional
+        If provided, a basemap will be added using `contextily.add_basemap`.
     crs : str, int, or pyproj.CRS, optional
-        CRS for the input data. Required if using a basemap.
+        The CRS of the input points. Required if `basemap_provider` is specified.
+
+    Returns
+    -------
+    ax : matplotlib.axes.Axes
+        The Axes object with the plotted data.
+    fig : matplotlib.figure.Figure
+        The Figure object containing the Axes.
     """
 
     if isinstance(points, Point):
