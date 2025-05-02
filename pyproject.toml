@@ -19,8 +19,8 @@ pointpats = "^2.5.1"  # alternative?
 seaborn = "^0.13.2"
 statsmodels = "^0.14.4"
 plotly = "^6.0.0"
-pymc = "^5.20.0"  # incompatible with numpy 2.x
-numpy = "~1"
+pymc = "^5.20.0"
+numpy = ">=2.0,<3.0"
 scikit-image = "^0.25.1"
 
 
