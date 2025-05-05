@@ -2,7 +2,7 @@
 # -*-coding:utf-8 -*-
 # @Author  : Christopher Carleton & Shuang Song
 # @Contact   : carleton@gea.mpg.de
-# GitHub   : https://github.com/wccarleton/chronocluster_dark
+# GitHub   : https://github.com/wccarleton/chronocluster
 
 import numpy as np
 import itertools
