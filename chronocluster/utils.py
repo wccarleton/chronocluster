@@ -4,17 +4,21 @@
 # @Contact   : carleton@gea.mpg.de
 # GitHub   : https://github.com/wccarleton/chronocluster_dark
 
+import numpy as np
 import itertools
 from typing import Dict, List, Optional, Tuple
-
 import matplotlib.pyplot as plt
-import numpy as np
+from matplotlib.lines import Line2D
+from matplotlib.patches import Ellipse
 import plotly.graph_objects as go
 import rasterio
 import seaborn as sns
-from matplotlib.patches import Ellipse
+import geopandas as gpd
+import contextily as ctx
 from scipy.ndimage import zoom
 from statsmodels.distributions.empirical_distribution import ECDF
+from pyproj import CRS
+from shapely.geometry import Point as ShapelyPoint
 
 from chronocluster.clustering import Point
 
@@ -272,6 +276,189 @@ def get_box(points, buffer=0):
     # Return the bounding box as a tuple: (min_x, min_y, max_x, max_y)
     return (min_x, min_y, max_x, max_y)
 
+def chrono_plot2d(
+    points,
+    time,
+    ax=None,
+    style_params=None,
+    plot_limits=None,
+    save=None,
+    basemap_provider=None,
+    crs=None,
+    **kwargs,
+):
+    """
+    Plot a 2D scatter of spatial points with alpha (transparency) scaled by inclusion probability at a given time slice.
+
+    Optionally includes a basemap (via contextily) and supports coordinate reference system (CRS) transformations.
+
+    Parameters
+    ----------
+    points : list of Point or Point
+        A single Point or list of Points, each of which must implement a `calculate_inclusion_probability(time)` method
+        and have `.x` and `.y` attributes (e.g., shapely.geometry.Point-like).
+    time : float
+        The time slice at which to evaluate and visualize inclusion probability.
+    ax : matplotlib.axes.Axes, optional
+        The matplotlib Axes object to plot on. If None, a new figure and axes will be created.
+    style_params : dict, optional
+        Dictionary to override default plotting styles. Recognized keys include 'point_color' and 'point_size'.
+    plot_limits : tuple of tuple, optional
+        ((xmin, xmax), (ymin, ymax)) axis limits to apply to the plot.
+    save : str or Path, optional
+        If provided, saves the figure to the given file path.
+    basemap_provider : contextily tile provider, optional
+        If provided, a basemap will be added using `contextily.add_basemap`.
+    crs : str, int, or pyproj.CRS, optional
+        The CRS of the input points. Required if `basemap_provider` is specified.
+
+    Returns
+    -------
+    ax : matplotlib.axes.Axes
+        The Axes object with the plotted data.
+    fig : matplotlib.figure.Figure
+        The Figure object containing the Axes.
+    """
+
+    if isinstance(points, Point):
+        points = [points]
+
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(8, 6))
+    else:
+        fig = ax.get_figure()
+
+    default_style = {
+        "point_color": "black",
+        "point_size": 50,
+    }
+    if style_params:
+        default_style.update(style_params)
+
+    point_color = default_style["point_color"]
+    point_size = default_style["point_size"]
+
+    # Robust GeoDataFrame construction
+    geometries = [ShapelyPoint(p.x, p.y) for p in points]
+    inclusion_probs = [p.calculate_inclusion_probability(time) for p in points]
+
+    gdf = gpd.GeoDataFrame(
+        {"inclusion_prob": inclusion_probs},
+        geometry=gpd.GeoSeries(geometries, crs=CRS.from_user_input(crs))
+    )
+
+    # Reproject if using a basemap
+    if basemap_provider is not None:
+        if gdf.crs is None:
+            raise ValueError("CRS must be provided if using a basemap.")
+        gdf = gdf.to_crs(epsg=3857)
+
+    # Dummy plot to fix extent
+    if basemap_provider is not None:
+        gdf.plot(ax=ax, alpha=0, markersize=0)
+        ctx.add_basemap(ax, source=basemap_provider, crs=gdf.crs)
+
+    # Plot points with inclusion-based alpha
+    gdf.plot(
+        ax=ax,
+        color=point_color,
+        alpha=gdf["inclusion_prob"],
+        markersize=point_size
+    )
+
+    # Optional axis limits
+    if plot_limits is not None:
+        ax.set_xlim(plot_limits[0])
+        ax.set_ylim(plot_limits[1])
+
+    ax.set_xlabel("X")
+    ax.set_ylabel("Y")
+    ax.set_aspect("equal")
+
+    if fig is not None:
+        fig.tight_layout()
+        if save:
+            fig.savefig(save, bbox_inches="tight", **kwargs)
+
+    return ax, fig
+
+def inclusion_legend(
+    ax=None,
+    alphas=[0.2, 0.5, 0.8, 1.0],
+    color="black",
+    title="Inclusion Probability",
+    fontsize=8,
+    below=True,
+    shared=False,
+    fig=None
+):
+    """
+    Adds a horizontal alpha-based legend with circular markers.
+
+    Parameters:
+    - ax: Matplotlib axis
+    - alphas: List of alpha values to show
+    - color: Color of the points
+    - title: Legend title
+    - fontsize: Size of text
+    - below: If True, places legend below plot (horizontal layout)
+    - shared: If True, adds a shared legend outside the plot (used for side-by-side)
+    - fig: Matplotlib figure, required if shared=True
+    """
+    handles = [
+        Line2D(
+            [], [], 
+            marker="o", 
+            linestyle="None",
+            markersize=8,
+            color=color,
+            alpha=a,
+            label=f"{a:.1f}"
+        )
+        for a in alphas
+    ]
+    
+    # For shared legend
+    if shared:
+        if fig is None:
+            raise ValueError("For shared legends, 'fig' must be provided.")
+        fig.legend(
+            handles=handles,
+            title=title,
+            loc="upper center",
+            bbox_to_anchor=(0.5, 0.05),
+            fontsize=fontsize,
+            title_fontsize=fontsize,
+            handletextpad=1.0,
+            handlelength=1.5,
+            borderpad=0.6,
+            labelspacing=0.5,
+            ncol=len(alphas)
+        )
+    else:
+        # For individual plot legends (below or standard inside)
+        if ax is None:
+            raise ValueError("For individual legends, 'ax' must be provided.")
+        
+        if below:
+            legend = ax.legend(
+                handles=handles,
+                title=title,
+                loc="upper center",
+                bbox_to_anchor=(0.5, -0.15),
+                frameon=True,
+                fontsize=fontsize,
+                title_fontsize=fontsize,
+                handletextpad=1.0,
+                handlelength=1.5,
+                borderpad=0.6,
+                labelspacing=0.5,
+                ncol=len(alphas)
+            )
+            legend.get_frame().set_alpha(0.0)
+            legend.get_frame().set_edgecolor("none")
+        else:
+            ax.legend(handles=handles, title=title, fontsize=fontsize)
 
 def chrono_plot(
     points,
