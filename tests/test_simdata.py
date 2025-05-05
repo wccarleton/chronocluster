@@ -1,3 +1,9 @@
+#!/usr/bin/env python 3.11.0
+# -*-coding:utf-8 -*-
+# @Author  : Christopher Carleton & Shuang Song
+# @Contact   : carleton@gea.mpg.de
+# GitHub   : https://github.com/wccarleton/chronocluster
+
 import pytest
 from chronocluster.data.simdata import generate_random_points, generate_params
 from chronocluster.clustering import Point

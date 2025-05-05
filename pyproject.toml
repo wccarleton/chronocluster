@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "chronocluster"
 version = "0.1.0"
-description = "A point distribution analysis tool for archaeologist."
+description = "A spacetime point distribution analysis tool for archaeologists."
 authors = [
     "Christopher Carleton <carleton@gea.mpg.de>",
     "Shuang Song (SongshGeo) <song@gea.mpg.de>",
