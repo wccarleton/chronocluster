@@ -67,7 +67,11 @@ def test_temporal_pairwise():
     max_distance = 10.0
 
     results = temporal_pairwise(
-        simulations, time_slices, bw, density=False, max_distance=max_distance
+        point_sets = simulations, 
+        time_slices = time_slices,
+        bw = bw, 
+        use_kde = False, 
+        max_distance = max_distance
     )
 
     # temporal_pairwise returns two objects

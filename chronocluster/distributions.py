@@ -85,7 +85,7 @@ class calrcarbon:
         t_max = t_values[mask].max()
         t_values = np.linspace(t_min, t_max, 10000)
         pdf_values = self._pdf(t_values, c14_mean, c14_err)
-        pdf_values /= np.trapz(pdf_values, t_values)
+        pdf_values /= np.trapezoid(pdf_values, t_values)
         return t_values, pdf_values
 
     def pdf(self, tau, c14_mean=None, c14_err=None):
