@@ -258,7 +258,6 @@ def temporal_pairwise(
                     distances_for_time_slices.append(None)
                     continue
                 pairwise_distances = distance.cdist(f_pts, pts)
-                distances_for_time_slices.append(pairwise_distances)
                 if max_distance is not None:
                     pairwise_distances = pairwise_distances[pairwise_distances <= max_distance]
                 if pairwise_distances.size == 0:
